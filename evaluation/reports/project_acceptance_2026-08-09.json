@@ -1,25 +1,25 @@
 {
   "report_date": "2026-08-09",
-  "assessment_revision": "desktop_browser_extension",
+  "assessment_revision": "desktop_browser_taobao_fixture_replay",
   "previous_score": 65,
-  "overall_score": 79,
-  "weighted_score_before_rounding": 79.2,
-  "decision": "offline_prototype_and_desktop_browser_baseline_accepted",
+  "overall_score": 82,
+  "weighted_score_before_rounding": 81.7,
+  "decision": "offline_prototype_desktop_browser_and_taobao_fixture_replay_accepted",
   "production_ready": false,
   "real_device_runtime_verified": false,
   "real_platform_ready": false,
   "dimensions": [
-    {"name": "requirements_and_core", "weight": 15, "score": 90},
-    {"name": "architecture_and_explainability", "weight": 15, "score": 92},
+    {"name": "requirements_and_core", "weight": 15, "score": 92},
+    {"name": "architecture_and_explainability", "weight": 15, "score": 94},
     {"name": "safety", "weight": 15, "score": 90},
-    {"name": "tests_and_builds", "weight": 15, "score": 86},
-    {"name": "evaluation_credibility", "weight": 15, "score": 58},
-    {"name": "real_integration_readiness", "weight": 15, "score": 58},
+    {"name": "tests_and_builds", "weight": 15, "score": 88},
+    {"name": "evaluation_credibility", "weight": 15, "score": 62},
+    {"name": "real_integration_readiness", "weight": 15, "score": 64},
     {"name": "engineering_governance", "weight": 5, "score": 68},
-    {"name": "documentation", "weight": 5, "score": 94}
+    {"name": "documentation", "weight": 5, "score": 96}
   ],
   "verification": {
-    "backend_tests": {"passed": 91, "failed": 0, "warnings": 1},
+    "backend_tests": {"passed": 101, "failed": 0, "warnings": 1},
     "focused_bridge_and_safety_tests": {"passed": 15, "failed": 0},
     "browser_runtime_tests": {"passed": 2, "failed": 0},
     "browser_mock_web_e2e": {
@@ -27,6 +27,15 @@
       "price": "10.90",
       "safety_status": "SAFETY_BLOCKED",
       "order_submitted": false
+    },
+    "taobao_fixture_replay": {
+      "status": "passed",
+      "real_page_accessed": false,
+      "external_side_effect": false,
+      "search_query": "iphone17",
+      "product_count": 2,
+      "prices": ["5999.00", "5999.00"],
+      "selector_roles": ["product_result", "search_input", "search_submit"]
     },
     "python_compileall": "passed",
     "android_client_test_and_assemble_debug": "build_successful",
@@ -36,7 +45,8 @@
     "github_actions_workflow": "backend_android_browser_jobs_added_not_yet_run_remotely",
     "android_lint": "not_completed_missing_offline_lint_dependency",
     "real_device_runtime": "not_run_by_user_scope",
-    "real_platform_browser_runtime": "not_run_no_real_adapter"
+    "real_platform_browser_runtime": "not_verified_live_page_access_blocked_fixture_replay_only",
+    "taobao_adapter_status": "fixture_verified_not_live"
   },
   "remediated_blockers": [
     "git_baseline_exists",
@@ -50,9 +60,12 @@
     "safety_separator_obfuscation_is_blocked",
     "browser_runtime_reuses_action_device_contract",
     "mock_web_browser_e2e_is_reproducible"
+    ,"taobao_adapter_and_sanitized_fixture_replay_is_reproducible"
+    ,"taobao_page_structure_converts_to_standard_observation"
   ],
   "remaining_p0_blockers": [
-    "no_real_platform_adapter_or_sanitized_real_fixture",
+    "no_live_taobao_dom_aria_selector_verification_or_real_page_replay",
+    "no_meituan_or_jd_real_platform_adapter",
     "no_real_application_bad_case_validation"
   ],
   "latest_metrics_unchanged": {

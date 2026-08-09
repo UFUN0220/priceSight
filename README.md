@@ -2,11 +2,11 @@
 
 一个安全模式的移动端 Computer-Use Agent 原型：通过 Android Accessibility Tree 观察界面，压缩成结构化 Observation，由 Workflow + Agent 决定动作，经 Action Harness grounding 后执行，并对多个商品来源进行规格和价格比较。
 
-当前实现以离线 Fake Device、Mock Shopping App 和合成数据为主。真实 Meituan/JD/Taobao 适配、真实设备运行和真实模型调用均未声称完成。
+当前实现以离线 Fake Device、Mock Shopping App、合成数据和淘宝脱敏 fixture 回放为主。真实设备运行、实时淘宝网页验证、Meituan/JD 适配和真实模型调用均未声称完成。
 
 ## 最新项目级验收
 
-2026-08-09 桌面端扩展复验评分为 **79/100**，由整改前的 65 分提升。项目已具备本地浏览器真实执行基线：Playwright Browser Runtime 可完成 Mock Web 搜索、商品打开、价格读取和订单确认前安全停止；后端 **91 个测试**、浏览器 E2E、Android Client 与 Mock App 构建均通过。真实平台和生产交付仍不通过。
+2026-08-09 淘宝 fixture 更新后的项目复验评分为 **82/100**，由整改前的 65 分提升。项目已具备本地浏览器真实执行基线和淘宝脱敏结构 fixture 只读回放；后端 **101 个测试**、浏览器 E2E、Android Client 与 Mock App 构建均通过。实时平台和生产交付仍不通过。
 
 详见 [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)。
 

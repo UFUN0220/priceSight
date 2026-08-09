@@ -4,6 +4,13 @@
 
 ## 已完成阶段
 
+### 阶段0复验——优化前可复现 Baseline
+
+- [x] 修正机器可读验收结果中淘宝状态的过时表述。
+- [x] 完成 Python compile、Backend 全量测试、Browser/淘宝定向测试、Mock Chromium E2E、淘宝 fixture replay、Android 两工程 `test assembleDebug` 和 `git diff --check`。
+- [x] 生成 [baseline_before_optimization.md](../evaluation/reports/baseline_before_optimization.md)。
+- [ ] 实时淘宝页面、真实 Android 设备和远端 CI 仍未验证，详见 baseline 报告中的 `NOT_VERIFIED`。
+
 ### 阶段0——环境与仓库初始化
 
 - [x] 完成 Python 3.12.1、uv、Git、FastAPI 项目初始化和健康检查。
@@ -142,19 +149,19 @@
 
 ## 2026-08-09 桌面端扩展复验
 
-- 综合评分：由 **65/100 提升至 79/100**。
-- 离线工程原型和桌面浏览器开发基线：通过。
+- 综合评分：由 **65/100 提升至 82/100**。
+- 离线工程原型、桌面浏览器开发基线和淘宝脱敏结构 fixture 回放：通过。
 - 真实设备、真实平台和生产交付：不通过/未实现。
-- 最新验证：后端 **91 passed**；新增浏览器 Runtime 测试 2 passed；Python 编译检查通过；Mock Web 浏览器 E2E 通过；Android Client 和 Mock App 的 `test assembleDebug` 均通过。
-- 已增加：Browser Runtime、统一 RuntimeSession、TaskOrchestrator、本地 Mock Web、Playwright E2E 和浏览器 CI job。
-- 剩余 P0：无真实平台 adapter、无真实平台 Bad Case 验证；Android 运行证据仍缺失，但不再阻断桌面端主线。
+- 最新验证：后端 **101 passed**；淘宝结构 fixture 回放通过；新增浏览器 Runtime 测试 2 passed；Python 编译检查通过；Mock Web 浏览器 E2E 通过；Android Client 和 Mock App 的 `test assembleDebug` 均通过。
+- 已增加：Browser Runtime、统一 RuntimeSession、TaskOrchestrator、本地 Mock Web、淘宝 Adapter、页面结构到 Observation 回放和浏览器 CI job。
+- 剩余 P0：实时淘宝 DOM/ARIA 选择器和 Bad Case 尚未验证，Meituan/JD Adapter 仍缺失；Android 运行证据仍缺失，但不再阻断桌面端主线。
 
 完整结论见 [PROJECT_ACCEPTANCE_REPORT.md](PROJECT_ACCEPTANCE_REPORT.md)。
 
 ## 已知限制
 
 - 无物理 Android 设备和真实购物 App 运行验证。
-- 无真实 Meituan/JD/Taobao adapter、selector 和真实价格数据。
+- 无实时淘宝 selector 和实时价格验证；无真实 Meituan/JD adapter。
 - 商品解析数据集未人工复核，不能称为人工标注准确率。
 - Event transport 未接入真实 Accessibility event timing。
 - 双向 bridge 仅通过契约测试和 APK 构建验证，尚无设备运行结论。

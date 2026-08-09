@@ -4,7 +4,7 @@
 
 ## 审计结论
 
-综合评分由 **65/100 提升至 79/100**。离线工程原型和桌面浏览器开发基线通过；真实购物平台能力和生产交付仍未验收通过。
+综合评分由 **65/100 提升至 82/100**。离线工程原型、桌面浏览器开发基线和淘宝脱敏结构 fixture 回放通过；实时购物平台能力和生产交付仍未验收通过。
 
 ## 本轮已补齐
 
@@ -19,11 +19,12 @@
 - Playwright Browser Runtime 已实现 DOM/ARIA Observation、ActionDevice 动作执行、allowed-host 检查和安全停止。
 - Mock Web 浏览器 E2E 已真实运行 Chromium，读取 `¥10.90`，进入订单确认边界并返回 `SAFETY_BLOCKED`，未提交订单。
 - `TaskOrchestrator` 已成为 Workflow 与具体 Runtime 之间的统一编排入口。
+- 淘宝 `TaobaoPlatformAdapter` 已完成，用户提供的页面结构 fixture 已转换为统一 Observation 并完成只读回放。
 
 ## 验证记录
 
 ```text
-Backend: 91 passed, 0 failed, 1 Starlette/httpx deprecation warning
+Backend: 101 passed, 0 failed, 1 Starlette/httpx deprecation warning
 Python compileall: passed for backend/app, backend/tests, evaluation, scripts
 Focused bridge/safety tests: 15 passed
 Browser Runtime tests: 2 passed
@@ -43,11 +44,12 @@ Real device runtime: not run by explicit project scope
 - 设备会话为进程内本地实现，没有生产级持久化、多实例协调和背压。
 - Evaluation 仍来自 synthetic/Mock 数据，没有人工复核集或真实 App benchmark。
 - Browser Runtime 只在本地 Mock Web 上实测，没有真实购物网站 Adapter 和线上结果。
+- 淘宝 Adapter 已有脱敏结构 fixture 回放，但没有实时淘宝 DOM/ARIA 选择器和线上结果。
 - CI 文件已存在，但尚无远端成功记录，也没有 coverage、lint、类型检查和 pre-commit 门槛。
 
 ## 未实现或安全排除
 
-- Meituan、JD、Taobao 的真实 selector、脱敏 fixture 和 live adapter。
+- Meituan、JD 的真实 selector、脱敏 fixture 和 live adapter；淘宝实时 selector 和 live adapter 验证。
 - 真实设备上的 Accessibility Service 启用、网络联通和动作 E2E。
 - 真实订单提交、支付、密码输入、验证码绕过、账户注册或购买确认。
 - 生产级认证、密钥轮换、分布式队列、可观测性和运维方案。
