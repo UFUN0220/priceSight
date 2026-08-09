@@ -1,0 +1,12 @@
+{
+  "observation_id": "fixture-empty-nodes",
+  "package_name": "com.example.shop",
+  "nodes": [
+    {"node_id":"root","class_name":"android.widget.FrameLayout","visible":true,"children":["empty-a","invisible","button","editor"]},
+    {"node_id":"empty-a","parent_id":"root","class_name":"android.view.ViewGroup","visible":true},
+    {"node_id":"invisible","parent_id":"root","class_name":"android.view.View","visible":false},
+    {"node_id":"button","parent_id":"root","class_name":"android.widget.ImageButton","clickable":true,"enabled":true,"visible":true},
+    {"node_id":"editor","parent_id":"root","class_name":"android.widget.EditText","editable":true,"enabled":true,"visible":true}
+  ]
+}
+

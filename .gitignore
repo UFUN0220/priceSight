@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Build artifacts
+build/
+dist/
+*.whl
+*.zip
+
+# Android / Gradle (reserved for later phases)
+.gradle/
+local.properties
+captures/
+*.apk
+*.aab
+android-client/**/build/
+mock-shopping-app/**/build/
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local evaluation output; keep the report directory itself in Git.
+evaluation/reports/*
+!evaluation/reports/.gitkeep
+!evaluation/reports/*.json

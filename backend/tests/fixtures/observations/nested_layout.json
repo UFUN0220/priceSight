@@ -1,0 +1,12 @@
+{
+  "observation_id": "fixture-nested-layout",
+  "package_name": "com.example.shop",
+  "nodes": [
+    {"node_id":"root","class_name":"android.widget.FrameLayout","visible":true,"children":["layout-a","scroll"]},
+    {"node_id":"layout-a","parent_id":"root","class_name":"android.view.ViewGroup","visible":true,"children":["layout-b"]},
+    {"node_id":"layout-b","parent_id":"layout-a","class_name":"android.view.ViewGroup","visible":true,"children":["label"]},
+    {"node_id":"label","parent_id":"layout-b","class_name":"android.widget.TextView","text":"商品详情","visible":true},
+    {"node_id":"scroll","parent_id":"root","class_name":"android.widget.ScrollView","scrollable":true,"visible":true}
+  ]
+}
+

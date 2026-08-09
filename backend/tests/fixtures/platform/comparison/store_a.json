@@ -1,0 +1,10 @@
+{
+  "observation_id": "store-a-results",
+  "platform": "fixture-store-a",
+  "package_name": "com.pricesight.fixture.storea",
+  "page_type": "unknown",
+  "nodes": [
+    {"node_id":"page.title","text":"商品列表"},
+    {"node_id":"result.a.1","resource_id":"result.a.1","text":"可口可乐 500ml 2瓶 | ¥12.90 | 优惠券 满10减2","content_description":"product_result","clickable":true}
+  ]
+}

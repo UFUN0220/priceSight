@@ -1,0 +1,73 @@
+{
+  "phase": 3,
+  "description": "Raw deterministic Accessibility observation compression results",
+  "compression_ratio_definition": "compressed_node_count / raw_node_count; lower means more removal",
+  "cases": [
+    {
+      "fixture": "clickable_empty.json",
+      "stats": {
+        "raw_node_count": 4,
+        "compressed_node_count": 2,
+        "compression_ratio": 0.5,
+        "raw_serialized_chars": 987,
+        "compressed_serialized_chars": 530,
+        "processing_latency_ms": 0.11530000006132468
+      }
+    },
+    {
+      "fixture": "duplicate_product_cards.json",
+      "stats": {
+        "raw_node_count": 7,
+        "compressed_node_count": 6,
+        "compression_ratio": 0.8571428571428571,
+        "raw_serialized_chars": 1730,
+        "compressed_serialized_chars": 1490,
+        "processing_latency_ms": 0.09650000015426485
+      }
+    },
+    {
+      "fixture": "empty_nodes.json",
+      "stats": {
+        "raw_node_count": 5,
+        "compressed_node_count": 2,
+        "compression_ratio": 0.4,
+        "raw_serialized_chars": 1205,
+        "compressed_serialized_chars": 530,
+        "processing_latency_ms": 0.05199999986871262
+      }
+    },
+    {
+      "fixture": "nested_layout.json",
+      "stats": {
+        "raw_node_count": 5,
+        "compressed_node_count": 2,
+        "compression_ratio": 0.4,
+        "raw_serialized_chars": 1229,
+        "compressed_serialized_chars": 544,
+        "processing_latency_ms": 0.05310000005920301
+      }
+    },
+    {
+      "fixture": "no_root.json",
+      "stats": {
+        "raw_node_count": 0,
+        "compressed_node_count": 0,
+        "compression_ratio": 0.0,
+        "raw_serialized_chars": 147,
+        "compressed_serialized_chars": 147,
+        "processing_latency_ms": 0.019599999859565287
+      }
+    },
+    {
+      "fixture": "normal_product_list.json",
+      "stats": {
+        "raw_node_count": 10,
+        "compressed_node_count": 7,
+        "compression_ratio": 0.7,
+        "raw_serialized_chars": 2432,
+        "compressed_serialized_chars": 1732,
+        "processing_latency_ms": 0.18380000005890906
+      }
+    }
+  ]
+}

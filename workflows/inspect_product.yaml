@@ -1,0 +1,13 @@
+name: inspect_product
+steps:
+  - id: open_product_result
+    action: click
+    target:
+      semantic_hint: product_result
+    expected:
+      expected_page_type: product
+  - id: read_product_state
+    action: wait
+    timeout_ms: 500
+    guard:
+      expected_page_type: product

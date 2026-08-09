@@ -1,0 +1,10 @@
+{
+  "observation_id": "store-b-results",
+  "platform": "fixture-store-b",
+  "package_name": "com.pricesight.fixture.storeb",
+  "page_type": "unknown",
+  "nodes": [
+    {"node_id":"page.title","text":"商品列表"},
+    {"node_id":"result.b.1","resource_id":"result.b.1","text":"Coca-Cola 500ml x2瓶 | ¥11.80","content_description":"product_result","clickable":true}
+  ]
+}

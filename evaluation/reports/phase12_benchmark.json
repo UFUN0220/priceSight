@@ -1,0 +1,283 @@
+{
+  "phase": 12,
+  "scope": "offline transport and cache efficiency benchmark",
+  "physical_device_connected": false,
+  "real_platforms_contacted": [],
+  "conditions": {
+    "iterations": 10,
+    "poll_interval_ms": 1,
+    "event_stabilization_ms": 1,
+    "simulated_delivery_delay_ms": 1,
+    "sources": [
+      "fixture-store-a",
+      "fixture-store-b"
+    ],
+    "task": "mock shopping safe-mode E2E"
+  },
+  "polling_latency_ms": {
+    "sample_count": 10,
+    "mean_ms": 1.8174000000044543,
+    "min_ms": 1.4014000000770466,
+    "max_ms": 2.664500000037151,
+    "raw_samples": [
+      1.9228999999540974,
+      1.6203000000132306,
+      1.4014000000770466,
+      1.6227000000981207,
+      1.6026999999212421,
+      1.5805000000455038,
+      1.5925999998671614,
+      1.5885000000253058,
+      2.577900000005684,
+      2.664500000037151
+    ]
+  },
+  "event_driven_latency_ms": {
+    "sample_count": 10,
+    "mean_ms": 29.185879999954523,
+    "min_ms": 26.375299999926938,
+    "max_ms": 30.63239999983125,
+    "raw_samples": [
+      26.375299999926938,
+      30.63239999983125,
+      30.171199999813325,
+      30.467699999917386,
+      29.809200000045166,
+      29.27429999999731,
+      29.604000000063024,
+      27.37059999981284,
+      29.73500000007334,
+      28.419100000064645
+    ]
+  },
+  "cache": {
+    "first_run": {
+      "hits": 0,
+      "misses": 2,
+      "events": [
+        {
+          "hit": false,
+          "age_seconds": null,
+          "platform_id": "fixture-store-a",
+          "source_store": "com.pricesight.fixture.storea",
+          "normalized_product": "可口可乐",
+          "specification": "{\"original_text\":\"可口可乐 500ml 2瓶 | ¥12.90 | 优惠券 满10减2\",\"primary_quantity\":{\"raw_text\":\"500ml 2瓶\",\"count\":2,\"content_amount\":\"500\",\"content_unit\":\"ml\",\"container_unit\":\"bottle\",\"normalized_content_amount\":\"500\",\"normalized_content_unit\":\"ml\",\"confidence\":0.98},\"components\":[{\"raw_text\":\"500ml 2瓶\",\"count\":2,\"content_amount\":\"500\",\"content_unit\":\"ml\",\"container_unit\":\"bottle\",\"normalized_content_amount\":\"500\",\"normalized_content_unit\":\"ml\",\"confidence\":0.98}],\"package_type\":null,\"ambiguous\":false,\"confidence\":0.99}"
+        },
+        {
+          "hit": false,
+          "age_seconds": null,
+          "platform_id": "fixture-store-b",
+          "source_store": "com.pricesight.fixture.storeb",
+          "normalized_product": "coca-cola",
+          "specification": "{\"original_text\":\"Coca-Cola 500ml x2瓶 | ¥11.80\",\"primary_quantity\":{\"raw_text\":\"500ml x2瓶\",\"count\":2,\"content_amount\":\"500\",\"content_unit\":\"ml\",\"container_unit\":\"bottle\",\"normalized_content_amount\":\"500\",\"normalized_content_unit\":\"ml\",\"confidence\":0.98},\"components\":[{\"raw_text\":\"500ml x2瓶\",\"count\":2,\"content_amount\":\"500\",\"content_unit\":\"ml\",\"container_unit\":\"bottle\",\"normalized_content_amount\":\"500\",\"normalized_content_unit\":\"ml\",\"confidence\":0.98}],\"package_type\":null,\"ambiguous\":false,\"confidence\":0.98}"
+        }
+      ]
+    },
+    "second_run": {
+      "hits": 2,
+      "misses": 0,
+      "hit_rate": 1.0,
+      "events": [
+        {
+          "hit": true,
+          "age_seconds": 0.006520271301269531,
+          "platform_id": "fixture-store-a",
+          "source_store": "com.pricesight.fixture.storea",
+          "normalized_product": "可口可乐",
+          "specification": "{\"original_text\":\"可口可乐 500ml 2瓶 | ¥12.90 | 优惠券 满10减2\",\"primary_quantity\":{\"raw_text\":\"500ml 2瓶\",\"count\":2,\"content_amount\":\"500\",\"content_unit\":\"ml\",\"container_unit\":\"bottle\",\"normalized_content_amount\":\"500\",\"normalized_content_unit\":\"ml\",\"confidence\":0.98},\"components\":[{\"raw_text\":\"500ml 2瓶\",\"count\":2,\"content_amount\":\"500\",\"content_unit\":\"ml\",\"container_unit\":\"bottle\",\"normalized_content_amount\":\"500\",\"normalized_content_unit\":\"ml\",\"confidence\":0.98}],\"package_type\":null,\"ambiguous\":false,\"confidence\":0.99}"
+        },
+        {
+          "hit": true,
+          "age_seconds": 0.004006624221801758,
+          "platform_id": "fixture-store-b",
+          "source_store": "com.pricesight.fixture.storeb",
+          "normalized_product": "coca-cola",
+          "specification": "{\"original_text\":\"Coca-Cola 500ml x2瓶 | ¥11.80\",\"primary_quantity\":{\"raw_text\":\"500ml x2瓶\",\"count\":2,\"content_amount\":\"500\",\"content_unit\":\"ml\",\"container_unit\":\"bottle\",\"normalized_content_amount\":\"500\",\"normalized_content_unit\":\"ml\",\"confidence\":0.98},\"components\":[{\"raw_text\":\"500ml x2瓶\",\"count\":2,\"content_amount\":\"500\",\"content_unit\":\"ml\",\"container_unit\":\"bottle\",\"normalized_content_amount\":\"500\",\"normalized_content_unit\":\"ml\",\"confidence\":0.98}],\"package_type\":null,\"ambiguous\":false,\"confidence\":0.98}"
+        }
+      ]
+    }
+  },
+  "tasks": {
+    "sample_count": 10,
+    "task_success_rate": 1.0,
+    "average_llm_calls_per_task": 1.0,
+    "average_steps_per_task": 13.0,
+    "raw_results": [
+      {
+        "task_id": "mock-e2e-coca-cola-500ml",
+        "task_success": true,
+        "steps": 13,
+        "retries": 0,
+        "llm_calls": 1,
+        "latency_ms": 8.422399999972185,
+        "safety_result": "SAFETY_STOP",
+        "final_price": "10.90",
+        "compression_runs": 26,
+        "compressed_observation_count": 166,
+        "raw_observation_count": 194,
+        "action_attempts": 11,
+        "action_success_rate": 1.0,
+        "safety_stop_correct": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "mock-e2e-coca-cola-500ml",
+        "task_success": true,
+        "steps": 13,
+        "retries": 0,
+        "llm_calls": 1,
+        "latency_ms": 7.447199999887744,
+        "safety_result": "SAFETY_STOP",
+        "final_price": "10.90",
+        "compression_runs": 26,
+        "compressed_observation_count": 166,
+        "raw_observation_count": 194,
+        "action_attempts": 11,
+        "action_success_rate": 1.0,
+        "safety_stop_correct": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "mock-e2e-coca-cola-500ml",
+        "task_success": true,
+        "steps": 13,
+        "retries": 0,
+        "llm_calls": 1,
+        "latency_ms": 8.303599999862854,
+        "safety_result": "SAFETY_STOP",
+        "final_price": "10.90",
+        "compression_runs": 26,
+        "compressed_observation_count": 166,
+        "raw_observation_count": 194,
+        "action_attempts": 11,
+        "action_success_rate": 1.0,
+        "safety_stop_correct": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "mock-e2e-coca-cola-500ml",
+        "task_success": true,
+        "steps": 13,
+        "retries": 0,
+        "llm_calls": 1,
+        "latency_ms": 7.367400000021007,
+        "safety_result": "SAFETY_STOP",
+        "final_price": "10.90",
+        "compression_runs": 26,
+        "compressed_observation_count": 166,
+        "raw_observation_count": 194,
+        "action_attempts": 11,
+        "action_success_rate": 1.0,
+        "safety_stop_correct": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "mock-e2e-coca-cola-500ml",
+        "task_success": true,
+        "steps": 13,
+        "retries": 0,
+        "llm_calls": 1,
+        "latency_ms": 8.16779999991013,
+        "safety_result": "SAFETY_STOP",
+        "final_price": "10.90",
+        "compression_runs": 26,
+        "compressed_observation_count": 166,
+        "raw_observation_count": 194,
+        "action_attempts": 11,
+        "action_success_rate": 1.0,
+        "safety_stop_correct": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "mock-e2e-coca-cola-500ml",
+        "task_success": true,
+        "steps": 13,
+        "retries": 0,
+        "llm_calls": 1,
+        "latency_ms": 7.229800000004616,
+        "safety_result": "SAFETY_STOP",
+        "final_price": "10.90",
+        "compression_runs": 26,
+        "compressed_observation_count": 166,
+        "raw_observation_count": 194,
+        "action_attempts": 11,
+        "action_success_rate": 1.0,
+        "safety_stop_correct": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "mock-e2e-coca-cola-500ml",
+        "task_success": true,
+        "steps": 13,
+        "retries": 0,
+        "llm_calls": 1,
+        "latency_ms": 7.988800000021001,
+        "safety_result": "SAFETY_STOP",
+        "final_price": "10.90",
+        "compression_runs": 26,
+        "compressed_observation_count": 166,
+        "raw_observation_count": 194,
+        "action_attempts": 11,
+        "action_success_rate": 1.0,
+        "safety_stop_correct": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "mock-e2e-coca-cola-500ml",
+        "task_success": true,
+        "steps": 13,
+        "retries": 0,
+        "llm_calls": 1,
+        "latency_ms": 8.129000000053566,
+        "safety_result": "SAFETY_STOP",
+        "final_price": "10.90",
+        "compression_runs": 26,
+        "compressed_observation_count": 166,
+        "raw_observation_count": 194,
+        "action_attempts": 11,
+        "action_success_rate": 1.0,
+        "safety_stop_correct": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "mock-e2e-coca-cola-500ml",
+        "task_success": true,
+        "steps": 13,
+        "retries": 0,
+        "llm_calls": 1,
+        "latency_ms": 7.286300000032497,
+        "safety_result": "SAFETY_STOP",
+        "final_price": "10.90",
+        "compression_runs": 26,
+        "compressed_observation_count": 166,
+        "raw_observation_count": 194,
+        "action_attempts": 11,
+        "action_success_rate": 1.0,
+        "safety_stop_correct": true,
+        "failure_reason": null
+      },
+      {
+        "task_id": "mock-e2e-coca-cola-500ml",
+        "task_success": true,
+        "steps": 13,
+        "retries": 0,
+        "llm_calls": 1,
+        "latency_ms": 7.744000000002416,
+        "safety_result": "SAFETY_STOP",
+        "final_price": "10.90",
+        "compression_runs": 26,
+        "compressed_observation_count": 166,
+        "raw_observation_count": 194,
+        "action_attempts": 11,
+        "action_success_rate": 1.0,
+        "safety_stop_correct": true,
+        "failure_reason": null
+      }
+    ]
+  },
+  "notes": [
+    "All measurements are local synthetic/fake-device runs in this environment.",
+    "Latency values are observations from this run, not production performance claims.",
+    "Real Meituan/JD/Taobao apps and physical Android devices were not used."
+  ]
+}

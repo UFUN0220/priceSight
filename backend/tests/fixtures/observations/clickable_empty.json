@@ -1,0 +1,11 @@
+{
+  "observation_id": "fixture-clickable-empty",
+  "package_name": "com.example.shop",
+  "nodes": [
+    {"node_id":"root","class_name":"android.widget.FrameLayout","visible":true,"children":["button","scroll","layout"]},
+    {"node_id":"button","parent_id":"root","class_name":"android.widget.Button","clickable":true,"enabled":true,"visible":true},
+    {"node_id":"scroll","parent_id":"root","class_name":"android.widget.ScrollView","scrollable":true,"enabled":true,"visible":true},
+    {"node_id":"layout","parent_id":"root","class_name":"android.view.ViewGroup","visible":true}
+  ]
+}
+

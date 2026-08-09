@@ -1,0 +1,13 @@
+{
+  "observation_id": "mock-detail-1",
+  "platform": "mock-shopping",
+  "package_name": "com.pricesight.mockshopping",
+  "page_type": "product",
+  "nodes": [
+    {"node_id":"detail.title","text":"可口可乐 500ml 2瓶"},
+    {"node_id":"detail.price","text":"商品价格 ¥12.90"},
+    {"node_id":"detail.spec_selector","text":"选择规格","content_description":"spec_selector","clickable":true},
+    {"node_id":"detail.coupon","text":"优惠券 满10减2","content_description":"coupon","clickable":true},
+    {"node_id":"detail.add_to_cart","text":"加入购物车","content_description":"add_to_cart","clickable":true}
+  ]
+}

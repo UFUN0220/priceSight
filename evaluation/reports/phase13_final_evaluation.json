@@ -1,0 +1,36 @@
+{
+  "phase": 13,
+  "scope": "final measured offline evaluation and implementation audit",
+  "measurement_scopes": {
+    "tree_compression": "synthetic fixtures",
+    "product_parsing": "synthetic; not human-reviewed",
+    "task_and_action": "controlled Mock Shopping App / Python mock device",
+    "cache_and_transport": "synthetic fixture sources / fake transport",
+    "real_app": "not measured"
+  },
+  "metrics": {
+    "tree_compression_ratio_retained_mean": 0.5714285714285714,
+    "tree_compression_case_count": 5,
+    "product_parsing_rule_only_accuracy": 1.0,
+    "product_parsing_hybrid_accuracy": 1.0,
+    "task_success_rate": 1.0,
+    "action_success_rate": 1.0,
+    "average_retries": 0.0,
+    "average_steps": 13.0,
+    "average_llm_calls": 1.0,
+    "end_to_end_latency_ms_mean": 7.808629999976802,
+    "cache_hit_rate_warm_run": 1.0,
+    "safety_stop_accuracy": 1.0
+  },
+  "benchmark_reference": {
+    "polling_latency_ms_mean": 1.8174000000044543,
+    "event_driven_latency_ms_mean": 29.185879999954523,
+    "iterations": 10
+  },
+  "limitations": [
+    "All reported evaluation datasets and task runs are synthetic or controlled mock runs.",
+    "No dataset is human-reviewed unless explicitly labeled otherwise; the current parsing dataset is not human-reviewed.",
+    "Real Android devices, real shopping applications, and live provider calls were not used.",
+    "No production throughput, network latency, or real-platform success rate is claimed."
+  ]
+}

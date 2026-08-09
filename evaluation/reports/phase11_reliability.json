@@ -1,0 +1,91 @@
+{
+  "phase": 11,
+  "scope": "offline action-harness reliability regression",
+  "physical_device_connected": false,
+  "real_platform_adapters_tested": false,
+  "cases": [
+    {
+      "name": "target_missing",
+      "status": "FAILED",
+      "device_calls": 0,
+      "trace_events": [
+        {
+          "task_id": "phase11-target_missing",
+          "step_id": "click_coupon",
+          "observation_hash": "b735d19b5c08660fb589c5796c3c681de14f6e85a1021db5ffe64a49b175bca1",
+          "action_type": "CLICK",
+          "target_summary": "semantic_hint=coupon",
+          "match_strategy": null,
+          "confidence": null,
+          "execution_result": "TARGET_NOT_FOUND",
+          "latency_ms": 0.19580000002861198,
+          "retry_count": 0,
+          "bad_case": "TARGET_MISSING"
+        }
+      ]
+    },
+    {
+      "name": "duplicate_target",
+      "status": "FAILED",
+      "device_calls": 0,
+      "trace_events": [
+        {
+          "task_id": "phase11-duplicate_target",
+          "step_id": "click_search",
+          "observation_hash": "b86bf17a3512c5b65d69fa2666e69d221e089aa63296ff48055064f1aab2793c",
+          "action_type": "CLICK",
+          "target_summary": "semantic_hint=search",
+          "match_strategy": "NORMALIZED_TEXT",
+          "confidence": null,
+          "execution_result": "TARGET_NOT_FOUND",
+          "latency_ms": 0.09030000001075678,
+          "retry_count": 0,
+          "bad_case": "DUPLICATE_TARGET"
+        }
+      ]
+    },
+    {
+      "name": "replan_after_repeated_failure",
+      "status": "NEEDS_AGENT_DECISION",
+      "device_calls": 1,
+      "trace_events": [
+        {
+          "task_id": "phase11-replan_after_repeated_failure",
+          "step_id": "click_search",
+          "observation_hash": "32f48f16e61ceca095a57bd775bbdc87ecf671c50f1d15b8c2fd30c817f0f722",
+          "action_type": "CLICK",
+          "target_summary": "semantic_hint=search",
+          "match_strategy": "NORMALIZED_TEXT",
+          "confidence": null,
+          "execution_result": "ACTION_REJECTED",
+          "latency_ms": 0.06529999996018887,
+          "retry_count": 0,
+          "bad_case": null
+        },
+        {
+          "task_id": "phase11-replan_after_repeated_failure",
+          "step_id": "click_search",
+          "observation_hash": "32f48f16e61ceca095a57bd775bbdc87ecf671c50f1d15b8c2fd30c817f0f722",
+          "action_type": "CLICK",
+          "target_summary": "semantic_hint=search",
+          "match_strategy": null,
+          "confidence": null,
+          "execution_result": "REPLAN_REQUIRED",
+          "latency_ms": 0.03620000006776536,
+          "retry_count": 1,
+          "bad_case": "ACTION_NO_EFFECT"
+        }
+      ]
+    }
+  ],
+  "bad_cases_observed": {
+    "TARGET_MISSING": 1,
+    "DUPLICATE_TARGET": 1,
+    "ACTION_NO_EFFECT": 1
+  },
+  "replan_triggered": true,
+  "notes": [
+    "Only deterministic offline harness cases are measured.",
+    "UNEXPECTED_DIALOG, SPEC_AMBIGUITY, and page transition cases remain future fixtures until a real fixture is available."
+  ]
+}

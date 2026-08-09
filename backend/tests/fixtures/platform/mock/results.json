@@ -1,0 +1,13 @@
+{
+  "observation_id": "mock-results-1",
+  "platform": "mock-shopping",
+  "package_name": "com.pricesight.mockshopping",
+  "page_type": "unknown",
+  "nodes": [
+    {"node_id":"page.title","text":"商品列表 可口可乐500ml"},
+    {"node_id":"result.cola.1","resource_id":"result.cola.1","text":"可口可乐 500ml 2瓶 | Mock店A","content_description":"product_result","clickable":true},
+    {"node_id":"result.cola.2","resource_id":"result.cola.2","text":"可口可乐 500ml 2瓶 | Mock店B","content_description":"product_result_duplicate","clickable":true},
+    {"node_id":"result.cola.330","text":"可口可乐 330ml 6罐","clickable":true},
+    {"node_id":"load_more","text":"加载更多","content_description":"load_more","clickable":true}
+  ]
+}

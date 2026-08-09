@@ -1,0 +1,9 @@
+name: add_to_cart
+steps:
+  - id: add_product_to_cart
+    action: click
+    target:
+      semantic_hint: add_to_cart
+    requires_cart_opt_in: true
+    expected:
+      expected_page_type: cart

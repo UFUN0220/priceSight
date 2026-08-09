@@ -1,0 +1,19 @@
+{
+  "observation_id": "fixture-normal-list",
+  "package_name": "com.example.shop",
+  "page_type": "search",
+  "timestamp_epoch_ms": 1700000000000,
+  "nodes": [
+    {"node_id":"root","class_name":"android.widget.FrameLayout","visible":true,"children":["layout","search","card-a","card-b"]},
+    {"node_id":"layout","parent_id":"root","class_name":"android.view.ViewGroup","visible":true,"children":["decorative"]},
+    {"node_id":"decorative","parent_id":"layout","class_name":"android.view.View","visible":true},
+    {"node_id":"search","parent_id":"root","class_name":"android.widget.EditText","content_description":"搜索商品","editable":true,"enabled":true,"visible":true},
+    {"node_id":"card-a","parent_id":"root","class_name":"android.view.ViewGroup","visible":true,"children":["name-a","price-a"]},
+    {"node_id":"name-a","parent_id":"card-a","class_name":"android.widget.TextView","text":"可口可乐 330ml*6罐","visible":true},
+    {"node_id":"price-a","parent_id":"card-a","class_name":"android.widget.TextView","text":"¥19.90","visible":true},
+    {"node_id":"card-b","parent_id":"root","class_name":"android.view.ViewGroup","visible":true,"children":["name-b","price-b"]},
+    {"node_id":"name-b","parent_id":"card-b","class_name":"android.widget.TextView","text":"可口可乐 500ml*2瓶","visible":true},
+    {"node_id":"price-b","parent_id":"card-b","class_name":"android.widget.TextView","text":"¥12.80","visible":true}
+  ]
+}
+

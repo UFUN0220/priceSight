@@ -1,0 +1,14 @@
+{
+  "observation_id": "fixture-duplicate-cards",
+  "package_name": "com.example.shop",
+  "nodes": [
+    {"node_id":"root","class_name":"android.widget.FrameLayout","visible":true,"children":["card-a","card-b"]},
+    {"node_id":"card-a","parent_id":"root","class_name":"android.view.ViewGroup","visible":true,"children":["title-a","price-a"]},
+    {"node_id":"title-a","parent_id":"card-a","class_name":"android.widget.TextView","text":"农夫山泉 550ml×12瓶","visible":true},
+    {"node_id":"price-a","parent_id":"card-a","class_name":"android.widget.TextView","text":"¥29.90","visible":true},
+    {"node_id":"card-b","parent_id":"root","class_name":"android.view.ViewGroup","visible":true,"children":["title-b","price-b"]},
+    {"node_id":"title-b","parent_id":"card-b","class_name":"android.widget.TextView","text":"农夫山泉 550ml×12瓶","visible":true},
+    {"node_id":"price-b","parent_id":"card-b","class_name":"android.widget.TextView","text":"¥31.90","visible":true}
+  ]
+}
+

@@ -1,0 +1,17 @@
+name: search_product
+steps:
+  - id: open_search
+    action: click
+    target:
+      semantic_hint: search
+  - id: input_keyword
+    action: set_text
+    target:
+      semantic_hint: search_input
+    value_from: task.product_keyword
+  - id: submit
+    action: click
+    target:
+      semantic_hint: search_submit
+    expected:
+      expected_page_type: search

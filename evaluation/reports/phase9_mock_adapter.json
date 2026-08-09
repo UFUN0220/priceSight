@@ -1,0 +1,19 @@
+{
+  "adapter": "mock-shopping",
+  "mode": "offline_mock_only",
+  "physical_device_connected": false,
+  "success_case": {
+    "recognized": true,
+    "product_count": 3,
+    "page_type": "results"
+  },
+  "detail_case": {
+    "recognized": true,
+    "price": "12.90"
+  },
+  "graceful_failure_case": {
+    "recognized": false,
+    "reason": "current observation is not a recognized product list"
+  },
+  "real_platform_result": "not attempted by explicit user instruction: no physical device"
+}

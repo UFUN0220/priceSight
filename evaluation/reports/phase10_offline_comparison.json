@@ -1,0 +1,30 @@
+{
+  "mode": "offline_synthetic_only",
+  "physical_device_connected": false,
+  "real_platforms_supported": [],
+  "comparable_case": {
+    "comparable": true,
+    "recommended_platform": "fixture-store-a",
+    "offers": [
+      {
+        "platform": "fixture-store-a",
+        "final_price": "10.90",
+        "comparable": true
+      },
+      {
+        "platform": "fixture-store-b",
+        "final_price": "11.80",
+        "comparable": true
+      }
+    ]
+  },
+  "cache_case": {
+    "first_hits": 0,
+    "second_hits": 2
+  },
+  "mismatch_case": {
+    "comparable": false,
+    "reason": "fewer than two comparable platform offers; no forced recommendation"
+  },
+  "real_platform_note": "Meituan/JD/Taobao were not claimed or contacted; no physical device was connected."
+}

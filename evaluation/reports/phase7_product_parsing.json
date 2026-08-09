@@ -1,0 +1,12 @@
+{
+  "dataset": "evaluation\\datasets\\product_spec.jsonl",
+  "dataset_metadata": "synthetic; not human-reviewed",
+  "case_count": 8,
+  "rule_only_accuracy": 1.0,
+  "hybrid_accuracy": 1.0,
+  "llm_fallback_rate": 0.25,
+  "average_parse_latency": 0.04784999998719286,
+  "average_parse_latency_ms": 0.04784999998719286,
+  "rule_average_parse_latency_ms": 0.06696249991477998,
+  "provider": "fake"
+}

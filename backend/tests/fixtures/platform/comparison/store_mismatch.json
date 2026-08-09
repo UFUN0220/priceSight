@@ -1,0 +1,10 @@
+{
+  "observation_id": "store-mismatch-results",
+  "platform": "fixture-store-c",
+  "package_name": "com.pricesight.fixture.storec",
+  "page_type": "unknown",
+  "nodes": [
+    {"node_id":"page.title","text":"商品列表"},
+    {"node_id":"result.c.1","resource_id":"result.c.1","text":"Coca-Cola 330ml x6罐 | ¥19.90","content_description":"product_result","clickable":true}
+  ]
+}

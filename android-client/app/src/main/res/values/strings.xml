@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">PriceSight Android</string>
+    <string name="open_accessibility_settings">打开无障碍设置</string>
+    <string name="accessibility_service_description">采集当前窗口的脱敏无障碍节点，用于本地调试</string>
+</resources>
+

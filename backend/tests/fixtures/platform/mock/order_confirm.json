@@ -1,0 +1,10 @@
+{
+  "observation_id": "mock-order-confirm-1",
+  "platform": "mock-shopping",
+  "package_name": "com.pricesight.mockshopping",
+  "page_type": "unknown",
+  "nodes": [
+    {"node_id":"order.title","text":"订单确认"},
+    {"node_id":"order.submit","text":"提交订单","content_description":"submit_order","clickable":true}
+  ]
+}
