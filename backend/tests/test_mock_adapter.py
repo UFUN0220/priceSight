@@ -1,6 +1,5 @@
 """Tests for the offline first platform adapter and safe cart boundary."""
 
-import json
 from decimal import Decimal
 from pathlib import Path
 

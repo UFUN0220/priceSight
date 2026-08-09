@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from app.action.models import ActionTarget
 from app.observation.models import Observation, PageType
-from app.parser.models import ProductIdentity, ProductSpecification
 from app.parser.price import PriceParser
 from app.parser.product import ProductParser
 from app.parser.specification import PromotionParser

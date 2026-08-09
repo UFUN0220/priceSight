@@ -121,7 +121,7 @@ class DeviceBridgeClient(
             .put("command_id", commandId)
             .put("action_id", command.optString("action_id", commandId))
             .put("result", result.toJson())
-        val reportResponse = withRetry("action result callback") {
+        withRetry("action result callback") {
             val callbackResponse = request(
                 method = "POST",
                 path = "/devices/$encodedDeviceId/action-results",

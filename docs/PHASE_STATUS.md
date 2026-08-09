@@ -142,7 +142,7 @@
 - [x] 将用户提供的淘宝页面结构 fixture 转换为统一 `Observation`。
 - [x] 经淘宝 Adapter 常规网页抽取路径识别 2 条商品，识别出搜索输入、搜索提交和商品结果角色。
 - [x] 生成可复现报告：[phase16_taobao_fixture_replay.json](../evaluation/reports/phase16_taobao_fixture_replay.json)。
-- [ ] 尚未访问实时淘宝页面，真实 DOM/ARIA 选择器和线上网页稳定性仍未验证。
+- [x] 阶段8已访问一次淘宝公开页面并完成只读 smoke；真实登录态、长期 DOM/ARIA 稳定性、订单和支付仍未验证。
 - [x] 报告：[PHASE_16_REPORT.md](PHASE_16_REPORT.md)。
 
 ### 阶段5——多平台 Adapter 架构
@@ -165,12 +165,23 @@
 - [ ] 未验证多进程高并发、真实 Android 断网重连和生产级故障转移。
 - [x] 报告：[session_store_validation.md](../evaluation/reports/session_store_validation.md)。
 
+### 阶段7——CI、Coverage、Lint、Typing 与最终验收
+
+- [x] CI 拆分为 `python-quality`、`python-test`、`browser-test`、`android-test-build`。
+- [x] Python 接入 Ruff、mypy、compileall、pytest/branch coverage 和轻量 pre-commit。
+- [x] 当前 132 个测试的 branch coverage 为 85%，门槛设为 80%。
+- [x] SafetyGuard、Parser、PlatformAdapter、TaskOrchestrator、DeviceSession 和 Action Harness 有重点回归覆盖。
+- [x] Android Client/Mock App 的 unit test 与 assembleDebug 本地通过；CI 已加入 lintDebug。
+- [ ] 本机离线 lint 因缺少 `lint-gradle:31.5.2` 阻断；远端 CI 尚无运行记录。
+- [x] 报告：[ci_quality_validation.md](../evaluation/reports/ci_quality_validation.md)。
+
 ### 阶段1——淘宝实时网页只读链路验证
 
 - [x] 增加淘宝页面状态识别、host allowlist、DOM/ARIA 可选证据字段和有序 selector fallback。
 - [x] 增加 `scripts/run_taobao_readonly.py`，只读 runner 入口和非变更行为测试通过。
 - [x] 浏览器入口实际访问淘宝公开搜索页并观察到搜索控件、商品链接和价格文本。
-- [ ] 项目独立 runner 进程被当前审批通道阻断，未完成项目内实时 Observation→TaobaoAdapter 标准化链路。
+- [x] 阶段8重新执行公开页面只读 runner：生成实时 Observation，抽取 140 个商品链接和 45 个展示价格，无外部副作用。
+- [ ] 该结果只覆盖一次公开搜索页只读 smoke，不代表登录态、长期 selector 稳定性、真实订单或支付能力。
 - [x] 报告：[taobao_live_readonly_validation.md](../evaluation/reports/taobao_live_readonly_validation.md)。
 
 ## 当前能力
@@ -186,7 +197,7 @@
 - Browser Runtime 已实现 DOM/ARIA Observation、Playwright 动作执行、域名 allowlist 和安全停止。
 - 本地 Mock Web 浏览器 E2E 已通过：读取 `¥10.90`，订单确认边界返回 `SAFETY_BLOCKED`，未提交订单。
 - 已具备真实网页只读接入基础：通用 Web Adapter、选择器配置和脱敏 fixture 采集工具。
-- 已具备淘宝 Adapter 的 fixture 回放基础；真实淘宝选择器仍未验证。
+- 淘宝 Adapter 已完成脱敏 fixture 回放和一次公开页面只读 smoke；结果不代表真实订单或支付流程。
 
 ## 最终评估指标
 
@@ -204,19 +215,19 @@
 
 ## 2026-08-09 桌面端扩展复验
 
-- 综合评分：由 **65/100 提升至 82/100**。
+- 阶段7截点评分由 **65/100 提升至 82/100**；阶段8最终验收按同维度复算为 **84/100**。
 - 离线工程原型、桌面浏览器开发基线和淘宝脱敏结构 fixture 回放：通过。
 - 真实设备、真实平台和生产交付：不通过/未实现。
 - 最新验证：后端 **101 passed**；淘宝结构 fixture 回放通过；新增浏览器 Runtime 测试 2 passed；Python 编译检查通过；Mock Web 浏览器 E2E 通过；Android Client 和 Mock App 的 `test assembleDebug` 均通过。
 - 已增加：Browser Runtime、统一 RuntimeSession、TaskOrchestrator、本地 Mock Web、淘宝 Adapter、页面结构到 Observation 回放和浏览器 CI job。
-- 剩余 P0：实时淘宝 DOM/ARIA 选择器和 Bad Case 尚未验证，Meituan/JD Adapter 仍缺失；Android 运行证据仍缺失，但不再阻断桌面端主线。
+- 阶段7截点剩余 P0 记录保留作历史；阶段8已补充一次淘宝公开只读 smoke，但 Meituan/JD live、人工 Bad Case 和 Android 运行证据仍缺失。
 
 完整结论见 [PROJECT_ACCEPTANCE_REPORT.md](PROJECT_ACCEPTANCE_REPORT.md)。
 
 ## 已知限制
 
 - 无物理 Android 设备和真实购物 App 运行验证。
-- 无实时淘宝 selector 和实时价格验证；无真实 Meituan/JD adapter。
+- 淘宝仅有一次公开页面只读 selector/价格抽取证据；无真实 Meituan/JD 运行证据。
 - 商品解析数据集未人工复核，不能称为人工标注准确率。
 - Event transport 未接入真实 Accessibility event timing。
 - 双向 bridge 仅通过契约测试和 APK 构建验证，尚无设备运行结论。
@@ -227,6 +238,16 @@
 - 网页 Adapter 目前仍是通用基础，尚未针对具体真实购物平台进行只读验证。
 - 淘宝专用 Adapter 目前通过合成 fixture 和用户提供的结构化搜索 fixture 验证，不能代表真实淘宝网页运行结果。
 - 淘宝页面结构 fixture 已可转换为统一 Observation 并走标准网页抽取链路；尚不代表实时网页结果。
+
+### 阶段8——最终验收、Demo 与秋招材料整理
+
+- [x] 按 2026-08-09 原验收报告的八个维度重新验收，未新增业务功能。
+- [x] Python 质量门禁复验：132 passed、Ruff、mypy（79 source files）、compileall、pre-commit 和 85% branch coverage 均通过，门槛为 80%。
+- [x] Browser Mock Chromium E2E、淘宝脱敏 fixture replay、跨平台 fixture tests 和 Evaluation v2 重新通过。
+- [x] 淘宝公开页面只读 smoke 通过：真实页面 Observation、140 个商品链接、45 个展示价格、无外部副作用；结果不与 fixture/Mock 混合。
+- [x] Android Client/Mock App unit test 与 assembleDebug 通过，明确将 APK 构建记录为 BUILD_ONLY。
+- [ ] Android lint 因离线缺少 `com.android.tools.lint:lint-gradle:31.5.2` BLOCKED；无 emulator/AVD/system image，Android Runtime E2E NOT_VERIFIED；远端 CI 无运行记录。
+- [x] 生成 [project_acceptance_final.md](../evaluation/reports/project_acceptance_final.md)、[project_acceptance_final.json](../evaluation/reports/project_acceptance_final.json) 和 [面试项目说明](interview/project_overview.md)。最终评分 84/100，项目仍非生产就绪。
 
 ## 后续外部前置条件
 

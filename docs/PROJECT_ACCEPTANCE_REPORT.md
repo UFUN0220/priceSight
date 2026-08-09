@@ -7,13 +7,15 @@
 
 综合评分由 **65/100 提升至 82/100**。
 
-结论：**离线工程原型、桌面浏览器开发基线、淘宝脱敏结构 fixture 回放、Hybrid Parser、阶段5多平台 Adapter fixture 和阶段6设备会话可靠性验证通过；Android 双向 Runtime 因本机缺少 Emulator/AVD/system image 仍为 BLOCKED，实时淘宝/JD/美团网页能力和生产交付仍不通过。**
+> 注：本文保留阶段7质量门禁复验的历史评分与证据。阶段8在不新增业务功能的前提下完成了淘宝公开页面只读 smoke，并重新计算同维度最终评分；最新结论以 [project_acceptance_final.md](../evaluation/reports/project_acceptance_final.md) 和 [project_acceptance_final.json](../evaluation/reports/project_acceptance_final.json) 为准。
+
+结论（阶段7截点）：**离线工程原型、桌面浏览器开发基线、淘宝脱敏结构 fixture 回放、Hybrid Parser、阶段5多平台 Adapter、阶段6设备会话可靠性和阶段7 Python 质量门禁验证通过；Android lint 本机因离线依赖缺失 BLOCKED，Android Runtime 因本机缺少 Emulator/AVD/system image 仍为 BLOCKED，实时淘宝/JD/美团网页能力和生产交付仍不通过。阶段8的淘宝公开只读 smoke 结果不回写为本历史截点评分。**
 
 本轮已修复此前最关键的内部工程阻断项：后端开始保存设备最新观察并管理动作会话；Android Accessibility Service 已装配动作执行器，通过轮询接收动作并回传结构化结果；观察版本在入队和下发两个时点校验；Debug 构建允许访问本机 HTTP；仓库已有 Git 基线并新增 CI 工作流。
 
 阶段 4 已完成 Android bridge 的 action_id 去重、lifecycle、指数退避/jitter/timeout/bounded retry 和 Mock/instrumented test harness，但本机没有 Emulator、AVD 或 Android 34 system image，Emulator 安装也未通过审批通道。因此 Android 仍只能归类为 `BUILD_ONLY`/`NOT_VERIFIED`，不能写成 Runtime Verified。桌面端已在本地 Chromium Mock Web 上完成真实浏览器 E2E；淘宝已完成专用 Adapter、脱敏结构 fixture 到 Observation 的转换和只读回放，但实时淘宝 DOM/ARIA 选择器仍未验证。
 
-阶段 5 建立了统一 `PlatformAdapter`/`BasePlatformAdapter` 与 `NormalizedProduct`，Taobao、JD、Meituan 可沿 `Runtime → Observation → PlatformAdapter → NormalizedProduct → ComparisonEngine` 复用核心链路。JD/美团当前仅为脱敏 fixture Adapter 验证，不代表真实平台 selector 或实时网络验证。阶段 6 增加可替换 `SessionStore`、SQLite 持久化、动作租约、幂等和背压；不引入 Redis 或微服务。阶段 5/6 不改变 82/100 的整体评分，因为新增证据仍属于离线 fixture/mock/本地单体范围。
+阶段 5 建立了统一 `PlatformAdapter`/`BasePlatformAdapter` 与 `NormalizedProduct`，Taobao、JD、Meituan 可沿 `Runtime → Observation → PlatformAdapter → NormalizedProduct → ComparisonEngine` 复用核心链路。JD/美团当前仅为脱敏 fixture Adapter 验证，不代表真实平台 selector 或实时网络验证。阶段 6 增加可替换 `SessionStore`、SQLite 持久化、动作租约、幂等和背压；不引入 Redis 或微服务。阶段 5/6 不改变 82/100 的整体评分，因为新增证据仍属于离线 fixture/mock/本地单体范围。阶段 7 将 Python branch coverage 实测到 85%，设定 80% 门槛，接入 Ruff/mypy/pre-commit，并把 Android lint 纳入 CI；远端 CI 尚无运行记录。
 
 ## 二、评分结果
 
@@ -22,7 +24,7 @@
 | 需求覆盖与核心能力 | 15% | 78 | 92 | 增加 Browser Runtime、淘宝 Adapter、结构 fixture 回放和统一任务编排入口 |
 | 架构与可解释性 | 15% | 84 | 94 | Runtime Port、Observation Parser、淘宝边界和 TaskOrchestrator 清晰 |
 | 安全设计 | 15% | 80 | 90 | 浏览器 allowlist、订单确认停止和既有双重安全防线 |
-| 测试与构建质量 | 15% | 74 | 88 | 最近一次已验证 131 个后端测试、淘宝 fixture 回放、浏览器 Runtime 测试和本地 Chromium E2E；Android instrumented runtime 仍未执行 |
+| 测试与构建质量 | 15% | 74 | 88 | 最近一次已验证 132 个后端测试、branch coverage 85%、Ruff/mypy、淘宝 fixture 回放、浏览器 Runtime 测试和本地 Chromium E2E；Android instrumented runtime 仍未执行 |
 | Evaluation 可信度 | 15% | 52 | 62 | 增加用户提供的脱敏淘宝结构 fixture 回放；仍无实时平台/人工复核指标 |
 | 真实集成与运行就绪度 | 15% | 30 | 64 | 淘宝 Adapter 和只读 fixture 链路完成；Android Emulator runtime、实时 DOM/ARIA 和真实 Bad Case 仍缺失 |
 | 工程治理与交付 | 5% | 20 | 68 | 增加浏览器 CI job；远端 Actions 和质量门槛仍待完善 |
@@ -68,6 +70,16 @@
 - 增加 lease timeout 恢复、retry count、action_id 幂等、队列上限/429 背压、断开设备不下发和 stale observation 清理。
 - InMemory 与 SQLite 均覆盖两个消费者竞争同一动作；SQLite 还覆盖关闭后重建会话的恢复。
 - 该实现仍是单体本地存储，不代表多实例高可用或分布式队列。详细结果见 [设备会话报告](../evaluation/reports/session_store_validation.md)。
+
+### 2.2.2 阶段 7 CI 与工程质量门禁
+
+- CI 已拆分为 `python-quality`、`python-test`、`browser-test` 和 `android-test-build`。
+- Python 接入 Ruff、mypy、compileall、pre-commit、pytest 和 branch coverage；当前 132 个测试、coverage 85%，门槛 80%。
+- 重点模块覆盖已复核：SafetyGuard、Parser、PlatformAdapter、TaskOrchestrator、DeviceSession 和 Action Harness。
+- Android CI 执行 unit test、`lintDebug` 和 `assembleDebug`；本机两个 Android 工程的 test/assembleDebug 通过。
+- 本机离线 lint 因缺少 `com.android.tools.lint:lint-gradle:31.5.2` 失败；这不是 Runtime 失败，也没有被写成 lint 通过。
+- Starlette/httpx2 警告因 httpx2 当前要求 Python 3.14、项目约束 Python 3.12，已精确过滤并记录为技术债；没有强制升级依赖。
+- 详细报告见 [CI 与质量门禁验证报告](../evaluation/reports/ci_quality_validation.md)。
 
 ### 2.2 Evaluation 与 Hybrid Parser
 
@@ -119,21 +131,23 @@ CI 文件已完成本地静态配置，但尚无远端 Actions 运行记录，�
 
 | 验证项 | 结果 |
 |---|---|
-| 后端全量测试 | **131 passed，0 failed，1 warning** |
+| 后端全量测试 | **132 passed，0 failed，0 warning（已过滤已知上游弃用提示）** |
+| Python branch coverage | **85% / 门槛 80%** |
+| Ruff / mypy / compileall / pre-commit | **全部通过** |
 | Python 编译检查 | **通过**：`backend/app`、`backend/tests`、`evaluation`、`scripts` |
 | 新增闭环与安全定向测试 | **15 passed** |
 | 浏览器 Runtime/Parser 定向测试 | **2 passed** |
 | Mock Web Chromium E2E | **通过**：价格 `10.90`，安全状态 `SAFETY_BLOCKED`，未提交订单 |
 | 淘宝结构 fixture 回放 | **通过**：搜索词 `iphone17`，识别 2 条商品，价格均为 `5999.00`，无外部副作用 |
-| Android Client | 历史 `test assembleDebug` **BUILD_ONLY**；阶段4修改后的重新构建/connectedAndroidTest 未完成 |
-| Mock Shopping App | 历史 `test assembleDebug` **BUILD_ONLY**；instrumented/UI test 未在设备上执行 |
+| Android Client | `test`、`assembleDebug` **通过**；本机 `lintDebug` 因离线缺少 lint-gradle **BLOCKED** |
+| Mock Shopping App | `test`、`assembleDebug` **通过**；本机 `lintDebug` 因离线缺少 lint-gradle **BLOCKED** |
 | Android Emulator / AVD | **BLOCKED**：无 `emulator.exe`、无 AVD、无 Android 34 system image |
 | Android 双向 Runtime | **NOT_VERIFIED / BLOCKED**：未执行 observation upload → action poll → Accessibility execution → result callback |
 | SessionStore 可靠性 | **通过**：InMemory/SQLite 租约、并发、幂等、背压、断开和 stale cleanup 定向测试 9 passed |
 | Android action latency / success rate | **NOT_MEASURED / BLOCKED** |
 | Git 空白错误检查 | `git diff --check` 无错误 |
 
-唯一 Python 警告来自 FastAPI TestClient 依赖链的 Starlette/httpx 弃用提示。Android 构建仍提示 Gradle 10 弃用兼容问题和 SDK XML v4/v3 工具版本差异。
+Starlette/httpx 弃用提示已被精确过滤；其原因和 Python 3.12 下无法安全采用 httpx2 的技术债见阶段7报告。Android 构建仍提示 Gradle 10 弃用兼容问题和 SDK XML v4/v3 工具版本差异。
 
 ## 五、Evaluation 可信度
 
@@ -151,17 +165,18 @@ CI 文件已完成本地静态配置，但尚无远端 Actions 运行记录，�
 
 ### P1——高可信质量阻断
 
-1. CI 尚无远端执行记录；没有 coverage 门槛、lint、静态类型检查和 pre-commit。
+1. CI 尚无远端执行记录；Python 门禁已配置，但 Android lint 需要联网 runner 下载 `lint-gradle:31.5.2`。
 2. Android instrumented/UI test harness 已新增，但未在 Emulator/Device 执行；当前设备桥接主要由代码、后端契约测试和历史 BUILD_ONLY 证据覆盖。
 3. 设备共享令牌默认空值，仅适用于本机开发；没有设备注册、令牌轮换和多租户授权。
 4. Android 尚未接入 WebSocket event client；当前 Android 桥接使用 polling，event 路径仍是后端基准实现。
 5. SQLite 会话已具备本地持久化、租约和背压；多进程协调、跨机器故障转移和断线后的真实 Android 重连仍未验证。
 6. Evaluation v2 已纳入淘宝脱敏 fixture，但数据仍小且没有 HUMAN_VERIFIED 样本。
+7. Starlette/httpx2 兼容问题暂以精确 warning filter 处理；Python 3.12 约束下未升级到不兼容的 httpx2。
 
 ### P2——持续优化
 
 1. 消除 Gradle 10 和 SDK XML 工具链警告。
-2. 解决 TestClient 弃用警告并加入覆盖率、Ruff/类型检查。
+2. 在 Python 3.12 可用的 httpx2 版本出现后再移除 warning filter；当前覆盖率、Ruff、类型检查和 pre-commit 已加入。
 3. 在 Emulator/Device 可用后实测桥接退避、抖动、命令确认租约、dispatch/execution latency 和成功率。
 4. 在真实设备条件下重新测量 polling/event 延迟、失败率和分位数。
 

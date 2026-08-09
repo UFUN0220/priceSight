@@ -6,7 +6,6 @@ from time import perf_counter
 
 from app.action.executor import ActionDevice, ActionExecutor
 from app.action.models import ActionRequest, ActionResult, ActionStatus, ActionType
-from app.action.verifier import VerificationExpectation
 from app.core.reliability import (
     ActionTraceEvent,
     RepetitionDetector,

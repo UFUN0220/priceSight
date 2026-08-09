@@ -1,0 +1,63 @@
+{
+  "report_date": "2026-08-09",
+  "assessment_revision": "phase8_final_acceptance_live_taobao_readonly_verified_android_runtime_blocked",
+  "baseline_report": "evaluation/reports/project_acceptance_2026-08-09.json",
+  "previous_score": 82,
+  "overall_score": 84,
+  "weighted_score_before_rounding": 83.8,
+  "decision": "offline_prototype_browser_readonly_and_fixture_comparison_accepted_android_runtime_not_verified",
+  "production_ready": false,
+  "real_device_runtime_verified": false,
+  "real_platform_ready": false,
+  "dimensions": [
+    {"name": "requirements_and_core", "weight": 15, "score": 92},
+    {"name": "architecture_and_explainability", "weight": 15, "score": 94},
+    {"name": "safety", "weight": 15, "score": 90},
+    {"name": "tests_and_builds", "weight": 15, "score": 90},
+    {"name": "evaluation_credibility", "weight": 15, "score": 62},
+    {"name": "real_integration_readiness", "weight": 15, "score": 72},
+    {"name": "engineering_governance", "weight": 5, "score": 78},
+    {"name": "documentation", "weight": 5, "score": 98}
+  ],
+  "verification_levels": ["VERIFIED", "FIXTURE_VERIFIED", "MOCK_VERIFIED", "BUILD_ONLY", "NOT_VERIFIED", "BLOCKED"],
+  "verification": {
+    "backend_tests": {"passed": 132, "failed": 0, "warnings": 0, "status": "VERIFIED"},
+    "python_compileall": {"status": "VERIFIED", "command": "uv run python -m compileall -q backend/app backend/tests evaluation scripts"},
+    "ruff": "VERIFIED",
+    "mypy": {"status": "VERIFIED", "source_files": 79},
+    "pre_commit": "VERIFIED",
+    "coverage": {"status": "VERIFIED", "branch_percent": 85, "fail_under": 80},
+    "browser_mock_e2e": {"status": "MOCK_VERIFIED", "price": "10.90", "safety_status": "SAFETY_BLOCKED", "order_submitted": false},
+    "taobao_fixture_replay": {"status": "FIXTURE_VERIFIED", "real_page_accessed": false, "external_side_effect": false, "product_count": 2, "prices": ["5999.00", "5999.00"]},
+    "cross_platform_fixture_tests": {"status": "FIXTURE_VERIFIED", "passed": 24, "failed": 0},
+    "evaluation_v2": {"status": "FIXTURE_VERIFIED", "dataset_count": 10, "human_verified_count": 0, "rule_accuracy": {"numerator": 8, "denominator": 10}, "hybrid_accuracy": {"numerator": 10, "denominator": 10}, "llm_invocation_rate": {"numerator": 4, "denominator": 10}, "schema_failure_rate": {"numerator": 0, "denominator": 4}},
+    "taobao_live_readonly": {"status": "VERIFIED", "report": "evaluation/reports/taobao_live_readonly_validation_final.json", "real_page_accessed": true, "page_state": "SEARCH_RESULT", "items_extracted": 140, "displayed_price_extracted": 45, "product_url_extracted": 140, "external_side_effect": false},
+    "android_client_unit_test": "VERIFIED",
+    "android_client_assemble_debug": "BUILD_ONLY",
+    "mock_app_unit_test": "VERIFIED",
+    "mock_app_assemble_debug": "BUILD_ONLY",
+    "android_lint": {"status": "BLOCKED", "reason": "offline cache missing com.android.tools.lint:lint-gradle:31.5.2"},
+    "android_runtime_e2e": {"status": "NOT_VERIFIED/BLOCKED", "adb_available": true, "emulator_executable": false, "avd_count": 0, "system_image_android_34": false},
+    "remote_ci": "NOT_VERIFIED",
+    "git_diff_check": "VERIFIED"
+  },
+  "remaining_p0": [
+    "Android emulator/device runtime loop is not verified",
+    "No HUMAN_VERIFIED Evaluation samples",
+    "JD and Meituan live runtime are not verified",
+    "Real Android shopping app is not verified"
+  ],
+  "remaining_p1": [
+    "Android lint dependency is unavailable in offline cache",
+    "GitHub Actions has no remote run evidence",
+    "Several Bad Case taxonomy categories have no represented samples"
+  ],
+  "reports": {
+    "evaluation": "evaluation/reports/evaluation_v2.md",
+    "hybrid_parser": "evaluation/reports/hybrid_parser_after_optimization.md",
+    "multi_platform_adapter": "evaluation/reports/multi_platform_adapter_validation.md",
+    "session_store": "evaluation/reports/session_store_validation.md",
+    "quality_gates": "evaluation/reports/ci_quality_validation.md",
+    "interview_material": "docs/interview/project_overview.md"
+  }
+}

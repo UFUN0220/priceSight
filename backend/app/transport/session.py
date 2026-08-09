@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from uuid import uuid4
 
-from app.action.models import ActionLifecycle, ActionRequest, ActionResult, ActionStatus
+from app.action.models import ActionRequest, ActionStatus
 from app.core.exceptions import ObservationUnavailableError, SafetyViolationError
 from app.core.safety import SafetyDecision, SafetyGuard
 from app.observation.models import Observation

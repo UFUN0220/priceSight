@@ -1,7 +1,7 @@
 """Fake device and transport for backend-only tests."""
 
 from app.observation.models import Observation
-from app.transport.base import DeviceAction, DeviceTransport, TransportResult
+from app.transport.base import DeviceAction, TransportResult
 
 
 class FakeDevice:
@@ -34,4 +34,3 @@ class FakeTransport:
 
     def execute(self, action: DeviceAction) -> TransportResult:
         return self.device.execute(action)
-

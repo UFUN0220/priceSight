@@ -201,6 +201,21 @@ uv run pytest -q
 
 报告见 [session_store_validation.md](../evaluation/reports/session_store_validation.md)。SQLite 是本地单体持久化，不是 Redis 或分布式任务队列。
 
+## 阶段 7 CI 与本地质量门禁
+
+本地 Python 质量与覆盖率入口：
+
+```powershell
+uv sync --extra dev
+uv run ruff check backend/app backend/tests scripts
+uv run mypy backend/app
+uv run pre-commit run --all-files
+uv run coverage run --branch -m pytest -q
+uv run coverage report --fail-under=80
+```
+
+CI job 分为 `python-quality`、`python-test`、`browser-test` 和 `android-test-build`。Android job 执行 `test lintDebug assembleDebug`；本机离线缺少 `com.android.tools.lint:lint-gradle:31.5.2` 时，lint 应标记为 BLOCKED，不能把 APK 构建当作 lint 或 Runtime 验证。详见 [ci_quality_validation.md](../evaluation/reports/ci_quality_validation.md)。
+
 ## Android 构建
 
 ```powershell

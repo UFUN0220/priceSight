@@ -1,6 +1,6 @@
 """Fresh-observation state transition verification."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from app.observation.models import Observation, PageType
 
@@ -61,4 +61,3 @@ class ActionVerifier:
                 observation_id=after.observation_id,
             )
         return VerificationResult(verified=True, reason="expectation satisfied", observation_id=after.observation_id)
-

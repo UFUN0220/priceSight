@@ -20,13 +20,13 @@ try:  # pragma: no cover - exercised by the optional browser extra
     from playwright.sync_api import Page, TimeoutError as PlaywrightTimeoutError
     from playwright.sync_api import sync_playwright
 except ImportError:  # pragma: no cover - normal backend installations do not import it
-    Page = Any  # type: ignore[misc,assignment]
-    sync_playwright = None  # type: ignore[assignment]
+    Page = Any
+    sync_playwright = None
 
-    class PlaywrightError(RuntimeError):
+    class PlaywrightError(RuntimeError):  # type: ignore[no-redef]
         """Fallback type used when Playwright is not installed."""
 
-    class PlaywrightTimeoutError(TimeoutError):
+    class PlaywrightTimeoutError(TimeoutError):  # type: ignore[no-redef]
         """Fallback type used when Playwright is not installed."""
 
 

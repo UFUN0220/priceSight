@@ -1,6 +1,5 @@
 """Run and persist the repeatable safe-mode mock-shopping E2E scenario."""
 
-import json
 from pathlib import Path
 
 from app.platform.mock_e2e import run_mock_e2e

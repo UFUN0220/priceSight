@@ -7,7 +7,7 @@ import os
 import httpx
 
 from app.core.exceptions import ProviderError
-from app.llm.base import LLMProvider, LLMRequest, LLMResponse
+from app.llm.base import LLMRequest, LLMResponse
 
 
 class OpenAICompatibleProvider:

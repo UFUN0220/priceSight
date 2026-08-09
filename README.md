@@ -1,222 +1,177 @@
-# Mobile Price Agent——移动端价格比较 Agent
+# PriceSight：安全模式跨平台价格比较 Agent
 
-一个安全模式的移动端 Computer-Use Agent 原型：通过 Android Accessibility Tree 观察界面，压缩成结构化 Observation，由 Workflow + Agent 决定动作，经 Action Harness grounding 后执行，并对多个商品来源进行规格和价格比较。
+PriceSight 是一个面向 Computer-Use Agent 的工程原型：观察 Android Accessibility Tree 或浏览器 DOM/ARIA，压缩为结构化 Observation，由 Workflow + Agent 规划动作，经 Action Harness 校验和 grounding 后执行，再抽取商品规格与价格并进行跨平台比较。
 
-当前实现以离线 Fake Device、Mock Shopping App、合成数据和淘宝脱敏 fixture 回放为主。真实设备运行、实时淘宝网页验证、Meituan/JD 适配和真实模型调用均未声称完成。
+系统默认 SAFE MODE。它可以搜索、浏览、读取商品信息、选择规格和形成比较结果；到订单确认、支付、密码、验证码或身份验证边界时必须停止。
 
-## 最新项目级验收
+## 当前验收结论
 
-2026-08-09 淘宝 fixture 更新后的项目复验评分为 **82/100**，由整改前的 65 分提升。项目已具备本地浏览器真实执行基线、淘宝脱敏结构 fixture 只读回放、阶段5多平台 Adapter fixture 验证和阶段6 SQLite 会话持久化；最近一次已验证 Backend 为 **131 个通过**。Android Emulator Runtime 仍为 BLOCKED，实时平台和生产交付仍不通过。
+截至 2026-08-09，最终复验综合评分为 **84/100**。该分数反映的是同一套项目级评分维度下的证据更新，不代表生产就绪：Backend 132 tests、Python branch coverage 85%、质量门禁、Browser Mock E2E、淘宝脱敏 fixture、跨平台 fixture 和一次公开淘宝页面只读 smoke 已验证；Android Runtime、Android lint、JD/美团实时页面、人工标注 Evaluation 和远端 CI 仍未验证或被环境阻断。
 
-详见 [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)。
+详细证据见 [最终验收报告](evaluation/reports/project_acceptance_final.md) 和 [机器可读结果](evaluation/reports/project_acceptance_final.json)。
 
-## 项目简介
+## 项目解决的问题
 
-目标任务是：搜索同一商品 → 识别规格 → 读取价格/优惠 → 计算可比最终价 → 给出推荐。系统默认 SAFE MODE，订单提交、支付、密码、验证码和安全控制绕过均会触发确定性拦截。
+目标流程是：
+
+```text
+用户需求 → 搜索商品 → 识别商品/规格/数量 → 读取展示价和优惠 → 计算有效单位价 → 返回比较结果
+```
+
+难点不是简单抓取数字，而是处理移动界面和网页的部分可观测性、旧页面动作、规格/数量歧义、不同平台页面结构以及下单安全边界。
 
 ## 核心架构
 
 ```mermaid
 flowchart TD
-    A[用户目标] --> B[任务路由]
-    B --> C[YAML 工作流]
-    B --> D[Agent 规划器]
-    C --> E[动作 Harness]
+    A[用户目标] --> B[Task Router]
+    B --> C[YAML Workflow]
+    B --> D[Structured Agent Planner]
+    C --> E[Action Harness]
     D --> E
-    E --> F[Polling 或事件传输]
-    F --> G[Android Accessibility 客户端]
-    G --> H[Observation 压缩]
-    F --> N[Browser Runtime]
-    N --> H
-    H --> B
-    E --> I[验证与安全停止]
-    H --> J[平台适配器]
-    J --> K[商品与规格解析器]
-    K --> L[比较引擎与 OfferCache]
-    L --> M[比较结果]
+    E --> F[observation_id 校验 / SafetyGuard]
+    F --> G[Runtime Port]
+    G --> H[Android Accessibility + DeviceBridge]
+    G --> I[BrowserRuntime DOM/ARIA]
+    H --> J[Observation]
+    I --> J
+    J --> K[PlatformAdapter]
+    K --> L[Hybrid Parser]
+    L --> M[NormalizedProduct]
+    M --> N[Comparison Engine]
+    N --> O[可比价格与推荐]
 ```
 
-## Agent 循环
+核心代码按职责分离：`backend/app/runtime` 提供 Runtime Port、BrowserRuntime 和设备抽象；`backend/app/observation` 负责 Observation；`backend/app/platform` 负责 Adapter；`backend/app/parser` 负责规则与结构化 LLM fallback；`backend/app/workflow`、`backend/app/agent` 和 `backend/app/task` 负责任务执行；`backend/app/transport` 负责设备会话与 polling/event transport。
+
+## Agent Workflow
+
+稳定步骤优先使用 YAML Workflow，例如打开搜索、输入关键词、提交搜索和返回；商品选择、规格歧义和异常恢复才进入结构化 Agent Planner。动作执行顺序是：
 
 ```text
-Goal
-  → current workflow state + compact observation
-  → deterministic workflow or structured Agent decision
+当前目标/状态
+  → compact Observation
+  → Workflow 或 Agent decision
   → target grounding
-  → safety check
-  → device action
-  → fresh observation and verification
-  → success / retry / replan / safety stop
+  → SafetyGuard
+  → Runtime action
+  → fresh Observation + verification
+  → 成功、有限重试、重规划或安全停止
 ```
 
-Agent 输出必须通过 Pydantic schema 校验；坐标不是首选目标，系统优先使用 resource ID、node ID、文本语义匹配，最后才使用当前 Observation 的 bounds。
+Workflow 和 Agent 都受步骤、重试、LLM 调用和安全边界约束；同一状态重复动作会要求重新观察或重规划。
 
-## Workflow + Agent 设计
+## Observation Tree 剪枝
 
-- 稳定步骤由 YAML Workflow 执行，例如打开搜索、输入关键词、提交搜索。
-- 结果选择、规格歧义和异常恢复交给结构化 Agent Planner。
-- Workflow 对重试、步骤数、购物车 opt-in 和安全停止设置上限。
-- 同一 observation hash + action 连续重复时返回 `REPLAN_REQUIRED`，避免死循环。
+Android 侧把 Accessibility 节点转换为 framework-neutral DTO；后端/浏览器侧使用统一 Observation 模型。压缩流程包括归一化、不可见节点清理、空结构节点清理、保守去重、交互节点优先级排序和紧凑序列化。
 
-## Observation 压缩
+空文本节点如果仍然 clickable、editable、scrollable、有有效 bounds 或包含有意义的子节点，不会被误删。每次压缩可以记录原始节点数、压缩节点数、保留比例、序列化字符数和处理耗时，用于评估上下文大小。
 
-原始 Accessibility Tree 会经过归一化、不可见节点清理、空结构节点清理、保守去重和交互节点优先级排序。空文本但 clickable/editable/scrollable 的节点会保留。压缩结果记录节点数、字符数和处理耗时。
+## Hybrid Parser
 
-## Action Harness 动作执行
-
-目标解析顺序为：
+解析管线为：
 
 ```text
-resource ID → node ID → exact text → normalized text → fuzzy match → fresh bounds
+normalize → candidate extraction → deterministic parse
+→ ambiguity detection → optional structured LLM
+→ Pydantic schema validation → confidence/reason
 ```
 
-动作使用 `observation_id` 防止 stale UI；动作结果区分目标缺失、重复目标、动作拒绝、状态未变化、超时、安全阻断和重规划。
+数字、数量、单位、规格、明确价格、套装和简单促销优先由规则处理；组合关系、标题语义歧义和不完整信息才调用 LLM。LLM 输出必须通过结构化 schema，解析失败 fail closed。结果会记录 `parser_source`、`confidence` 和 `reason_code`。
 
-## 安全边界
+当前 Evaluation v2 有 10 条样本：8 条 synthetic、2 条淘宝脱敏 fixture，全部 `UNREVIEWED`，`HUMAN_VERIFIED=0`。Rule 为 8/10，Hybrid FakeLLM 回放为 10/10；这些是机器一致性回归，不是人工准确率，也不是线上模型表现。
 
-SAFE MODE 默认开启。系统不会提交真实订单、执行支付、输入支付密码、绕过 CAPTCHA 或访问无关隐私数据。安全规则位于确定性代码中，而不是只写在 Prompt 中。详见 [docs/SAFETY.md](docs/SAFETY.md)。
+## Browser / Android Runtime
 
-## 环境与启动
+### BrowserRuntime
 
-```powershell
-uv sync
-uv run pytest
-uv run uvicorn app.main:app --app-dir backend --reload
-```
+BrowserRuntime 使用 Playwright Chromium 将 DOM/ARIA 和语义节点转换为 Observation，并复用 `ActionDevice`/Runtime Port 约束。启动时固定 allowlist，动作优先使用 locator、ARIA/文本和当前页面 bounds，离开允许域名或遇到安全页面时停止。
 
-健康检查：`http://127.0.0.1:8000/health`。
+已验证：本地 Mock Web Chromium E2E 搜索、输入、打开商品、读取 `¥10.90`，进入订单确认边界后返回 `SAFETY_BLOCKED`，未提交订单。阶段8还完成了一次淘宝公开搜索页只读 smoke：真实页面访问成功，生成 Observation，抽取 140 个商品链接和 45 个展示价格，无外部副作用。它只证明该次公开页面只读链路，不证明登录态、稳定性或下单能力。
 
-传输模式：
+### Android Runtime / DeviceBridge
+
+Android `PriceSightAccessibilityService` 采集树，`AndroidActionExecutor` 执行点击、输入、滚动、返回和停止等动作，`DeviceBridgeClient` 通过 polling 上传 Observation、获取动作并回传结果。后端在入队和下发阶段都校验 `observation_id`；action/command id、租约、有限重试和生命周期代码已存在。
+
+当前 Android Client 和 Mock Shopping App 的 unit test、`assembleDebug` 已通过，但本机没有 Emulator/AVD/system image，instrumented 双向运行链路没有执行，因此 Android Runtime 仍是 `NOT_VERIFIED`。
+
+## Platform Adapter
+
+统一链路保持为：
 
 ```text
-TRANSPORT_MODE=polling   # 默认，保留的基线
-TRANSPORT_MODE=event     # EventDrivenTransport + WebSocket ingress
+Runtime → Observation → PlatformAdapter → NormalizedProduct → Comparison Engine / Agent
 ```
 
-事件入口为 `/ws/transport`。桌面端默认通过 `BrowserRuntime` 在进程内执行；Android 桥接默认使用 polling：`POST /observations` 上传观察，`GET /devices/{device_id}/actions/next` 获取带租约动作，`POST /devices/{device_id}/action-results` 回传结果。development 默认使用 SQLite 会话存储，测试使用 InMemory；OfferCache 也支持 SQLite 路径。
+`PlatformAdapter`/`BasePlatformAdapter` 约束页面识别、商品抽取、详情抽取、标准化和安全边界。Taobao Adapter 已支持结构化页面 fixture 和公开只读 smoke；JD、Meituan、Mock Adapter 使用相同契约完成 fixture/mock 验证。比较基于 `effective unit price`、数量、规格和 confidence，不直接比较页面上的孤立数字。JD/美团实时页面仍未验证。
 
-## Mock 演示
+## Safety Boundary
 
-Mock E2E 覆盖搜索、Agent 选择商品、选择规格、领取优惠、加入购物车、读取最终价，并在订单确认前安全停止：
+安全规则在确定性代码中，而不是只放在 Prompt：
+
+- 订单提交、支付、支付密码、验证码、身份验证和安全控制绕过会触发 `SafetyDecision.STOP`。
+- Action Executor、BrowserRuntime 和 Android bridge 都会做安全拦截。
+- 动作必须绑定当前 Observation；旧 Observation 会返回 `STALE_OBSERVATION`，不会继续执行。
+- Mock E2E 已证明订单确认按钮返回 `SAFETY_BLOCKED`，且 `order_was_submitted=false`。
+
+详见 [安全说明](docs/SAFETY.md)。
+
+## Evaluation 与一键验证
+
+Python 环境使用 Python 3.12、FastAPI、Pydantic、pytest 和 uv。最小质量门禁为：
 
 ```powershell
-uv run python scripts/run_mock_e2e.py
+uv run python scripts/run_quality_gate.py
 ```
 
-当前控制性 Mock 运行记录：任务成功，13 步，1 次 FakeLLM 调用，最终价 10.90，安全结果 `SAFETY_STOP`。这些不是真实平台指标。
-
-## 桌面浏览器演示
-
-安装可选浏览器依赖后，运行本地 Mock Web 只读 E2E：
+它会执行 Ruff、mypy、compileall、pre-commit、全量 pytest 和 80% branch coverage 门槛。阶段8完整验收还使用：
 
 ```powershell
-uv sync --extra browser
-uv run playwright install chromium-headless-shell
 uv run python scripts/run_browser_mock.py
-```
-
-该流程使用 Playwright Browser Runtime，完成搜索、输入关键词、打开商品、读取 `¥10.90`，然后进入订单确认边界并由确定性 SafetyGuard 返回 `SAFETY_BLOCKED`，不会提交订单。真实网站必须配置允许域名，并由用户手动完成登录。
-
-## 真实平台适配
-
-当前已有统一 `PlatformAdapter`/`NormalizedProduct` 契约、通用网页 Adapter、淘宝 Adapter、JD/美团脱敏 fixture Adapter、Mock Shopping Adapter 和合成 Fixture Adapter。淘宝 Adapter 已回放用户提供的 `iphone17` 商品列表及页面结构 fixture，但尚未声称真实淘宝网页运行成功。真实应用需要：
-
-1. 连接设备并采集经过脱敏的 Accessibility fixtures；
-2. 在独立 adapter 中实现页面识别、商品/价格/规格抽取；
-3. 用真实 Bad Case 回放验证 selector 和安全边界；
-4. 单独报告真实 App 结果，不与 Mock 结果混合。
-
-本仓库没有声称已完成 Meituan、JD 或 Taobao 的真实网页适配；JD/美团目前仅完成 Adapter 合同和脱敏 fixture 验证，淘宝目前完成平台边界与 fixture 回放。
-
-阶段5报告：[multi_platform_adapter_validation.md](evaluation/reports/multi_platform_adapter_validation.md)。
-
-网页只读 fixture 可使用 `scripts/capture_web_fixture.py` 采集；必须显式提供允许域名，输出会限制在项目目录并进行脱敏。详见 [阶段15报告](docs/PHASE_15_REPORT.md)。
-
-## 评估与性能基准
-
-生成阶段13最终评估：
-
-```powershell
-uv run python scripts/run_final_evaluation.py
-```
-
-报告位于 [evaluation/reports/phase13_final_evaluation.json](evaluation/reports/phase13_final_evaluation.json)。当前报告明确区分：
-
-| 指标 | 实测值 | 数据范围 |
-|---|---:|---|
-| Tree compression retained ratio mean | 0.5714 | 5 个非空合成 fixture |
-| Rule-only parsing accuracy | 1.0 | 8 个 synthetic、未人工复核样本 |
-| Hybrid parsing accuracy | 1.0 | 8 个 synthetic、FakeLLM |
-| Mock task success rate | 1.0 | 10 次 Mock E2E |
-| Mock action success rate | 1.0 | 10 次 Mock E2E |
-| Average retries / steps / LLM calls | 0 / 13 / 1 | 10 次 Mock E2E |
-| Mock E2E latency mean | 7.8086 ms | 本机 Python Mock Device |
-| Warm cache hit rate | 1.0 | 2 个合成来源的第二次比较 |
-| Safety stop accuracy | 1.0 | 10 次安全停止场景 |
-
-Polling/event 延迟、原始样本和缓存年龄见 [evaluation/reports/phase12_benchmark.json](evaluation/reports/phase12_benchmark.json)。所有结果是本地离线测量，不代表真实设备、网络或生产吞吐。
-
-### Evaluation v2：可信数据集与 Bad Case
-
-阶段 2 使用统一 schema、脱敏淘宝 fixture、Bad Case taxonomy 和人工标注指南建立新的评测入口：
-
-```powershell
+uv run python scripts/run_taobao_fixture_replay.py
 uv run python scripts/run_evaluation_v2.py
-uv run python scripts/run_evaluation_v2.py --sample-id gift-water
+uv run pytest backend/tests/test_multi_platform_adapters.py backend/tests/test_comparison.py backend/tests/test_taobao_adapter.py backend/tests/test_web_adapter.py -q
 ```
 
-报告位于 [evaluation/reports/evaluation_v2.md](evaluation/reports/evaluation_v2.md) 与 [evaluation/reports/evaluation_v2.json](evaluation/reports/evaluation_v2.json)。当前 10 条样本均为 `UNREVIEWED`，`HUMAN_VERIFIED=0`；报告中的 rule / LLM / hybrid 指标仅用于机器一致性回归，不能替代人工真实准确率。旧报告中的 8 条 synthetic “1.0” 已在新报告中审计，不升级为真实平台指标。
+浏览器依赖是可选项，且不应将 Mock 结果写成真实平台结果。Android 本地命令为：
 
-阶段 3 Hybrid Parser 优化报告见 [evaluation/reports/hybrid_parser_after_optimization.md](evaluation/reports/hybrid_parser_after_optimization.md)。Parser 按规则优先、ambiguity detection、结构化 LLM fallback 和 fail-closed schema validation 执行；报告会列出失败样本，不把 FakeLLMProvider 回放写成真实模型准确率。
+```powershell
+F:\newinstall\gradle-9.7.0-bin\gradle-9.7.0\bin\gradle.bat test --offline --no-daemon --console=plain
+F:\newinstall\gradle-9.7.0-bin\gradle-9.7.0\bin\gradle.bat assembleDebug --offline --no-daemon --console=plain
+```
 
-阶段 5 比价回归通过统一 Adapter 计算规格、数量、有效单位价和置信度；JD/美团结果仍属于 fixture/mock 证据，不是实时平台指标。
+完整验收状态、numerator/denominator、阻断原因和评分见 [project_acceptance_final.md](evaluation/reports/project_acceptance_final.md)。
+
+## Demo
+
+- Python Mock Shopping：`uv run python scripts/run_mock_e2e.py`
+- Browser Mock Chromium：`uv run python scripts/run_browser_mock.py`
+- 淘宝脱敏 fixture：`uv run python scripts/run_taobao_fixture_replay.py`
+- 淘宝公开页面只读 smoke：`uv run python scripts/run_taobao_readonly.py`；只允许读取，不登录、不点击、不输入、不加购、不下单、不支付。
 
 ## 已知限制
 
-Android 阶段4已补充 DeviceBridge retry、action lifecycle、action_id 去重和 instrumented test harness；本机无 Emulator/AVD/system image，当前仍为 `BLOCKED`，不得写成 Android Runtime Verified。详见 [Android Runtime 验证报告](evaluation/reports/android_runtime_validation.md)。
+- Android 没有 emulator/AVD 或物理设备运行证据；不能声称 Android Runtime Verified。
+- Android `lintDebug` 当前离线缺少 `com.android.tools.lint:lint-gradle:31.5.2`；远端 GitHub Actions 尚无执行记录。
+- 淘宝 live smoke 只覆盖一次公开搜索页只读访问；JD/美团没有 live smoke。
+- Evaluation 样本尚未人工复核，不能发布“复杂商品识别准确率”等真实指标；FakeLLM 不代表线上模型。
+- SQLite SessionStore 是本地单体持久化，不是分布式故障转移方案；真实断网重连、多进程 failover 未验证。
+- 真实购物 App、真实支付、真实订单、生产吞吐和长期价格稳定性均未测试。
 
-- Git 已有可追溯基线并加入 CI，但本轮整改变更仍需评审后提交，远端 CI 尚无运行记录。
-- Android—Backend 双向代码闭环已经接通，但未在物理设备或模拟器上完成运行验证。
-- 无物理 Android 设备连接；Android APK 仅完成构建/测试验证。
-- 无真实购物 App 运行结果，无真实平台 selector 成功率。
-- 解析数据集是 synthetic、未人工复核，不能称为人工标注准确率。
-- Event transport 尚未接入真实 Android Accessibility event timing。
-- Android 设备桥接当前使用 polling，尚无 Android WebSocket event client。
-- Browser Runtime 已在本地 Mock Web 上完成真实 Chromium 执行；真实电商平台只读链路尚未完成，JD/美团 Adapter 目前仅为 fixture 验证。
-- 浏览器依赖为可选项；没有安装 Playwright/Chromium 时只能运行后端和 fixture 测试。
-- SQLite cache 是本地单进程方案，不是分布式缓存。
-- 真实模型、真实网络和生产级延迟未测量。
-- 设备会话 SQLite 适合本地单体持久化；多进程高并发、云数据库和生产级故障转移尚未验证。
-
-## 目录结构
+## 目录与文档
 
 ```text
-backend/app/        FastAPI、观察、动作、工作流、Agent、运行时、解析、比较与传输
+backend/app/        后端运行时、Observation、Action、Workflow、Agent、Parser、Adapter、Transport
 backend/tests/      单元和离线集成测试
 android-client/     Android Accessibility client
-mock-shopping-app/  控制性 Mock Shopping App
-mock-shopping-web/  控制性 Mock Shopping Web
-workflows/          YAML workflow definitions
-evaluation/         synthetic datasets and measured reports
-docs/               architecture, safety, phase and interview documentation
-scripts/             reproducible evaluation and benchmark runners
+mock-shopping-app/  Mock Android App
+mock-shopping-web/  Mock Browser App
+evaluation/         数据集、runner 和验收报告
+docs/interview/     面试说明
 ```
 
-## 文档
-
 - [架构说明](docs/ARCHITECTURE.md)
-- [开发指南](docs/DEVELOPMENT.md)
 - [阶段状态](docs/PHASE_STATUS.md)
-- [最终完成度审计](docs/FINAL_AUDIT.md)
-- [面试说明](docs/INTERVIEW_GUIDE.md)
-- [中文简历描述](docs/RESUME_BULLETS.md)
-- [阶段13报告](docs/PHASE_13_REPORT.md)
-- [阶段14报告](docs/PHASE_14_REPORT.md)
-- [阶段15报告](docs/PHASE_15_REPORT.md)
-- [阶段16报告](docs/PHASE_16_REPORT.md)
-- [淘宝实时只读验证报告](evaluation/reports/taobao_live_readonly_validation.md)
-- [多平台 Adapter 验证报告](evaluation/reports/multi_platform_adapter_validation.md)
-- [设备会话可靠性验证报告](evaluation/reports/session_store_validation.md)
-- [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)
-- [结构化验收结果](evaluation/reports/project_acceptance_2026-08-09.json)
-- [安全边界](docs/SAFETY.md)
+- [安全说明](docs/SAFETY.md)
+- [最终验收报告](evaluation/reports/project_acceptance_final.md)
+- [面试项目说明](docs/interview/project_overview.md)

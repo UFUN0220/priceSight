@@ -1,0 +1,33 @@
+{
+  "test_date": "2026-08-09T13:50:04.243064+00:00",
+  "environment": "Playwright Chromium through BrowserRuntime",
+  "browser": "Chromium",
+  "query": "iphone17",
+  "start_url_host": "uland.taobao.com",
+  "real_page_accessed": true,
+  "host_verified": true,
+  "login_required": false,
+  "captcha_detected": false,
+  "page_state": "SEARCH_RESULT",
+  "observation_generated": true,
+  "items_extracted": 140,
+  "selector_strategy": {
+    "product_result": "href_product_id",
+    "search_input": "text_assisted",
+    "search_submit": "text_assisted"
+  },
+  "selector_fallback_used": true,
+  "displayed_price_extracted": 45,
+  "product_url_extracted": 140,
+  "external_side_effect": false,
+  "fixture_regression_result": "run_separately",
+  "backend_test_result": "run_separately",
+  "browser_test_result": "run_separately",
+  "mock_e2e_result": "run_separately",
+  "failures": [],
+  "limitations": [
+    "本 runner 只读取当前公开页面，不执行登录、点击、输入、加购、下单或支付。",
+    "实时页面结果不得与 fixture 或 Mock 结果混合统计。"
+  ],
+  "status": "LIVE_READONLY_VERIFIED"
+}

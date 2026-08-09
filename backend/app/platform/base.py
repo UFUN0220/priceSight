@@ -26,6 +26,17 @@ class BasePlatformAdapter:
     allow adding a platform without changing Runtime, Agent, or Workflow.
     """
 
+    platform_id: str
+
+    def identify_page(self, observation: Observation) -> PlatformPageType:
+        raise NotImplementedError
+
+    def extract_products(self, observation: Observation) -> AdapterExtraction:
+        raise NotImplementedError
+
+    def extract_product(self, observation: Observation) -> AdapterExtraction:
+        raise NotImplementedError
+
     def parse_products(self, observation: Observation) -> AdapterExtraction:
         return self.extract_products(observation)
 

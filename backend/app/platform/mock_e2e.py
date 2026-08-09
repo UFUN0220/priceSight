@@ -11,7 +11,6 @@ from pydantic import BaseModel, Field
 from app.agent.models import AgentContext
 from app.agent.planner import AgentPlanner
 from app.agent.router import AgentDecisionRouter, AgentRouteStatus
-from app.action.models import ActionType
 from app.llm.base import LLMResponse
 from app.llm.fake import FakeLLMProvider
 from app.platform.mock_shopping import MockShoppingDevice

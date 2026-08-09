@@ -3,7 +3,7 @@
 import asyncio
 from pathlib import Path
 
-from fastapi.testclient import TestClient
+from starlette.testclient import TestClient
 
 from app.cache.offer import OfferCache
 from app.comparison.engine import ComparisonEngine

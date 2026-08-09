@@ -1,6 +1,6 @@
 """Tests for the phase 0 service shell."""
 
-from fastapi.testclient import TestClient
+from starlette.testclient import TestClient
 
 from app.main import app
 

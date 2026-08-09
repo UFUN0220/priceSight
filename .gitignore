@@ -43,4 +43,7 @@ evaluation/reports/*
 !evaluation/reports/*.json
 !evaluation/reports/multi_platform_adapter_validation.md
 !evaluation/reports/session_store_validation.md
+!evaluation/reports/ci_quality_validation.md
+!evaluation/reports/project_acceptance_final.md
+!evaluation/reports/project_acceptance_final.json
 data/

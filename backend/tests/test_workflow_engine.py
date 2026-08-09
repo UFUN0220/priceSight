@@ -1,7 +1,6 @@
 """Offline integration tests for bounded YAML workflow execution."""
 
 from app.action.fake import FakeActionDevice
-from app.action.models import ActionStatus
 from app.observation.models import Observation, ObservationNode, PageType
 from app.workflow.engine import WorkflowEngine
 from app.workflow.loader import WorkflowLoader
