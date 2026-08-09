@@ -1,34 +1,61 @@
 {
   "report_date": "2026-08-09",
-  "overall_score": 65,
-  "decision": "offline_prototype_conditionally_accepted",
+  "assessment_revision": "desktop_browser_extension",
+  "previous_score": 65,
+  "overall_score": 79,
+  "weighted_score_before_rounding": 79.2,
+  "decision": "offline_prototype_and_desktop_browser_baseline_accepted",
   "production_ready": false,
-  "real_device_ready": false,
+  "real_device_runtime_verified": false,
   "real_platform_ready": false,
   "dimensions": [
-    {"name": "requirements_and_core", "weight": 15, "score": 78},
-    {"name": "architecture_and_explainability", "weight": 15, "score": 84},
-    {"name": "safety", "weight": 15, "score": 80},
-    {"name": "tests_and_builds", "weight": 15, "score": 74},
-    {"name": "evaluation_credibility", "weight": 15, "score": 52},
-    {"name": "real_integration_readiness", "weight": 15, "score": 30},
-    {"name": "engineering_governance", "weight": 5, "score": 20},
-    {"name": "documentation", "weight": 5, "score": 90}
+    {"name": "requirements_and_core", "weight": 15, "score": 90},
+    {"name": "architecture_and_explainability", "weight": 15, "score": 92},
+    {"name": "safety", "weight": 15, "score": 90},
+    {"name": "tests_and_builds", "weight": 15, "score": 86},
+    {"name": "evaluation_credibility", "weight": 15, "score": 58},
+    {"name": "real_integration_readiness", "weight": 15, "score": 58},
+    {"name": "engineering_governance", "weight": 5, "score": 68},
+    {"name": "documentation", "weight": 5, "score": 94}
   ],
   "verification": {
-    "backend_tests": {"passed": 79, "failed": 0, "warnings": 1},
+    "backend_tests": {"passed": 91, "failed": 0, "warnings": 1},
+    "focused_bridge_and_safety_tests": {"passed": 15, "failed": 0},
+    "browser_runtime_tests": {"passed": 2, "failed": 0},
+    "browser_mock_web_e2e": {
+      "status": "passed",
+      "price": "10.90",
+      "safety_status": "SAFETY_BLOCKED",
+      "order_submitted": false
+    },
     "python_compileall": "passed",
-    "android_client_test": "build_successful",
-    "android_client_unique_jvm_tests": 2,
-    "android_client_assemble_debug": "build_successful",
-    "mock_app_test": "build_successful",
-    "mock_app_unique_jvm_tests": 1,
-    "mock_app_assemble_debug": "build_successful",
-    "evaluation_runners": "all_passed",
+    "android_client_test_and_assemble_debug": "build_successful",
+    "android_client_gradle_tasks": 64,
+    "mock_app_test_and_assemble_debug": "build_successful",
+    "mock_app_gradle_tasks": 64,
+    "github_actions_workflow": "backend_android_browser_jobs_added_not_yet_run_remotely",
     "android_lint": "not_completed_missing_offline_lint_dependency",
-    "secret_scan": "no_real_secret_detected"
+    "real_device_runtime": "not_run_by_user_scope",
+    "real_platform_browser_runtime": "not_run_no_real_adapter"
   },
-  "latest_metrics": {
+  "remediated_blockers": [
+    "git_baseline_exists",
+    "backend_stores_latest_device_observation",
+    "backend_exposes_action_polling_and_result_api",
+    "android_action_executor_is_wired_into_accessibility_service",
+    "android_upload_poll_execute_report_loop_is_implemented",
+    "stale_observation_is_checked_at_enqueue_and_dispatch",
+    "android_debug_cleartext_policy_is_explicit",
+    "ci_workflow_is_present",
+    "safety_separator_obfuscation_is_blocked",
+    "browser_runtime_reuses_action_device_contract",
+    "mock_web_browser_e2e_is_reproducible"
+  ],
+  "remaining_p0_blockers": [
+    "no_real_platform_adapter_or_sanitized_real_fixture",
+    "no_real_application_bad_case_validation"
+  ],
+  "latest_metrics_unchanged": {
     "tree_compression_retained_ratio_mean": 0.5714285714285714,
     "rule_only_parsing_accuracy": 1.0,
     "hybrid_parsing_accuracy": 1.0,
@@ -39,13 +66,5 @@
     "safety_stop_accuracy": 1.0,
     "polling_latency_ms_mean": 1.8174000000044543,
     "event_latency_ms_mean": 29.185879999954523
-  },
-  "p0_blockers": [
-    "git_repository_has_no_commit_and_all_files_are_untracked",
-    "android_backend_bidirectional_action_loop_not_connected",
-    "backend_observation_endpoint_does_not_store_runtime_state",
-    "android_has_no_websocket_event_client",
-    "android_http_export_not_verified_under_target_sdk_34_network_policy",
-    "no_real_platform_adapter_or_real_device_fixture"
-  ]
+  }
 }

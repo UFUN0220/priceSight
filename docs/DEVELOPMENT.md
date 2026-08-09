@@ -82,6 +82,56 @@ F:\newinstall\gradle-9.7.0-bin\gradle-9.7.0\bin\gradle.bat assembleDebug --offli
 
 2026-08-09 的项目级验收结果和 P0/P1/P2 整改清单见 [PROJECT_ACCEPTANCE_REPORT.md](PROJECT_ACCEPTANCE_REPORT.md)。`lintDebug --offline` 因本机未缓存 `lint-gradle:31.5.2` 而未完成，不能视为 lint 通过。
 
+## 本地设备桥接调试
+
+后端启动后，Android Debug 构建默认连接 `http://10.0.2.2:8000`，设备 ID 为 `android-default`。主要接口：
+
+```text
+POST /observations?device_id=android-default
+POST /devices/android-default/actions
+GET  /devices/android-default/actions/next
+POST /devices/android-default/action-results
+GET  /devices/android-default
+```
+
+动作必须携带后端当前最新的 `observation_id`。动作入队后，如果设备先上传了更新观察，后端会将旧动作标记为 `STALE_OBSERVATION`，不会下发。生产或非本机环境必须配置 `DEVICE_SHARED_TOKEN`、TLS 和正式设备身份机制；Debug 明文 HTTP 配置不得复制到 release。
+
+CI 配置位于 `.github/workflows/ci.yml`，覆盖 Python 3.12 后端测试、两个 Android 工程的测试和 Debug 构建，以及浏览器 Mock Web E2E。只有远端 Actions 实际成功后，才能声明 CI 通过。
+
+## 桌面浏览器运行
+
+桌面端使用可选 Playwright 依赖和 Chromium headless shell：
+
+```powershell
+uv sync --extra browser
+uv run playwright install chromium-headless-shell
+uv run python scripts/run_browser_mock.py
+```
+
+`BrowserRuntime` 实现现有 `ActionDevice` 接口，支持观察 DOM/ARIA 节点、点击、输入、滚动、返回、等待和安全停止。默认执行本地 Mock Web；真实平台需要显式设置 allowed hosts，并单独开发平台 Adapter。不要把真实账号、Cookie、截图或未脱敏 HTML 写入仓库。
+
+### 网页只读 fixture 采集
+
+阶段15提供通用网页 Adapter 和脱敏采集工具。采集公开页面时，必须限制允许域名，并将输出写入项目目录：
+
+```powershell
+uv run python scripts/capture_web_fixture.py `
+  https://example.com/search `
+  evaluation/fixtures/web/example_search.json `
+  --platform-id example `
+  --allowed-host example.com
+```
+
+需要人工导航时使用 `--headed --interactive`。工具不会保存 Cookie、浏览器状态、截图或原始 HTML；真实平台接入仍需先确定平台，再在专用 Adapter 中配置选择器。
+
+淘宝页面结构 fixture 回放：
+
+```powershell
+uv run python scripts/run_taobao_fixture_replay.py
+```
+
+报告写入 `evaluation/reports/phase16_taobao_fixture_replay.json`。该命令只读取项目内脱敏 fixture，不访问实时淘宝页面。
+
 ## Android 构建
 
 ```powershell
@@ -94,6 +144,23 @@ Android 和 Mock App 构建可能出现 Gradle 弃用、SDK XML 兼容和 Androi
 ## 环境策略
 
 不要自动安装系统级软件。缺少工具时记录准确的 `MISSING` 或 `UNKNOWN`，并通过批准的 Windows/Android 开发渠道处理。
+
+## Windows 工具与下载路径约定
+
+项目相关工具和缓存默认放在 `F:\newinstall`，项目文件只放在 `F:\projects_2027\PriceSight` 或其子目录。当前已设置用户级路径：
+
+```text
+GRADLE_HOME=F:\newinstall\gradle-9.7.0-bin\gradle-9.7.0
+GRADLE_USER_HOME=F:\newinstall\gradle-user-home
+ANDROID_HOME / ANDROID_SDK_ROOT=F:\newinstall\android_sdk
+ANDROID_USER_HOME=F:\newinstall\android-user-home
+UV_CACHE_DIR=F:\newinstall\uv-cache
+PIP_CACHE_DIR=F:\newinstall\pip-cache
+PLAYWRIGHT_BROWSERS_PATH=F:\newinstall\playwright-browsers
+npm_config_cache=F:\newinstall\npm-cache
+```
+
+新增下载或工具依赖时，优先使用上述 F 盘路径；如果工具不支持修改路径，先向用户说明并询问。设置用户级变量后，需要重启终端或 Codex 才能让新进程完全继承。
 
 ## 增量开发规则
 

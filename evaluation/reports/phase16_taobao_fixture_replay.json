@@ -1,0 +1,23 @@
+{
+  "mode": "taobao_sanitized_fixture_replay",
+  "real_page_accessed": false,
+  "external_side_effect": false,
+  "source_fixture": "evaluation\\fixtures\\web\\taobao_iphone17_page_structure.json",
+  "search_query": "iphone17",
+  "selected_tabs": [
+    "宝贝"
+  ],
+  "page": 1,
+  "has_next": true,
+  "recognized": true,
+  "product_count": 2,
+  "prices": [
+    "5999.00",
+    "5999.00"
+  ],
+  "selector_roles": [
+    "product_result",
+    "search_input",
+    "search_submit"
+  ]
+}

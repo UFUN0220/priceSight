@@ -6,7 +6,7 @@
 
 ## 最新项目级验收
 
-2026-08-09 全面验收评分为 **65/100**：离线工程原型有条件通过，真实设备、真实平台和生产交付不通过。后端 79 个测试、Android client 与 Mock App 的测试/构建、全部 Evaluation runner 均通过；主要阻断项是仓库尚无 Git commit 基线，以及 Android—Backend 双向动作闭环和真实平台 adapter 尚未实现。
+2026-08-09 桌面端扩展复验评分为 **79/100**，由整改前的 65 分提升。项目已具备本地浏览器真实执行基线：Playwright Browser Runtime 可完成 Mock Web 搜索、商品打开、价格读取和订单确认前安全停止；后端 **91 个测试**、浏览器 E2E、Android Client 与 Mock App 构建均通过。真实平台和生产交付仍不通过。
 
 详见 [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)。
 
@@ -26,6 +26,8 @@ flowchart TD
     E --> F[Polling 或事件传输]
     F --> G[Android Accessibility 客户端]
     G --> H[Observation 压缩]
+    F --> N[Browser Runtime]
+    N --> H
     H --> B
     E --> I[验证与安全停止]
     H --> J[平台适配器]
@@ -91,7 +93,7 @@ TRANSPORT_MODE=polling   # 默认，保留的基线
 TRANSPORT_MODE=event     # EventDrivenTransport + WebSocket ingress
 ```
 
-事件入口为 `/ws/transport`。本地缓存默认内存模式，也可以给 `OfferCache` 传入 SQLite 路径启用持久化。
+事件入口为 `/ws/transport`。桌面端默认通过 `BrowserRuntime` 在进程内执行；Android 桥接默认使用 polling：`POST /observations` 上传观察，`GET /devices/{device_id}/actions/next` 获取动作，`POST /devices/{device_id}/action-results` 回传结果。本地缓存默认内存模式，也可以给 `OfferCache` 传入 SQLite 路径启用持久化。
 
 ## Mock 演示
 
@@ -103,16 +105,30 @@ uv run python scripts/run_mock_e2e.py
 
 当前控制性 Mock 运行记录：任务成功，13 步，1 次 FakeLLM 调用，最终价 10.90，安全结果 `SAFETY_STOP`。这些不是真实平台指标。
 
+## 桌面浏览器演示
+
+安装可选浏览器依赖后，运行本地 Mock Web 只读 E2E：
+
+```powershell
+uv sync --extra browser
+uv run playwright install chromium-headless-shell
+uv run python scripts/run_browser_mock.py
+```
+
+该流程使用 Playwright Browser Runtime，完成搜索、输入关键词、打开商品、读取 `¥10.90`，然后进入订单确认边界并由确定性 SafetyGuard 返回 `SAFETY_BLOCKED`，不会提交订单。真实网站必须配置允许域名，并由用户手动完成登录。
+
 ## 真实平台适配
 
-当前仅有通用平台边界、Mock Shopping Adapter 和合成 Fixture Adapter。真实应用需要：
+当前已有通用网页 Adapter、淘宝 Adapter 骨架、Mock Shopping Adapter 和合成 Fixture Adapter。淘宝 Adapter 已回放用户提供的 `iphone17` 商品列表及页面结构 fixture，但尚未声称真实淘宝网页运行成功。真实应用需要：
 
 1. 连接设备并采集经过脱敏的 Accessibility fixtures；
 2. 在独立 adapter 中实现页面识别、商品/价格/规格抽取；
 3. 用真实 Bad Case 回放验证 selector 和安全边界；
 4. 单独报告真实 App 结果，不与 Mock 结果混合。
 
-本仓库没有声称已完成 Meituan、JD 或 Taobao 的真实适配。
+本仓库没有声称已完成 Meituan、JD 或 Taobao 的真实网页适配；淘宝目前仅完成平台边界与 fixture 回放骨架。
+
+网页只读 fixture 可使用 `scripts/capture_web_fixture.py` 采集；必须显式提供允许域名，输出会限制在项目目录并进行脱敏。详见 [阶段15报告](docs/PHASE_15_REPORT.md)。
 
 ## 评估与性能基准
 
@@ -140,22 +156,26 @@ Polling/event 延迟、原始样本和缓存年龄见 [evaluation/reports/phase1
 
 ## 已知限制
 
-- Git 仓库尚无任何 commit，当前文件全部未跟踪；正式交付前必须创建可追溯基线。
-- Android 目前只导出 observation，后端 action command channel 和真实双向运行闭环未接通。
+- Git 已有可追溯基线并加入 CI，但本轮整改变更仍需评审后提交，远端 CI 尚无运行记录。
+- Android—Backend 双向代码闭环已经接通，但未在物理设备或模拟器上完成运行验证。
 - 无物理 Android 设备连接；Android APK 仅完成构建/测试验证。
 - 无真实购物 App 运行结果，无真实平台 selector 成功率。
 - 解析数据集是 synthetic、未人工复核，不能称为人工标注准确率。
 - Event transport 尚未接入真实 Android Accessibility event timing。
+- Android 设备桥接当前使用 polling，尚无 Android WebSocket event client。
+- Browser Runtime 已在本地 Mock Web 上完成真实 Chromium 执行；真实电商平台 Adapter 尚未完成。
+- 浏览器依赖为可选项；没有安装 Playwright/Chromium 时只能运行后端和 fixture 测试。
 - SQLite cache 是本地单进程方案，不是分布式缓存。
 - 真实模型、真实网络和生产级延迟未测量。
 
 ## 目录结构
 
 ```text
-backend/app/        FastAPI、观察、动作、工作流、Agent、解析、比较与传输
+backend/app/        FastAPI、观察、动作、工作流、Agent、运行时、解析、比较与传输
 backend/tests/      单元和离线集成测试
 android-client/     Android Accessibility client
 mock-shopping-app/  控制性 Mock Shopping App
+mock-shopping-web/  控制性 Mock Shopping Web
 workflows/          YAML workflow definitions
 evaluation/         synthetic datasets and measured reports
 docs/               architecture, safety, phase and interview documentation
@@ -171,6 +191,9 @@ scripts/             reproducible evaluation and benchmark runners
 - [面试说明](docs/INTERVIEW_GUIDE.md)
 - [中文简历描述](docs/RESUME_BULLETS.md)
 - [阶段13报告](docs/PHASE_13_REPORT.md)
+- [阶段14报告](docs/PHASE_14_REPORT.md)
+- [阶段15报告](docs/PHASE_15_REPORT.md)
+- [阶段16报告](docs/PHASE_16_REPORT.md)
 - [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)
 - [结构化验收结果](evaluation/reports/project_acceptance_2026-08-09.json)
 - [安全边界](docs/SAFETY.md)

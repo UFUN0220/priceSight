@@ -36,7 +36,6 @@ class ObservationSerializerTest {
         assertTrue(json.contains("\"package_name\":\"com.example.shop\""))
         assertTrue(json.contains("\"node_id\":\"1:root\""))
         assertTrue(json.contains("商品\\\"A"))
-        assertTrue(json.contains("\"bounds\":{\"left\":0,\"top\":1,\"right\":100,\"bottom\":101}"))
+        assertTrue(json.contains("\"bounds\":[0,1,100,101]"))
     }
 }
-

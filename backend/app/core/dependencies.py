@@ -9,6 +9,7 @@ from app.llm.factory import build_llm_provider
 from app.transport.base import DeviceTransport
 from app.transport.event import EventDrivenTransport
 from app.transport.fake import FakeTransport
+from app.transport.session import DeviceSessionManager
 
 
 @dataclass(frozen=True)
@@ -18,12 +19,14 @@ class AppContainer:
     settings: Settings
     llm_provider: LLMProvider
     transport: DeviceTransport
+    device_sessions: DeviceSessionManager
 
 
 def build_container(
     settings: Settings | None = None,
     llm_provider: LLMProvider | None = None,
     transport: DeviceTransport | None = None,
+    device_sessions: DeviceSessionManager | None = None,
 ) -> AppContainer:
     """Build a container with fake implementations by default."""
 
@@ -36,6 +39,7 @@ def build_container(
         settings=resolved_settings,
         llm_provider=llm_provider or build_llm_provider(resolved_settings),
         transport=resolved_transport or FakeTransport(),
+        device_sessions=device_sessions or DeviceSessionManager(),
     )
 
 

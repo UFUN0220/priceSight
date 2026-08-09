@@ -25,3 +25,10 @@ def test_safety_guard_raises_domain_error() -> None:
     with pytest.raises(SafetyViolationError):
         SafetyGuard().assert_allowed("submit order")
 
+
+@pytest.mark.parametrize(
+    "unsafe_text",
+    ["支 付 密 码", "确 认 下 单", "PAY-NOW", "identity_verification"],
+)
+def test_safety_guard_stops_separator_obfuscation(unsafe_text: str) -> None:
+    assert SafetyGuard().evaluate(unsafe_text).decision is SafetyDecision.STOP

@@ -15,3 +15,20 @@
 - 与当前任务无关的私人数据。
 
 安全检查必须位于确定性代码中，不能只依赖 Prompt。项目没有支付或购买流程。
+
+## 双重执行防线
+
+动作进入设备队列前，后端会把最新 Observation 的可访问文本与结构化动作一起交给 `SafetyGuard`。支付、订单、密码、验证码和身份验证相关词会返回 `SafetyDecision.STOP`，动作不会入队。检查会压缩空格、连字符和下划线，因此“支 付 密 码”、`PAY-NOW` 等分隔符变体同样被拦截。
+
+Android `DeviceBridgeClient` 在执行后端命令前还会检查动作内容。高风险动作或 STOP 命令返回 `SAFETY_BLOCKED`，不会交给 `AndroidActionExecutor`。这属于纵深防御，不替代后端安全判断。
+
+## 设备与传输限制
+
+- 动作必须绑定当前最新 `observation_id`；入队后变旧的动作不会下发。
+- `DEVICE_SHARED_TOKEN` 可为本地 HTTP 接口启用共享令牌，但默认空值只适用于受控本机开发。
+- Debug 构建可访问 `10.0.2.2` 明文 HTTP；release 不开放该设置。
+- 生产环境仍需 TLS、设备注册、令牌轮换、授权审计和隐私数据脱敏。本项目尚未实现这些生产能力。
+
+## 浏览器安全边界
+
+Browser Runtime 启动时绑定 allowed hosts；点击或导航后如果页面离开允许域名，Runtime 会停止。真实网站测试必须使用独立浏览器配置，登录由用户手动完成，不自动输入密码、不绕过 CAPTCHA。浏览器 Observation 中的 URL、HTML、截图和页面文本可能包含个人信息，保存前必须脱敏。

@@ -1,52 +1,55 @@
 # 最终项目完成度审计
 
-更新时间：2026-08-09
+更新时间：2026-08-09（桌面浏览器扩展复验）
 
-## 审计依据
+## 审计结论
 
-本审计基于代码、测试、[phase13_final_evaluation.json](../evaluation/reports/phase13_final_evaluation.json) 和 [项目全面验收报告](PROJECT_ACCEPTANCE_REPORT.md)。真实平台和物理设备未纳入实测范围。
+综合评分由 **65/100 提升至 79/100**。离线工程原型和桌面浏览器开发基线通过；真实购物平台能力和生产交付仍未验收通过。
 
-## 已实现
+## 本轮已补齐
 
-- Python 3.12+、FastAPI、Pydantic v2、pytest 项目骨架和安全模式默认配置。
-- Kotlin Android Accessibility client：节点 DTO、观察导出、动作执行边界和构建验证。
-- Accessibility Tree 压缩、统计和 synthetic fixtures。
-- Action Matcher、Verifier、bounded retry、stale observation 检测和 Bad Case trace。
-- YAML Workflow Engine、结构化 Agent Planner、Fake/OpenAI-compatible/Anthropic-compatible provider 边界。
-- 规则优先商品数量/规格/促销解析与结构化 LLM fallback。
-- Mock Shopping App、Python Mock Device 和 safe-mode E2E。
-- 通用 Platform Adapter、Mock/Fixture adapter 和离线 comparison engine。
-- Polling baseline、event-driven transport、WebSocket ingress、SQLite OfferCache 和阶段12 benchmark。
-- 阶段13最终 Evaluation 汇总、README、面试指南和简历描述。
-
-## 部分实现
-
-- Android transport 已有协议、HTTP/WebSocket observation 边界，但尚未与真实 Android 设备建立完整 action/observation session。
-- Event-driven transport 已有队列、去抖和 WebSocket contract test，但未测真实 Accessibility event 洪泛、网络抖动和断线恢复。
-- Bad Case 分类和离线回放覆盖基础目标失败与重复动作；真实弹窗、页面转场和规格歧义 fixture 尚未采集。
-- OfferCache 支持内存和本地 SQLite；没有分布式失效、多进程协调或生产运维能力。
-- Evaluation runner 可汇总 synthetic/Mock 数据；没有 human-reviewed dataset，也没有真实 App benchmark。
-
-## 未实现或按安全范围排除
-
-- Meituan、JD、Taobao 的真实平台 selector 和 live adapter。
-- 真实下单、支付、密码输入、验证码绕过、账号注册和购买确认。
-- 真实设备端到端安装、登录和应用驱动。
-- 生产级模型密钥、网络服务、分布式任务队列和多租户部署。
+- 后端按 `device_id` 保存最新 Observation，并提供动作入队、轮询、结果回传和状态快照 API。
+- 动作在入队和下发两个时点检查 `observation_id`；过期动作记录为 `STALE_OBSERVATION`。
+- Android Service 已装配 `AndroidActionExecutor` 和 `DeviceBridgeClient`，完成 observation/action/result 的 polling 代码闭环。
+- 修复 Android bounds 对象与后端四元数组之间的协议错误。
+- Debug 构建显式允许本机 HTTP，release 不开放。
+- SafetyGuard 增强确认下单词汇和分隔符混淆检测；设备端增加第二道安全检查。
+- 增加 GitHub Actions 后端和 Android 双工程 CI 配置。
+- Git 已有基线提交，不再是零提交仓库。
+- Playwright Browser Runtime 已实现 DOM/ARIA Observation、ActionDevice 动作执行、allowed-host 检查和安全停止。
+- Mock Web 浏览器 E2E 已真实运行 Chromium，读取 `¥10.90`，进入订单确认边界并返回 `SAFETY_BLOCKED`，未提交订单。
+- `TaskOrchestrator` 已成为 Workflow 与具体 Runtime 之间的统一编排入口。
 
 ## 验证记录
 
 ```text
-Backend: 79 passed, 1 existing Starlette/httpx deprecation warning
-Mock E2E: 10 benchmark repetitions, task_success_rate 1.0
-Parser: 8 synthetic, not human-reviewed; rule-only/hybrid accuracy 1.0
-Transport/cache: 10 offline transport samples and 2-source warm-cache comparison
-Android client: test and assembleDebug passed on 2026-08-09
-Mock App: test and assembleDebug passed on 2026-08-09
+Backend: 91 passed, 0 failed, 1 Starlette/httpx deprecation warning
+Python compileall: passed for backend/app, backend/tests, evaluation, scripts
+Focused bridge/safety tests: 15 passed
+Browser Runtime tests: 2 passed
+Mock Web Chromium E2E: passed; safety blocked order submission
+Android client: test + assembleDebug passed, 64 Gradle tasks
+Mock App: test + assembleDebug passed, 64 Gradle tasks
+Git diff whitespace check: passed
+Remote GitHub Actions: not yet run
 Android lint: not completed because lint-gradle:31.5.2 was unavailable offline
-Git baseline: no commits; all project files remain untracked
+Real device runtime: not run by explicit project scope
 ```
 
-## 完成结论
+## 仍为部分实现
 
-截至本次验收，离线工程闭环、可解释性、测试、构建和报告已完成。综合评分为 65/100：离线原型有条件通过；真实设备、真实平台和生产交付不通过。详细阻断项与整改优先级见 [PROJECT_ACCEPTANCE_REPORT.md](PROJECT_ACCEPTANCE_REPORT.md)。
+- 双向桥接通过代码、契约测试和 APK 构建验证，但没有设备安装和运行证据。
+- polling 已接入 Android；event transport 仍没有 Android WebSocket client。
+- 设备会话为进程内本地实现，没有生产级持久化、多实例协调和背压。
+- Evaluation 仍来自 synthetic/Mock 数据，没有人工复核集或真实 App benchmark。
+- Browser Runtime 只在本地 Mock Web 上实测，没有真实购物网站 Adapter 和线上结果。
+- CI 文件已存在，但尚无远端成功记录，也没有 coverage、lint、类型检查和 pre-commit 门槛。
+
+## 未实现或安全排除
+
+- Meituan、JD、Taobao 的真实 selector、脱敏 fixture 和 live adapter。
+- 真实设备上的 Accessibility Service 启用、网络联通和动作 E2E。
+- 真实订单提交、支付、密码输入、验证码绕过、账户注册或购买确认。
+- 生产级认证、密钥轮换、分布式队列、可观测性和运维方案。
+
+详细评分和 P0/P1/P2 清单见 [PROJECT_ACCEPTANCE_REPORT.md](PROJECT_ACCEPTANCE_REPORT.md)。

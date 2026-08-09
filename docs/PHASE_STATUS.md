@@ -87,6 +87,30 @@
 - [x] 后端测试：79 passed；报告：[PHASE_13_REPORT.md](PHASE_13_REPORT.md)。
 - [ ] 真实 App 结果和人工复核数据仍不可用，未被标记为完成。
 
+### 阶段14——桌面浏览器 Runtime 与 Mock Web
+
+- [x] 完成 Playwright Browser Runtime、统一 RuntimeSession 和 TaskOrchestrator。
+- [x] 完成 DOM/ARIA Observation、动作执行、allowed-host 和安全停止。
+- [x] 完成 Mock Web Chromium E2E；报告见 [PHASE_14_REPORT.md](PHASE_14_REPORT.md)。
+- [ ] 真实购物网站 Adapter 和真实平台只读验证尚未开始。
+
+### 阶段15——真实网页 Adapter 基础
+
+- [x] 完成通用 `WebPlatformAdapter`、可配置 `WebSelectorConfig` 和网页证据模型。
+- [x] 完成网页 fixture 采集与脱敏工具；默认不保存 Cookie、浏览器状态、截图或原始 HTML。
+- [x] 完成网页商品/价格抽取、跨来源比较和证据脱敏测试。
+- [x] 根据用户指定淘宝，完成 `TaobaoPlatformAdapter`、淘宝域名白名单、合成 fixture、商品列表 fixture 和用户提供的页面结构 fixture 回放测试。
+- [ ] 淘宝真实网页专用选择器和只读回放仍待下一步执行；其他真实平台尚未选择。
+- [x] 报告：[PHASE_15_REPORT.md](PHASE_15_REPORT.md)。
+
+### 阶段16——淘宝页面结构只读回放
+
+- [x] 将用户提供的淘宝页面结构 fixture 转换为统一 `Observation`。
+- [x] 经淘宝 Adapter 常规网页抽取路径识别 2 条商品，识别出搜索输入、搜索提交和商品结果角色。
+- [x] 生成可复现报告：[phase16_taobao_fixture_replay.json](../evaluation/reports/phase16_taobao_fixture_replay.json)。
+- [ ] 尚未访问实时淘宝页面，真实 DOM/ARIA 选择器和线上网页稳定性仍未验证。
+- [x] 报告：[PHASE_16_REPORT.md](PHASE_16_REPORT.md)。
+
 ## 当前能力
 
 - Action 可基于 fresh observation grounding、执行和验证，并拒绝 stale observation。
@@ -94,6 +118,13 @@
 - polling/event 两条传输路径均可测试，缓存支持内存和本地 SQLite。
 - SAFE MODE 会在订单、支付、密码、验证码和身份验证场景停止。
 - Mock Shopping App 的安全模式 E2E 可重复运行，不能代表真实平台结果。
+- 后端可按设备保存最新观察、排队动作、下发动作并接收执行结果。
+- Android Accessibility Service 已装配动作执行器和 polling bridge，可形成上传、轮询、执行、回传代码闭环。
+- 动作入队和下发均校验 `observation_id`；过期动作不会发送给设备。
+- Browser Runtime 已实现 DOM/ARIA Observation、Playwright 动作执行、域名 allowlist 和安全停止。
+- 本地 Mock Web 浏览器 E2E 已通过：读取 `¥10.90`，订单确认边界返回 `SAFETY_BLOCKED`，未提交订单。
+- 已具备真实网页只读接入基础：通用 Web Adapter、选择器配置和脱敏 fixture 采集工具。
+- 已具备淘宝 Adapter 的 fixture 回放基础；真实淘宝选择器仍未验证。
 
 ## 最终评估指标
 
@@ -109,13 +140,14 @@
 
 完整汇总见 [phase13_final_evaluation.json](../evaluation/reports/phase13_final_evaluation.json)。
 
-## 2026-08-09 项目级验收
+## 2026-08-09 桌面端扩展复验
 
-- 综合评分：**65/100**。
-- 离线工程原型：有条件通过。
+- 综合评分：由 **65/100 提升至 79/100**。
+- 离线工程原型和桌面浏览器开发基线：通过。
 - 真实设备、真实平台和生产交付：不通过/未实现。
-- 最新验证：后端 79 passed；Android client test/assembleDebug 通过；Mock App test/assembleDebug 通过；全部 Evaluation runner 通过。
-- P0 阻断项：无 Git commit 基线、Android—Backend 双向动作闭环未接通、无真实平台 adapter。
+- 最新验证：后端 **91 passed**；新增浏览器 Runtime 测试 2 passed；Python 编译检查通过；Mock Web 浏览器 E2E 通过；Android Client 和 Mock App 的 `test assembleDebug` 均通过。
+- 已增加：Browser Runtime、统一 RuntimeSession、TaskOrchestrator、本地 Mock Web、Playwright E2E 和浏览器 CI job。
+- 剩余 P0：无真实平台 adapter、无真实平台 Bad Case 验证；Android 运行证据仍缺失，但不再阻断桌面端主线。
 
 完整结论见 [PROJECT_ACCEPTANCE_REPORT.md](PROJECT_ACCEPTANCE_REPORT.md)。
 
@@ -125,8 +157,14 @@
 - 无真实 Meituan/JD/Taobao adapter、selector 和真实价格数据。
 - 商品解析数据集未人工复核，不能称为人工标注准确率。
 - Event transport 未接入真实 Accessibility event timing。
+- 双向 bridge 仅通过契约测试和 APK 构建验证，尚无设备运行结论。
+- 浏览器 Runtime 仅在本地 Mock Web 上实测，尚无真实购物网站只读结果。
+- Playwright/Chromium 属于可选依赖，远端 CI 尚无执行记录。
 - SQLite cache 是本地单进程方案，不是分布式缓存。
 - 真实模型、网络、生产吞吐和真实平台成功率未测量。
+- 网页 Adapter 目前仍是通用基础，尚未针对具体真实购物平台进行只读验证。
+- 淘宝专用 Adapter 目前通过合成 fixture 和用户提供的结构化搜索 fixture 验证，不能代表真实淘宝网页运行结果。
+- 淘宝页面结构 fixture 已可转换为统一 Observation 并走标准网页抽取链路；尚不代表实时网页结果。
 
 ## 后续外部前置条件
 

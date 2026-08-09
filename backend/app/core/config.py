@@ -22,6 +22,8 @@ class Settings(BaseModel):
     max_workflow_steps: int = Field(default=20, ge=1, le=100)
     transport_mode: Literal["polling", "event"] = "polling"
     event_stabilization_ms: int = Field(default=25, ge=0, le=5000)
+    device_shared_token: str = ""
+    max_transport_message_chars: int = Field(default=1_000_000, ge=1024, le=10_000_000)
 
 
 def _env_value(environ: Mapping[str, str], name: str, default: str) -> str:
@@ -65,4 +67,8 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         max_workflow_steps=int(_env_value(source, "MAX_WORKFLOW_STEPS", "20")),
         transport_mode=_env_value(source, "TRANSPORT_MODE", "polling").lower(),
         event_stabilization_ms=int(_env_value(source, "EVENT_STABILIZATION_MS", "25")),
+        device_shared_token=_env_value(source, "DEVICE_SHARED_TOKEN", ""),
+        max_transport_message_chars=int(
+            _env_value(source, "MAX_TRANSPORT_MESSAGE_CHARS", "1000000")
+        ),
     )

@@ -57,15 +57,15 @@ object ObservationSerializer {
             append("null")
             return
         }
-        append('{')
-        appendJsonNumberField("left", bounds.left)
+        append('[')
+        append(bounds.left)
         append(',')
-        appendJsonNumberField("top", bounds.top)
+        append(bounds.top)
         append(',')
-        appendJsonNumberField("right", bounds.right)
+        append(bounds.right)
         append(',')
-        appendJsonNumberField("bottom", bounds.bottom)
-        append('}')
+        append(bounds.bottom)
+        append(']')
     }
 
     private fun StringBuilder.appendJsonField(name: String, value: String) {
@@ -114,4 +114,3 @@ object ObservationSerializer {
         append('"')
     }
 }
-

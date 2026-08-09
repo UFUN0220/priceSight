@@ -42,4 +42,7 @@ class Observation(BaseModel):
     page_type: PageType = PageType.UNKNOWN
     captured_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     timestamp_epoch_ms: int | None = None
+    source_url: str | None = None
+    title: str | None = None
+    metadata: dict[str, str] = Field(default_factory=dict)
     nodes: list[ObservationNode] = Field(default_factory=list)

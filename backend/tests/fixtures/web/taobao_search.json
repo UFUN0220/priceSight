@@ -1,0 +1,26 @@
+{
+  "observation_id": "taobao-synthetic-search-001",
+  "platform": "taobao",
+  "package_name": "s.taobao.com",
+  "page_type": "unknown",
+  "source_url": "https://s.taobao.com/search",
+  "title": "淘宝搜索结果（合成 fixture）",
+  "nodes": [
+    {
+      "node_id": "taobao-card-1",
+      "resource_id": "taobao-product-result-1",
+      "content_description": "taobao_product_result",
+      "text": "可口可乐 500ml*2瓶 ¥12.80 买2赠1",
+      "clickable": true,
+      "visible": true
+    },
+    {
+      "node_id": "taobao-card-2",
+      "resource_id": "taobao-product-result-2",
+      "content_description": "taobao_product_result",
+      "text": "可口可乐 330ml*6罐 ¥19.90",
+      "clickable": true,
+      "visible": true
+    }
+  ]
+}

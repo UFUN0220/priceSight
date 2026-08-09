@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>PriceSight Mock Web</title>
+  <style>
+    body { font-family: sans-serif; max-width: 720px; margin: 40px auto; }
+    button, input { margin: 8px 4px; padding: 8px; }
+    .card { border: 1px solid #ddd; padding: 16px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <main id="app"></main>
+  <script>
+    const app = document.querySelector('#app');
+    const product = { title: '可口可乐 500ml 2瓶', price: '¥10.90' };
+
+    function renderHome() {
+      document.title = 'Mock Web 首页';
+      app.innerHTML = '<h1>Mock Web 首页</h1>' +
+        '<button data-testid="search-button" aria-label="search">搜索商品</button>';
+      document.querySelector('[data-testid="search-button"]').onclick = renderSearch;
+    }
+
+    function renderSearch() {
+      document.title = 'Mock Web 搜索';
+      app.innerHTML = '<h1>搜索商品</h1>' +
+        '<input data-testid="search-input" aria-label="search_input" />' +
+        '<button data-testid="search-submit" aria-label="search_submit">搜索</button>';
+      document.querySelector('[data-testid="search-submit"]').onclick = renderResults;
+    }
+
+    function renderResults() {
+      document.title = 'Mock Web 搜索结果';
+      app.innerHTML = '<h1>搜索结果</h1>' +
+        '<button class="card" data-testid="product-result-1" aria-label="product_result">' + product.title + '</button>' +
+        '<div class="card">可口可乐 330ml 6罐</div>';
+      document.querySelector('[data-testid="product-result-1"]').onclick = renderDetail;
+    }
+
+    function renderDetail() {
+      document.title = 'Mock Web 商品详情';
+      app.innerHTML = '<h1>商品详情</h1>' +
+        '<div data-testid="product-title">' + product.title + '</div>' +
+        '<div data-testid="product-price">' + product.price + '</div>' +
+        '<button data-testid="checkout" aria-label="checkout">去结算</button>';
+      document.querySelector('[data-testid="checkout"]').onclick = renderOrder;
+    }
+
+    function renderOrder() {
+      document.title = 'Mock Web 订单确认';
+      app.innerHTML = '<h1>订单确认</h1>' +
+        '<button data-testid="submit-order" aria-label="submit_order">提交订单</button>';
+    }
+
+    renderHome();
+  </script>
+</body>
+</html>

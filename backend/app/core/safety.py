@@ -1,5 +1,7 @@
 """Deterministic safety domain models and guard."""
 
+import re
+
 from enum import StrEnum
 
 from pydantic import BaseModel, Field
@@ -28,12 +30,15 @@ class SafetyGuard:
     _blocked_terms = (
         "submit order",
         "place order",
+        "confirm order",
         "payment",
         "pay now",
         "password",
         "captcha",
         "identity verification",
         "提交订单",
+        "确认订单",
+        "确认下单",
         "下单",
         "付款",
         "支付",
@@ -46,7 +51,13 @@ class SafetyGuard:
         """Return STOP when known payment, order, or security terms are present."""
 
         normalized = (text or "").casefold()
-        matched = [term for term in self._blocked_terms if term.casefold() in normalized]
+        compact = re.sub(r"[\W_]+", "", normalized)
+        matched = [
+            term
+            for term in self._blocked_terms
+            if term.casefold() in normalized
+            or re.sub(r"[\W_]+", "", term.casefold()) in compact
+        ]
         if matched:
             return SafetyAssessment(
                 decision=SafetyDecision.STOP,
@@ -63,4 +74,3 @@ class SafetyGuard:
             raise SafetyViolationError(
                 f"Safety stop: {assessment.reason_code}; terms={assessment.matched_terms}"
             )
-

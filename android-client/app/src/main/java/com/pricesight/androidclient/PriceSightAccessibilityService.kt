@@ -5,11 +5,11 @@ import android.view.accessibility.AccessibilityEvent
 
 class PriceSightAccessibilityService : AccessibilityService() {
     private val collector = ObservationCollector()
-    private var exporter: ObservationHttpExporter? = null
+    private var bridgeClient: DeviceBridgeClient? = null
 
     override fun onCreate() {
         super.onCreate()
-        exporter = ObservationHttpExporter()
+        bridgeClient = DeviceBridgeClient(AndroidActionExecutor(this))
     }
 
     override fun onServiceConnected() {
@@ -26,7 +26,7 @@ class PriceSightAccessibilityService : AccessibilityService() {
             windowId = event.windowId,
         )
         DebugStateStore.update(observation)
-        exporter?.exportAsync(observation)
+        bridgeClient?.submitObservationAsync(observation)
     }
 
     override fun onInterrupt() {
@@ -35,8 +35,8 @@ class PriceSightAccessibilityService : AccessibilityService() {
 
     override fun onDestroy() {
         DebugStateStore.markDisabled()
-        exporter?.close()
-        exporter = null
+        bridgeClient?.close()
+        bridgeClient = null
         super.onDestroy()
     }
 }

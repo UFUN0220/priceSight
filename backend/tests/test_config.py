@@ -9,6 +9,8 @@ def test_settings_default_to_safe_mode() -> None:
     assert settings.safe_mode is True
     assert settings.allow_cart is False
     assert settings.max_workflow_steps == 20
+    assert settings.device_shared_token == ""
+    assert settings.max_transport_message_chars == 1_000_000
 
 
 def test_settings_parse_explicit_values() -> None:
@@ -18,12 +20,16 @@ def test_settings_parse_explicit_values() -> None:
             "SAFE_MODE": "true",
             "SAFE_MODE_ALLOW_CART": "true",
             "MAX_RETRIES": "5",
+            "DEVICE_SHARED_TOKEN": "local-test-token",
+            "MAX_TRANSPORT_MESSAGE_CHARS": "2048",
         }
     )
 
     assert settings.app_env == "test"
     assert settings.allow_cart is True
     assert settings.max_retries == 5
+    assert settings.device_shared_token == "local-test-token"
+    assert settings.max_transport_message_chars == 2048
 
 
 def test_settings_parse_agent_provider_configuration() -> None:

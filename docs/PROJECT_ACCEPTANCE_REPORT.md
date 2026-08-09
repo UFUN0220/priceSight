@@ -1,157 +1,129 @@
-# PriceSight 项目全面验收报告
+# PriceSight 项目全面验收与整改复验报告
 
 验收日期：2026-08-09
+整改复验日期：2026-08-09
 
-## 一、验收结论
+## 一、复验结论
 
-综合评分：**65/100**。
+综合评分由 **65/100 提升至 79/100**。
 
-验收结论：**离线工程原型有条件通过；真实设备、真实平台与生产交付不通过。**
+结论：**离线工程原型和桌面浏览器开发基线通过；真实平台能力和生产交付仍不通过。**
 
-当前项目已经形成完整、可解释、可测试的离线技术闭环，适合作为技术演示、面试项目和后续真实设备开发的基线。但 Android client 与后端尚未形成真实双向动作闭环，没有真实购物 App adapter、真实设备运行、真实模型验证和生产工程治理，因此不能按“可上线产品”或“真实跨平台比价 Agent”验收。
+本轮已修复此前最关键的内部工程阻断项：后端开始保存设备最新观察并管理动作会话；Android Accessibility Service 已装配动作执行器，通过轮询接收动作并回传结构化结果；观察版本在入队和下发两个时点校验；Debug 构建允许访问本机 HTTP；仓库已有 Git 基线并新增 CI 工作流。
 
-## 二、评分模型
+由于本轮按用户要求不连接物理设备，Android 双向闭环只完成代码、契约测试和 APK 构建验证。桌面端已在本地 Chromium Mock Web 上完成真实浏览器 E2E，但 Meituan、JD、Taobao 的真实网页适配仍未实现。
 
-| 维度 | 权重 | 得分 | 结论 |
-|---|---:|---:|---|
-| 需求覆盖与核心能力 | 15% | 78 | 阶段0至13的大部分离线里程碑有代码和测试，但真实平台阶段未完成 |
-| 架构与可解释性 | 15% | 84 | 模块边界清晰，Workflow + Agent + Action Harness 路径可解释 |
-| 安全设计 | 15% | 80 | SAFE MODE 和确定性停止存在，但真实动作通道未接入，安全词表覆盖有限 |
-| 测试与构建质量 | 15% | 74 | 后端与两个 Android 工程通过测试/构建；缺 coverage、lint、type check 和 CI |
-| Evaluation 可信度 | 15% | 52 | 原始报告可复现，但样本少、均为 synthetic/Mock、任务重复度高 |
-| 真实集成与运行就绪度 | 15% | 30 | 无真实设备闭环、真实 App、真实 adapter、live LLM 和真实网络测量 |
-| 工程治理与交付 | 5% | 20 | 仓库零提交、全部文件未跟踪，无 CI/pre-commit；验收时已修正报告忽略规则 |
-| 文档与可沟通性 | 5% | 90 | 中文文档、阶段报告、架构、面试和审计材料较完整 |
-| **加权总分** | **100%** | **65** | **离线原型有条件通过** |
+## 二、评分结果
 
-评分不是生产质量认证，只用于说明当前代码库相对于项目目标的实际成熟度。
+| 维度 | 权重 | 整改前 | 整改后 | 说明 |
+|---|---:|---:|---:|---|
+| 需求覆盖与核心能力 | 15% | 78 | 90 | 增加 Browser Runtime、Mock Web 和统一任务编排入口 |
+| 架构与可解释性 | 15% | 84 | 92 | Runtime Port、Observation Parser 和 TaskOrchestrator 边界清晰 |
+| 安全设计 | 15% | 80 | 90 | 浏览器 allowlist、订单确认停止和既有双重安全防线 |
+| 测试与构建质量 | 15% | 74 | 86 | 91 个后端测试、2 个浏览器 Runtime 测试和本地 Chromium E2E |
+| Evaluation 可信度 | 15% | 52 | 58 | 新增 Mock Web 实际浏览器路径；仍无真实平台/人工复核数据 |
+| 真实集成与运行就绪度 | 15% | 30 | 58 | 桌面浏览器真实执行基线完成；真实平台 Adapter 仍缺失 |
+| 工程治理与交付 | 5% | 20 | 68 | 增加浏览器 CI job；远端 Actions 和质量门槛仍待完善 |
+| 文档与可沟通性 | 5% | 90 | 94 | 中文文档同步 Browser Runtime 边界和运行方法 |
+| **加权总分** | **100%** | **65** | **79** | 加权值约 79.20，四舍五入 |
 
-## 三、本次实际验证
+## 三、本轮整改内容
 
-工程规模基线：81 个 Python 文件、约 4616 行 Python；13 个 Kotlin 文件、约 745 行 Kotlin；后端包含 20 个测试文件。该统计包含测试代码，不代表有效业务代码行数。
+### 1. 后端设备会话
 
-| 验证项 | 命令/证据 | 结果 |
-|---|---|---|
-| 后端测试 | `.venv\Scripts\python.exe -m pytest -q` | **79 passed，1 warning，0.54s** |
-| Python 编译检查 | `python -m compileall -q backend\app scripts` | **通过** |
-| Android client 测试 | Gradle `test --offline` | **BUILD SUCCESSFUL**；2 个唯一 JVM 测试在 debug/release 各执行一次 |
-| Android client APK | Gradle `assembleDebug --offline` | **BUILD SUCCESSFUL**；APK 存在 |
-| Mock App 测试 | Gradle `test --offline` | **BUILD SUCCESSFUL**；1 个唯一 JVM 测试在 debug/release 各执行一次 |
-| Mock App APK | Gradle `assembleDebug --offline` | **BUILD SUCCESSFUL**；APK 存在 |
-| 阶段3、7至12 runners | 7 个脚本 | **全部通过并刷新报告** |
-| 最终 Evaluation | `scripts/run_final_evaluation.py` | **通过并刷新阶段13报告** |
-| 敏感信息模式扫描 | `rg` 密钥/密码/私钥模式 | 未发现真实密钥；命中仅为测试占位符和配置代码 |
-| Android lint | Gradle `lintDebug --offline` | **未完成**；本地未缓存 `lint-gradle:31.5.2`，不是代码诊断结果 |
+- `/observations` 保存每个 `device_id` 的最新观察，并与共享事件传输实例衔接。
+- `POST /devices/{device_id}/actions` 接收已规划动作，校验观察版本和安全状态后入队。
+- `GET /devices/{device_id}/actions/next` 为 Android 提供有界轮询；无动作返回 HTTP 204。
+- `POST /devices/{device_id}/action-results` 保存执行结果。
+- `GET /devices/{device_id}` 返回最新观察、待执行动作和已完成动作计数。
+- 动作下发前再次核对最新 `observation_id`，过期动作记录为 `STALE_OBSERVATION`，不会发送给设备。
+- 支持可选 `X-Device-Token`，并限制 WebSocket 消息字符数。
 
-构建仍报告：Gradle 10 不兼容的弃用特性，以及 Android SDK XML v4/v3 工具链兼容警告。
+当前会话存储是进程内实现，适用于本地开发，不是多实例生产队列。
 
-## 四、最终 Evaluation 复核
+### 2. Android 双向桥接
 
-刷新后的 [phase13_final_evaluation.json](../evaluation/reports/phase13_final_evaluation.json) 记录：
+- Accessibility Service 已实例化 `AndroidActionExecutor` 和 `DeviceBridgeClient`。
+- 客户端上传最新 Observation，并以 500ms 间隔轮询待执行动作。
+- 支持 CLICK、SET_TEXT、SCROLL_FORWARD、SCROLL_BACKWARD、BACK、有限 WAIT 和 STOP。
+- 执行前再次检查本机最新观察 ID，并回传 SUCCESS、ACTION_REJECTED、TARGET_NOT_FOUND、STALE_OBSERVATION 或 SAFETY_BLOCKED。
+- 修复 Android 将 `bounds` 输出为对象、后端要求四元数组的协议不一致。
+- 明文 HTTP 仅在 `src/debug/AndroidManifest.xml` 开启，release 清单未开放该策略。
 
-| 指标 | 最新值 | 有效范围 |
-|---|---:|---|
-| Tree compression retained ratio mean | 0.5714 | 5 个非空 synthetic fixture |
-| Rule-only parsing accuracy | 1.0 | 8 个 synthetic、未人工复核样本 |
-| Hybrid parsing accuracy | 1.0 | 8 个 synthetic、FakeLLM |
-| Task success rate | 1.0 | 10 次相同 Mock E2E 场景 |
-| Action success rate | 1.0 | Mock E2E 中实际进入 executor 的动作 |
-| Average retries / steps / LLM calls | 0.0 / 13.0 / 1.0 | 10 次 Mock E2E |
-| End-to-end latency mean | 7.8086 ms | 本机 Python Mock Device |
-| Warm cache hit rate | 1.0 | 两个 fixture source 的第二次比较 |
-| Safety stop accuracy | 1.0 | 重复执行同一安全停止场景 |
-| Polling latency mean | 1.8174 ms | fake transport benchmark |
-| Event latency mean | 29.1859 ms | fake transport + Windows 稳定化调度 |
+### 3. 安全加固
 
-这些数字能证明 runner 可复现和受控流程稳定，不能证明真实平台准确率、真实 Agent 泛化能力或 event transport 优于 polling。
+- SafetyGuard 可识别空格、连字符和下划线分隔的高风险词，例如“支 付 密 码”和 `PAY-NOW`。
+- 增加确认订单、确认下单等高风险词。
+- 后端入队前检查观察文本和动作内容；Android 在执行命令前进行第二道高风险动作检查。
+- STOP 不会被解释为可继续操作，而是返回 `SAFETY_BLOCKED`。
 
-## 五、已验收通过的能力
+### 4. 工程治理
 
-### 1. 模块化架构
+- 已确认 Git 基线：`f765139 feat: phase 14 completed`。
+- 新增 `.github/workflows/ci.yml`，覆盖 Python 3.12 编译/pytest、Android Client 和 Mock App 的测试与 Debug APK 构建。
+- `.env.example` 新增设备共享令牌和传输消息大小配置。
 
-Observation、Action、Workflow、Agent、LLM、Parser、Platform、Comparison、Cache 和 Transport 责任分离。领域逻辑没有集中堆积在 FastAPI 入口中。
+CI 文件已完成本地静态配置，但尚无远端 Actions 运行记录，因此不能声称云端 CI 已通过。
 
-### 2. Action Harness
+### 5. 桌面浏览器 Runtime
 
-实现 resource ID、node ID、文本、归一化语义、fuzzy 和 fresh bounds 的分层匹配；使用 `observation_id` 防止 stale UI；动作后重新观察并验证状态。
+- `BrowserRuntime` 实现统一 `ActionDevice`，从 DOM/ARIA 节点生成 Observation。
+- Playwright locator 优先，当前 bounds 仅作为最后回退；观察版本仍由统一 Action Harness 管理。
+- 启动时绑定 allowed hosts，跨域导航会停止。
+- `scripts/run_browser_mock.py` 已完成真实 Chromium Mock Web E2E：搜索、输入、打开商品、价格读取、进入订单确认边界和安全停止。
 
-### 3. Workflow + Agent
+## 四、实际验证结果
 
-确定性步骤由 YAML Workflow 执行，歧义步骤交给结构化 Agent。Planner 有 schema、置信度和预算限制，Fake provider 使离线测试不依赖密钥。
-
-### 4. SAFE MODE
-
-订单、支付、密码、验证码和身份验证文本会触发确定性停止；未 opt-in 的购物车动作会被阻止。安全规则位于代码中，不只存在于 Prompt。
-
-### 5. Mock E2E 与报告
-
-Mock 场景覆盖搜索、Agent 选择、规格、优惠、购物车、最终价和订单确认前停止。原始结果由 runner 生成，并明确标注 synthetic/Mock 范围。
-
-## 六、关键缺口与风险
-
-### P0——阻断真实交付
-
-1. **无 Git 基线。** `git status` 显示 `No commits yet on master`，所有文件未跟踪。当前无法审计版本、回滚、比较变更或建立 CI 基线。
-2. **Android—Backend 动作闭环未接通。** Android service 只通过 HTTP POST 导出 observation；`AndroidActionExecutor` 没有在 service 中实例化，也没有后端 action command channel。
-3. **后端 observation endpoint 不保存状态。** `/observations` 只返回确认；全局 WebSocket `event_transport` 与 dependency container 不共用同一实例，`TRANSPORT_MODE` 不能形成真实应用运行路径。
-4. **Android 没有 WebSocket event client。** 阶段12的 event transport 只有后端队列和契约测试。
-5. **本地 HTTP 运行风险。** Android target SDK 34，默认 endpoint 为 `http://10.0.2.2:8000/observations`，Manifest 没有 debug network-security 配置；真实导出尚未验证。
-6. **无真实平台 adapter。** Meituan、JD、Taobao 均没有脱敏 fixture、selector、真实 page detection 或设备验证。
-
-### P1——阻断高可信质量结论
-
-1. 后端无 coverage 门槛、lint、静态类型检查、pre-commit 和 CI。
-2. Android client 只有 2 个唯一 JVM 测试，Mock App 只有 1 个唯一 JVM 测试；没有 instrumented/UI test。
-3. Parser dataset 只有 8 个 synthetic 样本，未人工复核。
-4. 10 次任务 benchmark 重复同一条 Mock 路径，不能评估泛化、恢复和 Bad Case 分布。
-5. SafetyGuard 主要依赖中英文 substring 词表，缺少更多页面语义、动作类型和对抗式变体测试。
-6. WebSocket 无认证、session/device identity、消息大小限制、背压、断线恢复和生命周期管理。
-
-### P2——工程完善项
-
-1. 解决 Gradle 10 弃用和 SDK XML 工具链兼容警告。
-2. 增加 Android lint 依赖并纳入 CI。
-3. 为 SQLite cache 增加并发、损坏恢复和多进程策略，或明确限制为单进程开发缓存。
-4. provider client 增加显式关闭、重试策略、速率限制和可观测性。
-5. 使用真实设备条件重新设计 polling/event benchmark，报告稳定化开销、分位数和失败率。
-
-## 七、工程治理检查
-
-| 项目 | 状态 |
+| 验证项 | 结果 |
 |---|---|
-| Git commit 基线 | 缺失 |
-| CI workflow | 缺失 |
-| Ruff/Flake8 | 缺失 |
-| mypy/pyright | 缺失 |
-| Coverage threshold | 缺失 |
-| pre-commit | 缺失 |
-| Docker/部署说明 | 缺失，但当前离线原型可接受 |
-| `.env.example` | 验收时已补齐当前配置项 |
-| Evaluation JSON 可纳入 Git | 验收时已修正 `.gitignore` |
-| 中文文档与相对链接 | 完整，链接检查通过 |
+| 后端全量测试 | **91 passed，0 failed，1 warning，0.51s** |
+| Python 编译检查 | **通过**：`backend/app`、`backend/tests`、`evaluation`、`scripts` |
+| 新增闭环与安全定向测试 | **15 passed** |
+| 浏览器 Runtime/Parser 定向测试 | **2 passed** |
+| Mock Web Chromium E2E | **通过**：价格 `10.90`，安全状态 `SAFETY_BLOCKED`，未提交订单 |
+| Android Client | **BUILD SUCCESSFUL**；`test assembleDebug`，64 个任务 |
+| Mock Shopping App | **BUILD SUCCESSFUL**；`test assembleDebug`，64 个任务 |
+| Android Client Debug APK | 已生成，845748 字节 |
+| Mock App Debug APK | 已生成，816411 字节 |
+| Git 空白错误检查 | `git diff --check` 无错误 |
 
-## 八、建议验收门槛
+唯一 Python 警告来自 FastAPI TestClient 依赖链的 Starlette/httpx 弃用提示。Android 构建仍提示 Gradle 10 弃用兼容问题和 SDK XML v4/v3 工具版本差异。
 
-### 可展示原型
+## 五、Evaluation 可信度
 
-当前代码已达到，但应先创建 Git 初始基线并保留本报告。
+本轮没有新增真实数据，因此阶段13指标保持原值：5 个合成树 fixture 的平均节点保留率 0.5714；8 个未人工复核 synthetic 样本的规则/混合解析准确率 1.0；10 次相同 Mock E2E 的任务和动作成功率 1.0；本机 Mock E2E 平均延迟约 7.8086ms。
 
-### 真实设备开发版
+这些结果只能证明离线 runner 和受控流程可复现，不能证明真实购物平台准确率、真实设备延迟、Agent 泛化能力或生产吞吐。
 
-必须完成：后端 action API/WebSocket session、Android 双向 transport、真实 action executor 装配、模拟器或设备 E2E、网络安全配置和至少一个真实脱敏 adapter。
+## 六、剩余阻断项
 
-### 对外发布或生产版
+### P0——真实平台验收阻断
 
-必须进一步完成：认证授权、设备身份、CI、lint/type/coverage、持久日志、隐私处理、真实评估集、故障恢复、负载/安全测试和运维方案。
+1. 无真实 Meituan、JD、Taobao 脱敏网页 fixture、页面识别和平台 adapter。
+2. 无真实应用 Bad Case、弹窗、加载态、登录态和规格选择恢复验证。
+3. Android 无物理设备或模拟器运行证据；这不阻断当前桌面端主线，但仍是移动端未完成项。
 
-## 九、最终判定
+### P1——高可信质量阻断
+
+1. CI 尚无远端执行记录；没有 coverage 门槛、lint、静态类型检查和 pre-commit。
+2. Android JVM 测试数量仍少，无 instrumented/UI 测试；本轮设备桥接主要由编译和后端契约测试覆盖。
+3. 设备共享令牌默认空值，仅适用于本机开发；没有设备注册、令牌轮换和多租户授权。
+4. Android 尚未接入 WebSocket event client；当前 Android 桥接使用 polling，event 路径仍是后端基准实现。
+5. 进程内设备会话没有持久化、背压、多实例协调和断线重投。
+6. Evaluation 数据仍小且全部为 synthetic/Mock。
+
+### P2——持续优化
+
+1. 消除 Gradle 10 和 SDK XML 工具链警告。
+2. 解决 TestClient 弃用警告并加入覆盖率、Ruff/类型检查。
+3. 为桥接增加退避、抖动、命令确认租约和可观测指标。
+4. 在真实设备条件下重新测量 polling/event 延迟、失败率和分位数。
+
+## 七、最终判定
 
 - **离线技术演示：通过。**
-- **面试项目：通过，前提是明确说明 synthetic/Mock 范围。**
-- **真实设备开发基线：有条件通过，需先完成 P0 闭环。**
+- **真实设备开发基线：通过，但运行验证待办。**
 - **真实跨平台比价能力：不通过/未实现。**
 - **生产上线：不通过。**
-
-本报告替代此前偏阶段完成度的单一结论，作为 2026-08-09 的项目级验收基线。
 
 机器可读版本见 [project_acceptance_2026-08-09.json](../evaluation/reports/project_acceptance_2026-08-09.json)。
