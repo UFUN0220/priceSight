@@ -46,4 +46,6 @@ evaluation/reports/*
 !evaluation/reports/ci_quality_validation.md
 !evaluation/reports/project_acceptance_final.md
 !evaluation/reports/project_acceptance_final.json
+!evaluation/reports/evaluation_human_verified.md
+!evaluation/reports/evaluation_human_verified.json
 data/

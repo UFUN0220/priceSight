@@ -15,18 +15,101 @@ from app.parser.models import ParseResult
 from app.parser.price import PriceParser
 from app.parser.product import ProductParser
 
-from evaluation.schema import EvaluationSample, ExpectedQuantity, ParsedOutput, load_sample
+from evaluation.schema import (
+    AnnotationStatus,
+    EvaluationSample,
+    ExpectedQuantity,
+    HumanAnnotationRecord,
+    ParsedOutput,
+    load_human_annotation,
+    load_sample,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATASET = ROOT / "evaluation" / "datasets" / "evaluation_v2.jsonl"
 DEFAULT_TAXONOMY = ROOT / "evaluation" / "bad_case_taxonomy.json"
+DEFAULT_HUMAN_ANNOTATIONS = ROOT / "evaluation" / "datasets" / "human_annotations.jsonl"
 
 
-def load_dataset(path: Path = DEFAULT_DATASET) -> list[EvaluationSample]:
+def _read_jsonl(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    return [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def load_human_annotations(path: Path = DEFAULT_HUMAN_ANNOTATIONS) -> list[HumanAnnotationRecord]:
+    """Load human annotations; an absent or empty work file is a valid empty queue."""
+
+    return [load_human_annotation(line) for line in _read_jsonl(path)]
+
+
+def _annotation_has_labels(annotation: HumanAnnotationRecord) -> bool:
+    return any(
+        value is not None
+        for value in (
+            annotation.expected_quantity,
+            annotation.expected_spec,
+            annotation.expected_displayed_price,
+            annotation.expected_effective_price,
+            annotation.expected_product_name,
+        )
+    )
+
+
+def _apply_human_annotations(
+    samples: list[EvaluationSample], annotations: list[HumanAnnotationRecord]
+) -> list[EvaluationSample]:
+    by_id = {sample.sample_id: sample for sample in samples}
+    for annotation in annotations:
+        if annotation.sample_id in by_id:
+            current = by_id[annotation.sample_id]
+            if annotation.annotation_status is AnnotationStatus.UNREVIEWED and not _annotation_has_labels(annotation):
+                continue
+            if current.platform != annotation.platform or current.source_type != annotation.source_type:
+                raise ValueError(f"annotation provenance does not match sample {annotation.sample_id}")
+            by_id[annotation.sample_id] = current.model_copy(
+                update={
+                    "query": annotation.query,
+                    "expected_quantity": annotation.expected_quantity,
+                    "expected_spec": annotation.expected_spec,
+                    "expected_price": annotation.expected_displayed_price,
+                    "expected_displayed_price": annotation.expected_displayed_price,
+                    "expected_effective_price": annotation.expected_effective_price,
+                    "expected_product_name": annotation.expected_product_name,
+                    "ambiguity_type": annotation.ambiguity_type,
+                    "annotation_status": annotation.annotation_status,
+                }
+            )
+            continue
+
+        by_id[annotation.sample_id] = EvaluationSample(
+            sample_id=annotation.sample_id,
+            platform=annotation.platform,
+            source_type=annotation.source_type,
+            query=annotation.query,
+            raw_observation={"text": annotation.raw_text, "title": annotation.product_title},
+            expected_quantity=annotation.expected_quantity,
+            expected_spec=annotation.expected_spec,
+            expected_price=annotation.expected_displayed_price,
+            expected_displayed_price=annotation.expected_displayed_price,
+            expected_effective_price=annotation.expected_effective_price,
+            expected_product_name=annotation.expected_product_name,
+            ambiguity_type=annotation.ambiguity_type,
+            annotation_status=annotation.annotation_status,
+        )
+    return list(by_id.values())
+
+
+def load_dataset(
+    path: Path = DEFAULT_DATASET, annotations_path: Path | None = None
+) -> list[EvaluationSample]:
     """Load and validate every JSONL record, preserving source order."""
 
-    return [load_sample(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    samples = [load_sample(line) for line in _read_jsonl(path)]
+    if annotations_path is not None:
+        samples = _apply_human_annotations(samples, load_human_annotations(annotations_path))
+    return samples
 
 
 def _resolve_json_path(value: Any, path: str) -> Any:
@@ -45,6 +128,13 @@ def resolve_fixture_reference(reference: str) -> Any:
     fixture_path = ROOT / relative_path
     value: Any = json.loads(fixture_path.read_text(encoding="utf-8"))
     return _resolve_json_path(value, selector) if selector else value
+
+
+def _report_path(path: Path) -> str:
+    try:
+        return path.relative_to(ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
 
 
 def replay_text(sample: EvaluationSample) -> str:
@@ -136,7 +226,7 @@ def _spec_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
 
 
 def _price_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
-    expected = sample.expected_price
+    expected = sample.expected_displayed_price or sample.expected_price
     actual = output.price
     if expected is None or actual is None:
         return expected is actual
@@ -162,7 +252,7 @@ def _metric(numerator: int, denominator: int, basis: str) -> dict[str, Any]:
     return {
         "numerator": numerator,
         "denominator": denominator,
-        "accuracy": numerator / denominator if denominator else None,
+        "accuracy": numerator / denominator if denominator else "NOT_AVAILABLE",
         "basis": basis,
     }
 
@@ -177,6 +267,46 @@ def _metric_for(
     eligible = [sample for sample in samples if sample.sample_id in outputs and predicate(sample)]
     numerator = sum(comparator(sample, outputs[sample.sample_id]) for sample in eligible)
     return _metric(numerator, len(eligible), basis)
+
+
+def _metrics_for_scope(
+    samples: list[EvaluationSample],
+    rule_outputs: dict[str, ParsedOutput],
+    model_outputs: dict[str, ParsedOutput],
+    final_outputs: dict[str, ParsedOutput],
+) -> dict[str, dict[str, Any]]:
+    all_predicate = lambda _sample: True
+    field_predicates = {
+        "quantity": lambda sample: sample.expected_quantity is not None,
+        "spec": lambda sample: sample.expected_spec is not None,
+        "specification": lambda sample: sample.expected_spec is not None,
+        "price": lambda sample: sample.expected_displayed_price is not None or sample.expected_price is not None,
+        "ambiguous_case": lambda sample: sample.ambiguity_type.value != "none",
+    }
+    outputs_by_parser = {"rule": rule_outputs, "llm": model_outputs, "hybrid": final_outputs}
+    metrics: dict[str, dict[str, Any]] = {}
+    for parser_name, outputs in outputs_by_parser.items():
+        basis = {
+            "rule": "selected samples in scope; deterministic rule parser",
+            "llm": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance",
+            "hybrid": "selected samples in scope; rule-first hybrid with FakeLLMProvider",
+        }[parser_name]
+        metrics[f"{parser_name}_accuracy"] = _metric_for(samples, outputs, all_predicate, _full_equal, basis)
+        for field, predicate in field_predicates.items():
+            comparator = (
+                _full_equal
+                if field == "ambiguous_case"
+                else lambda sample, output, field=field: _field_equal(
+                    sample, output, "spec" if field == "specification" else field
+                )
+            )
+            metrics[f"{parser_name}_{field}_accuracy"] = _metric_for(samples, outputs, predicate, comparator, basis)
+        metrics[f"{parser_name}_effective_price_accuracy"] = _metric(
+            0,
+            sum(sample.expected_effective_price is not None for sample in samples),
+            "NOT_AVAILABLE: current parser output exposes displayed price, not effective price",
+        )
+    return metrics
 
 
 def _coverage(samples: list[EvaluationSample]) -> list[dict[str, Any]]:
@@ -197,8 +327,12 @@ def _coverage(samples: list[EvaluationSample]) -> list[dict[str, Any]]:
     return result
 
 
-def evaluate_dataset(dataset_path: Path = DEFAULT_DATASET, sample_ids: set[str] | None = None) -> dict[str, Any]:
-    all_samples = load_dataset(dataset_path)
+def evaluate_dataset(
+    dataset_path: Path = DEFAULT_DATASET,
+    sample_ids: set[str] | None = None,
+    annotations_path: Path | None = None,
+) -> dict[str, Any]:
+    all_samples = load_dataset(dataset_path, annotations_path)
     samples = [sample for sample in all_samples if sample_ids is None or sample.sample_id in sample_ids]
     if not samples:
         raise ValueError("no evaluation samples selected")
@@ -229,25 +363,15 @@ def evaluate_dataset(dataset_path: Path = DEFAULT_DATASET, sample_ids: set[str] 
         if hybrid_results[sample.sample_id].source.value == "llm"
     }
 
-    all_predicate = lambda _sample: True
-    field_predicates = {
-        "quantity": lambda sample: sample.expected_quantity is not None,
-        "spec": lambda sample: sample.expected_spec is not None,
-        "price": lambda sample: sample.expected_price is not None,
-        "ambiguous_case": lambda sample: sample.ambiguity_type.value != "none",
-    }
-    outputs_by_parser = {"rule": rule_outputs, "llm": model_outputs, "hybrid": final_outputs}
-    metrics: dict[str, Any] = {}
-    for parser_name, outputs in outputs_by_parser.items():
-        basis = {
-            "rule": "all selected samples; deterministic rule parser",
-            "llm": "samples where FakeLLMProvider fallback returned source=llm; not live model performance",
-            "hybrid": "all selected samples; rule-first hybrid with FakeLLMProvider",
-        }[parser_name]
-        metrics[f"{parser_name}_accuracy"] = _metric_for(samples, outputs, all_predicate, _full_equal, basis)
-        for field, predicate in field_predicates.items():
-            comparator = _full_equal if field == "ambiguous_case" else lambda sample, output, field=field: _field_equal(sample, output, field)
-            metrics[f"{parser_name}_{field}_accuracy"] = _metric_for(samples, outputs, predicate, comparator, basis)
+    metrics = _metrics_for_scope(samples, rule_outputs, model_outputs, final_outputs)
+    human_samples = [sample for sample in samples if sample.annotation_status is AnnotationStatus.HUMAN_VERIFIED]
+    human_ids = {sample.sample_id for sample in human_samples}
+    human_metrics = _metrics_for_scope(
+        human_samples,
+        {sample_id: output for sample_id, output in rule_outputs.items() if sample_id in human_ids},
+        {sample_id: output for sample_id, output in model_outputs.items() if sample_id in human_ids},
+        {sample_id: output for sample_id, output in final_outputs.items() if sample_id in human_ids},
+    )
 
     case_results = []
     for sample in samples:
@@ -291,22 +415,103 @@ def evaluate_dataset(dataset_path: Path = DEFAULT_DATASET, sample_ids: set[str] 
         for sample in samples
         if not _full_equal(sample, final_outputs[sample.sample_id])
     ]
+    failure_analysis: list[dict[str, Any]] = []
+    for sample in samples:
+        expected = {
+            "product_name": sample.expected_product_name,
+            "quantity": sample.expected_quantity.model_dump(mode="json") if sample.expected_quantity else None,
+            "specification": sample.expected_spec.model_dump(mode="json") if sample.expected_spec else None,
+            "displayed_price": (
+                (sample.expected_displayed_price or sample.expected_price).model_dump(mode="json")
+                if sample.expected_displayed_price or sample.expected_price
+                else None
+            ),
+            "effective_price": sample.expected_effective_price.model_dump(mode="json") if sample.expected_effective_price else None,
+        }
+        for parser_name, output, success, parser_source, reason in (
+            (
+                "rule",
+                rule_outputs[sample.sample_id],
+                _full_equal(sample, rule_outputs[sample.sample_id]),
+                rule_results[sample.sample_id].parser_source.value,
+                rule_results[sample.sample_id].reason_code,
+            ),
+            (
+                "hybrid",
+                final_outputs[sample.sample_id],
+                _full_equal(sample, final_outputs[sample.sample_id]),
+                hybrid_results[sample.sample_id].parser_source.value,
+                hybrid_results[sample.sample_id].reason_code,
+            ),
+        ):
+            if not success:
+                failure_analysis.append(
+                    {
+                        "sample_id": sample.sample_id,
+                        "ambiguity_type": sample.ambiguity_type.value,
+                        "parser": parser_name,
+                        "expected": expected,
+                        "actual": output.model_dump(mode="json"),
+                        "parser_source": parser_source,
+                        "failure_reason": reason,
+                    }
+                )
+    error_by_type: list[dict[str, Any]] = []
+    for ambiguity_type in sorted({sample.ambiguity_type.value for sample in samples}):
+        typed = [sample for sample in samples if sample.ambiguity_type.value == ambiguity_type]
+        error_by_type.append(
+            {
+                "ambiguity_type": ambiguity_type,
+                "sample_count": len(typed),
+                "rule_error_count": sum(sample.sample_id in rule_failure_ids for sample in typed),
+                "hybrid_error_count": sum(sample.sample_id in hybrid_failure_ids for sample in typed),
+                "sample_ids": [sample.sample_id for sample in typed],
+            }
+        )
+    human_accuracy_available = status_counts.get(AnnotationStatus.HUMAN_VERIFIED.value, 0) > 0
     return {
-        "report_version": "evaluation_v2",
-        "dataset": dataset_path.relative_to(ROOT).as_posix(),
+        "report_version": "evaluation_v2_human_annotation_aware",
+        "dataset": _report_path(dataset_path),
         "dataset_count": len(samples),
         "source_type_counts": dict(sorted(source_counts.items())),
         "annotation_status_counts": dict(sorted(status_counts.items())),
         "human_verified_count": status_counts.get("HUMAN_VERIFIED", 0),
-        "human_accuracy_claim_available": status_counts.get("HUMAN_VERIFIED", 0) > 0,
-        "metric_interpretation": "当前数据未达到 HUMAN_VERIFIED 门槛；accuracy 仅表示机器输出与未复核期望字段的一致性，不是人工真实准确率。",
+        "human_accuracy_claim_available": human_accuracy_available,
+        "metric_interpretation": (
+            "HUMAN_VERIFIED_ONLY 指标可用；ALL 仍混合不同来源，不能自动解释为真实平台准确率。"
+            if human_accuracy_available
+            else "HUMAN_VERIFIED=0；HUMAN_VERIFIED_ONLY 指标输出 NOT_AVAILABLE，当前只能发布机器一致性/fixture 回归。"
+        ),
+        "price_metric_definition": "price_accuracy compares expected_displayed_price; expected_effective_price is retained for annotation and is NOT_AVAILABLE until parser output exposes a comparable effective price.",
         "llm_invocation_rate": _metric(llm_invocation_count, len(samples), "hybrid parser fallback invocations / selected samples"),
         "schema_failure_rate": _metric(llm_schema_failure_count, llm_invocation_count, "invalid structured LLM responses / LLM invocations"),
         "rule_failure_sample_ids": rule_failure_ids,
         "hybrid_failure_sample_ids": hybrid_failure_ids,
         "metrics": metrics,
+        "metrics_by_scope": {
+            "ALL": {
+                **metrics,
+                "llm_invocation_rate": _metric(llm_invocation_count, len(samples), "fallback invocations / ALL samples"),
+                "schema_failure_rate": _metric(llm_schema_failure_count, llm_invocation_count, "invalid responses / ALL fallback invocations"),
+            },
+            "HUMAN_VERIFIED_ONLY": {
+                **human_metrics,
+                "llm_invocation_rate": _metric(
+                    sum(hybrid_results[sample.sample_id].llm_fallback_attempted for sample in human_samples),
+                    len(human_samples),
+                    "fallback invocations / HUMAN_VERIFIED_ONLY samples",
+                ),
+                "schema_failure_rate": _metric(
+                    sum(hybrid_results[sample.sample_id].llm_schema_valid is False for sample in human_samples),
+                    sum(hybrid_results[sample.sample_id].llm_fallback_attempted for sample in human_samples),
+                    "invalid responses / HUMAN_VERIFIED_ONLY fallback invocations",
+                ),
+            },
+        },
         "bad_case_coverage": _coverage(samples) if sample_ids is None else [],
         "case_results": case_results,
+        "failure_analysis": failure_analysis,
+        "error_by_ambiguity_type": error_by_type,
         "legacy_claim_review": {
             "legacy_report": "evaluation/reports/phase7_product_parsing.json",
             "legacy_claim": "8 条 synthetic 样本上的 rule/hybrid 1.0",
@@ -314,7 +519,11 @@ def evaluate_dataset(dataset_path: Path = DEFAULT_DATASET, sample_ids: set[str] 
             "reason": "历史样本均为 synthetic 且 not_human_reviewed，旧报告没有 numerator/denominator 和人工复核证据。",
         },
         "limitations": [
-            "当前没有 HUMAN_VERIFIED 样本，因此不发布复杂商品识别的真实准确率。",
+            (
+                "当前没有 HUMAN_VERIFIED 样本，因此 HUMAN_VERIFIED_ONLY 指标为 NOT_AVAILABLE，不发布复杂商品识别的真实准确率。"
+                if not human_accuracy_available
+                else "HUMAN_VERIFIED_ONLY 已有人工确认样本，但样本规模与来源仍不足以代表线上平台总体准确率。"
+            ),
             "LLM 指标使用 FakeLLMProvider 的确定性回放，不代表任何线上模型表现。",
             "taxonomy 中尚无可靠样本的类别标记为 NOT_REPRESENTED，不编造覆盖率。",
             "淘宝数据来自脱敏 fixture 回放，不是实时淘宝数据。",
@@ -324,8 +533,26 @@ def evaluate_dataset(dataset_path: Path = DEFAULT_DATASET, sample_ids: set[str] 
 
 
 def markdown_report(report: dict[str, Any]) -> str:
+    def accuracy_text(value: Any) -> str:
+        if value == "NOT_AVAILABLE" or value is None:
+            return "NOT_AVAILABLE"
+        return f"{value:.4f}"
+
+    def append_metric_table(lines: list[str], metrics: dict[str, Any]) -> None:
+        lines.extend(
+            [
+                "| 指标 | numerator | denominator | accuracy | 口径 |",
+                "| --- | ---: | ---: | --- | --- |",
+            ]
+        )
+        for name, metric in metrics.items():
+            lines.append(
+                f"| `{name}` | {metric['numerator']} | {metric['denominator']} | "
+                f"{accuracy_text(metric['accuracy'])} | {metric['basis']} |"
+            )
+
     lines = [
-        "# Evaluation v2 评测报告",
+        "# Evaluation v2 / Human-Verified 评测报告",
         "",
         "> 本报告建立可复现评测框架，不把未人工复核样本或 Fake LLM 输出描述为真实平台准确率。",
         "",
@@ -335,16 +562,22 @@ def markdown_report(report: dict[str, Any]) -> str:
         f"- 来源：`{json.dumps(report['source_type_counts'], ensure_ascii=False)}`。",
         f"- 标注状态：`{json.dumps(report['annotation_status_counts'], ensure_ascii=False)}`。",
         f"- HUMAN_VERIFIED：{report['human_verified_count']}；人工真实准确率是否可发布：`{report['human_accuracy_claim_available']}`。",
+        f"- 解释：{report['metric_interpretation']}",
+        f"- 价格口径：{report['price_metric_definition']}",
         "- 淘宝样本是脱敏 fixture 回放，不是实时淘宝数据。",
         "",
-        "## 指标（均含 numerator / denominator）",
+        "## ALL：所有可回放数据",
         "",
-        "| 指标 | numerator | denominator | accuracy | 口径 |",
-        "| --- | ---: | ---: | ---: | --- |",
     ]
-    for name, metric in report["metrics"].items():
-        accuracy = "N/A" if metric["accuracy"] is None else f"{metric['accuracy']:.4f}"
-        lines.append(f"| `{name}` | {metric['numerator']} | {metric['denominator']} | {accuracy} | {metric['basis']} |")
+    append_metric_table(lines, report["metrics_by_scope"]["ALL"])
+    lines += [
+        "",
+        "## HUMAN_VERIFIED_ONLY：仅人工明确确认的数据",
+        "",
+        "> 只有 `annotation_status == HUMAN_VERIFIED` 的样本进入本表；分母为 0 时统一输出 `NOT_AVAILABLE`。",
+        "",
+    ]
+    append_metric_table(lines, report["metrics_by_scope"]["HUMAN_VERIFIED_ONLY"])
     lines += [
         "",
         "## Bad Case 覆盖",
@@ -355,6 +588,37 @@ def markdown_report(report: dict[str, Any]) -> str:
     for entry in report["bad_case_coverage"]:
         ids = ", ".join(f"`{item}`" for item in entry["sample_ids"]) or "—"
         lines.append(f"| `{entry['ambiguity_type']}` | {entry['status']} | {ids} |")
+    lines += [
+        "",
+        "## 错误分析",
+        "",
+        "### 按 Bad Case 类型",
+        "",
+        "| ambiguity_type | sample_count | rule_error_count | hybrid_error_count | sample_id |",
+        "| --- | ---: | ---: | ---: | --- |",
+    ]
+    for entry in report["error_by_ambiguity_type"]:
+        lines.append(
+            f"| `{entry['ambiguity_type']}` | {entry['sample_count']} | {entry['rule_error_count']} | "
+            f"{entry['hybrid_error_count']} | {', '.join(f'`{item}`' for item in entry['sample_ids'])} |"
+        )
+    lines += [
+        "",
+        "### 失败样本明细",
+        "",
+        "| sample_id | ambiguity_type | parser | expected | actual | parser_source | failure_reason |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    if report["failure_analysis"]:
+        for failure in report["failure_analysis"]:
+            lines.append(
+                f"| `{failure['sample_id']}` | `{failure['ambiguity_type']}` | `{failure['parser']}` | "
+                f"`{json.dumps(failure['expected'], ensure_ascii=False, separators=(',', ':'))}` | "
+                f"`{json.dumps(failure['actual'], ensure_ascii=False, separators=(',', ':'))}` | "
+                f"`{failure['parser_source']}` | `{failure['failure_reason']}` |"
+            )
+    else:
+        lines.append("| — | — | — | — | — | — | 当前选择范围没有失败样本 |")
     lines += [
         "",
         "## 历史指标审计",
@@ -374,7 +638,11 @@ def markdown_report(report: dict[str, Any]) -> str:
     ]
     lines.extend(f"- {item}" for item in report["limitations"])
     lines += [
-        "- 下一步应优先补充经过双人复核的 real_anonymized / fixture 样本，再建立可发布的人工准确率基线。",
+        (
+            "- 下一步应优先补充经过双人复核的 real_anonymized / fixture 样本，扩大人工准确率基线。"
+            if report["human_verified_count"]
+            else "- 下一步应优先补充经过双人复核的 real_anonymized / fixture 样本，再建立可发布的人工准确率基线。"
+        ),
         "",
     ]
     return "\n".join(lines)

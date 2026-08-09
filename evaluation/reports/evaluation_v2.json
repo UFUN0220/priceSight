@@ -1,5 +1,5 @@
 {
-  "report_version": "evaluation_v2",
+  "report_version": "evaluation_v2_human_annotation_aware",
   "dataset": "evaluation/datasets/evaluation_v2.jsonl",
   "dataset_count": 10,
   "source_type_counts": {
@@ -11,7 +11,8 @@
   },
   "human_verified_count": 0,
   "human_accuracy_claim_available": false,
-  "metric_interpretation": "当前数据未达到 HUMAN_VERIFIED 门槛；accuracy 仅表示机器输出与未复核期望字段的一致性，不是人工真实准确率。",
+  "metric_interpretation": "HUMAN_VERIFIED=0；HUMAN_VERIFIED_ONLY 指标输出 NOT_AVAILABLE，当前只能发布机器一致性/fixture 回归。",
+  "price_metric_definition": "price_accuracy compares expected_displayed_price; expected_effective_price is retained for annotation and is NOT_AVAILABLE until parser output exposes a comparable effective price.",
   "llm_invocation_rate": {
     "numerator": 4,
     "denominator": 10,
@@ -34,91 +35,409 @@
       "numerator": 8,
       "denominator": 10,
       "accuracy": 0.8,
-      "basis": "all selected samples; deterministic rule parser"
+      "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_quantity_accuracy": {
       "numerator": 6,
       "denominator": 6,
       "accuracy": 1.0,
-      "basis": "all selected samples; deterministic rule parser"
+      "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_spec_accuracy": {
       "numerator": 10,
       "denominator": 10,
       "accuracy": 1.0,
-      "basis": "all selected samples; deterministic rule parser"
+      "basis": "selected samples in scope; deterministic rule parser"
+    },
+    "rule_specification_accuracy": {
+      "numerator": 10,
+      "denominator": 10,
+      "accuracy": 1.0,
+      "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_price_accuracy": {
       "numerator": 2,
       "denominator": 2,
       "accuracy": 1.0,
-      "basis": "all selected samples; deterministic rule parser"
+      "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_ambiguous_case_accuracy": {
       "numerator": 8,
       "denominator": 10,
       "accuracy": 0.8,
-      "basis": "all selected samples; deterministic rule parser"
+      "basis": "selected samples in scope; deterministic rule parser"
+    },
+    "rule_effective_price_accuracy": {
+      "numerator": 0,
+      "denominator": 0,
+      "accuracy": "NOT_AVAILABLE",
+      "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
     },
     "llm_accuracy": {
       "numerator": 4,
       "denominator": 4,
       "accuracy": 1.0,
-      "basis": "samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_quantity_accuracy": {
       "numerator": 0,
       "denominator": 0,
-      "accuracy": null,
-      "basis": "samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      "accuracy": "NOT_AVAILABLE",
+      "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_spec_accuracy": {
       "numerator": 4,
       "denominator": 4,
       "accuracy": 1.0,
-      "basis": "samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+    },
+    "llm_specification_accuracy": {
+      "numerator": 4,
+      "denominator": 4,
+      "accuracy": 1.0,
+      "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_price_accuracy": {
       "numerator": 2,
       "denominator": 2,
       "accuracy": 1.0,
-      "basis": "samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_ambiguous_case_accuracy": {
       "numerator": 4,
       "denominator": 4,
       "accuracy": 1.0,
-      "basis": "samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+    },
+    "llm_effective_price_accuracy": {
+      "numerator": 0,
+      "denominator": 0,
+      "accuracy": "NOT_AVAILABLE",
+      "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
     },
     "hybrid_accuracy": {
       "numerator": 10,
       "denominator": 10,
       "accuracy": 1.0,
-      "basis": "all selected samples; rule-first hybrid with FakeLLMProvider"
+      "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_quantity_accuracy": {
       "numerator": 6,
       "denominator": 6,
       "accuracy": 1.0,
-      "basis": "all selected samples; rule-first hybrid with FakeLLMProvider"
+      "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_spec_accuracy": {
       "numerator": 10,
       "denominator": 10,
       "accuracy": 1.0,
-      "basis": "all selected samples; rule-first hybrid with FakeLLMProvider"
+      "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+    },
+    "hybrid_specification_accuracy": {
+      "numerator": 10,
+      "denominator": 10,
+      "accuracy": 1.0,
+      "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_price_accuracy": {
       "numerator": 2,
       "denominator": 2,
       "accuracy": 1.0,
-      "basis": "all selected samples; rule-first hybrid with FakeLLMProvider"
+      "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_ambiguous_case_accuracy": {
       "numerator": 10,
       "denominator": 10,
       "accuracy": 1.0,
-      "basis": "all selected samples; rule-first hybrid with FakeLLMProvider"
+      "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+    },
+    "hybrid_effective_price_accuracy": {
+      "numerator": 0,
+      "denominator": 0,
+      "accuracy": "NOT_AVAILABLE",
+      "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
+    }
+  },
+  "metrics_by_scope": {
+    "ALL": {
+      "rule_accuracy": {
+        "numerator": 8,
+        "denominator": 10,
+        "accuracy": 0.8,
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_quantity_accuracy": {
+        "numerator": 6,
+        "denominator": 6,
+        "accuracy": 1.0,
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_spec_accuracy": {
+        "numerator": 10,
+        "denominator": 10,
+        "accuracy": 1.0,
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_specification_accuracy": {
+        "numerator": 10,
+        "denominator": 10,
+        "accuracy": 1.0,
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_price_accuracy": {
+        "numerator": 2,
+        "denominator": 2,
+        "accuracy": 1.0,
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_ambiguous_case_accuracy": {
+        "numerator": 8,
+        "denominator": 10,
+        "accuracy": 0.8,
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_effective_price_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
+      },
+      "llm_accuracy": {
+        "numerator": 4,
+        "denominator": 4,
+        "accuracy": 1.0,
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_quantity_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_spec_accuracy": {
+        "numerator": 4,
+        "denominator": 4,
+        "accuracy": 1.0,
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_specification_accuracy": {
+        "numerator": 4,
+        "denominator": 4,
+        "accuracy": 1.0,
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_price_accuracy": {
+        "numerator": 2,
+        "denominator": 2,
+        "accuracy": 1.0,
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_ambiguous_case_accuracy": {
+        "numerator": 4,
+        "denominator": 4,
+        "accuracy": 1.0,
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_effective_price_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
+      },
+      "hybrid_accuracy": {
+        "numerator": 10,
+        "denominator": 10,
+        "accuracy": 1.0,
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_quantity_accuracy": {
+        "numerator": 6,
+        "denominator": 6,
+        "accuracy": 1.0,
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_spec_accuracy": {
+        "numerator": 10,
+        "denominator": 10,
+        "accuracy": 1.0,
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_specification_accuracy": {
+        "numerator": 10,
+        "denominator": 10,
+        "accuracy": 1.0,
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_price_accuracy": {
+        "numerator": 2,
+        "denominator": 2,
+        "accuracy": 1.0,
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_ambiguous_case_accuracy": {
+        "numerator": 10,
+        "denominator": 10,
+        "accuracy": 1.0,
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_effective_price_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
+      },
+      "llm_invocation_rate": {
+        "numerator": 4,
+        "denominator": 10,
+        "accuracy": 0.4,
+        "basis": "fallback invocations / ALL samples"
+      },
+      "schema_failure_rate": {
+        "numerator": 0,
+        "denominator": 4,
+        "accuracy": 0.0,
+        "basis": "invalid responses / ALL fallback invocations"
+      }
+    },
+    "HUMAN_VERIFIED_ONLY": {
+      "rule_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_quantity_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_spec_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_specification_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_price_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_ambiguous_case_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; deterministic rule parser"
+      },
+      "rule_effective_price_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
+      },
+      "llm_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_quantity_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_spec_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_specification_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_price_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_ambiguous_case_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+      },
+      "llm_effective_price_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
+      },
+      "hybrid_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_quantity_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_spec_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_specification_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_price_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_ambiguous_case_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
+      },
+      "hybrid_effective_price_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
+      },
+      "llm_invocation_rate": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "fallback invocations / HUMAN_VERIFIED_ONLY samples"
+      },
+      "schema_failure_rate": {
+        "numerator": 0,
+        "denominator": 0,
+        "accuracy": "NOT_AVAILABLE",
+        "basis": "invalid responses / HUMAN_VERIFIED_ONLY fallback invocations"
+      }
     }
   },
   "bad_case_coverage": [
@@ -840,6 +1159,150 @@
       "failure_reason": null
     }
   ],
+  "failure_analysis": [
+    {
+      "sample_id": "taobao-iphone17-item-1",
+      "ambiguity_type": "title_noise",
+      "parser": "rule",
+      "expected": {
+        "product_name": "Apple/苹果 iPhone 17",
+        "quantity": null,
+        "specification": {
+          "package_type": null,
+          "notes": "fixture 未提供容量 SKU，不能推断规格"
+        },
+        "displayed_price": {
+          "amount": "5999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "【淘金币可叠加国家补贴】Apple/苹果 iPhone 17 手机 全国联保 现货速发 全新未拆封 游戏拍照 ¥5999.00",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": {
+          "amount": "5999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "taobao-iphone17-item-2",
+      "ambiguity_type": "title_noise",
+      "parser": "rule",
+      "expected": {
+        "product_name": "Apple/苹果 iPhone 17",
+        "quantity": null,
+        "specification": {
+          "package_type": null,
+          "notes": "fixture 未提供容量 SKU，不能推断规格"
+        },
+        "displayed_price": {
+          "amount": "5999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "【12期免息/国家补贴15%】Apple/苹果 iPhone 17 手机 A19 芯片 2025 新款 全新未拆封 多仓速发 官方正品 ¥5999.00",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": {
+          "amount": "5999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    }
+  ],
+  "error_by_ambiguity_type": [
+    {
+      "ambiguity_type": "gift",
+      "sample_count": 1,
+      "rule_error_count": 0,
+      "hybrid_error_count": 0,
+      "sample_ids": [
+        "gift-water"
+      ]
+    },
+    {
+      "ambiguity_type": "multi_pack",
+      "sample_count": 4,
+      "rule_error_count": 0,
+      "hybrid_error_count": 0,
+      "sample_ids": [
+        "water-550ml-12",
+        "cola-330ml-6",
+        "water-1l-2",
+        "snack-250g-3"
+      ]
+    },
+    {
+      "ambiguity_type": "multi_spec",
+      "sample_count": 1,
+      "rule_error_count": 0,
+      "hybrid_error_count": 0,
+      "sample_ids": [
+        "combo"
+      ]
+    },
+    {
+      "ambiguity_type": "quantity_ambiguity",
+      "sample_count": 1,
+      "rule_error_count": 0,
+      "hybrid_error_count": 0,
+      "sample_ids": [
+        "buy-2-get-1"
+      ]
+    },
+    {
+      "ambiguity_type": "title_noise",
+      "sample_count": 2,
+      "rule_error_count": 2,
+      "hybrid_error_count": 0,
+      "sample_ids": [
+        "taobao-iphone17-item-1",
+        "taobao-iphone17-item-2"
+      ]
+    },
+    {
+      "ambiguity_type": "unit_ambiguity",
+      "sample_count": 1,
+      "rule_error_count": 0,
+      "hybrid_error_count": 0,
+      "sample_ids": [
+        "cups-2"
+      ]
+    }
+  ],
   "legacy_claim_review": {
     "legacy_report": "evaluation/reports/phase7_product_parsing.json",
     "legacy_claim": "8 条 synthetic 样本上的 rule/hybrid 1.0",
@@ -847,7 +1310,7 @@
     "reason": "历史样本均为 synthetic 且 not_human_reviewed，旧报告没有 numerator/denominator 和人工复核证据。"
   },
   "limitations": [
-    "当前没有 HUMAN_VERIFIED 样本，因此不发布复杂商品识别的真实准确率。",
+    "当前没有 HUMAN_VERIFIED 样本，因此 HUMAN_VERIFIED_ONLY 指标为 NOT_AVAILABLE，不发布复杂商品识别的真实准确率。",
     "LLM 指标使用 FakeLLMProvider 的确定性回放，不代表任何线上模型表现。",
     "taxonomy 中尚无可靠样本的类别标记为 NOT_REPRESENTED，不编造覆盖率。",
     "淘宝数据来自脱敏 fixture 回放，不是实时淘宝数据。",

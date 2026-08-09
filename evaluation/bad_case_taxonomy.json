@@ -1,4 +1,5 @@
 {
+  "bulk": {"description": "人工标注的整箱、连包或多件装；与 multi_pack 语义相近但保留原始标注值", "sample_ids": []},
   "multi_pack": {"description": "标题同时包含单件容量与包装数量", "sample_ids": ["water-550ml-12", "cola-330ml-6", "water-1l-2", "snack-250g-3"]},
   "multi_spec": {"description": "同一商品存在多个规格或组合规格", "sample_ids": ["combo"]},
   "second_item_discount": {"description": "第二件折扣或第二件优惠，不能当作单件价格", "sample_ids": []},

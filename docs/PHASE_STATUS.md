@@ -249,6 +249,24 @@
 - [ ] Android lint 因离线缺少 `com.android.tools.lint:lint-gradle:31.5.2` BLOCKED；无 emulator/AVD/system image，Android Runtime E2E NOT_VERIFIED；远端 CI 无运行记录。
 - [x] 生成 [project_acceptance_final.md](../evaluation/reports/project_acceptance_final.md)、[project_acceptance_final.json](../evaluation/reports/project_acceptance_final.json) 和 [面试项目说明](interview/project_overview.md)。最终评分 84/100，项目仍非生产就绪。
 
+### 阶段8补充——Human-Verified Evaluation 收口
+
+- [x] 保留现有 10 条 Evaluation v2 回归样本：8 条 synthetic、2 条淘宝脱敏 fixture，全部仍为 `UNREVIEWED`。
+- [x] 新增人工复核队列 `evaluation/datasets/human_annotations.jsonl` 和模板 `human_annotations.template.json`；没有新增假的真实商品或人工结论。
+- [x] runner 支持 `--annotations` overlay，并分别输出 `ALL` 与 `HUMAN_VERIFIED_ONLY`；分母为 0 时输出 `NOT_AVAILABLE`。
+- [x] 增加 `DISPUTED` 状态、synthetic 禁止 HUMAN_VERIFIED、错误明细和 Bad Case 类型错误统计，以及 sample_id 不特判回归测试。
+- [x] 生成 [evaluation_human_verified.md](../evaluation/reports/evaluation_human_verified.md)；当前报告纳入 22 条 HUMAN_VERIFIED（18 条 fixture、4 条 real_anonymized），其余样本仍为 UNREVIEWED。
+- [x] HUMAN_VERIFIED_ONLY 已可计算，但样本规模不足以代表线上总体准确率；FakeLLM 指标仍不是线上模型指标。
+
+### 阶段9——Android Emulator Runtime 闭环复验
+
+- [x] 完成环境盘点：Java 17.0.15、SDK `F:\newinstall\android_sdk`、platform `android-34`、build-tools `34.0.0`、adb/sdkmanager/avdmanager 已确认。
+- [x] Emulator binary 已安装；API 34 x86_64 system image 两次下载均未完成，目录只有 `.installer` 元数据。
+- [x] 修复 instrumented test harness 的 AndroidX runner 配置；测试 APK 编译成功。
+- [x] Android unit tests、assembleDebug、Backend 138 tests、Python quality gate 85% coverage、git diff --check 通过。
+- [ ] Instrumented runtime 因 `No connected devices!` BLOCKED；未创建 AVD，未启动 Mock Shopping App，未执行双向 Runtime E2E。
+- [ ] 生成 [android_runtime_validation_final.md](../evaluation/reports/android_runtime_validation_final.md)；Android Runtime 仍保持 BLOCKED，不升级为 MOCK_RUNTIME_VERIFIED。
+
 ## 后续外部前置条件
 
 连接物理设备、采集脱敏真实 App fixture、单独完成安全评审后，才可开始真实平台 adapter 和真实运行验证。

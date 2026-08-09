@@ -35,3 +35,93 @@ Evaluation v2 用于建立可追溯的商品解析评测集。`synthetic` 是历
 ## 质量门槛
 
 只有 `HUMAN_VERIFIED` 样本可以进入“人工真实准确率”分母。`UNREVIEWED`、`MACHINE_DRAFT` 和仅有 fixture 的样本可以用于解析器回归，但报告必须明确标记为机器一致性或 fixture 验证，不得用于简历级准确率声明。
+
+## 本阶段人工填写入口
+
+人工实际填写文件：
+
+```text
+evaluation/datasets/human_annotations.jsonl
+```
+
+字段模板和允许值见：
+
+```text
+evaluation/datasets/human_annotations.template.json
+```
+
+仓库已放入当前 10 条样本的人工复核队列，全部保持 `UNREVIEWED`，其中 8 条是既有 synthetic，2 条是淘宝脱敏 fixture。它们不是人工标签，也不会自动进入 HUMAN_VERIFIED 指标。以后新增 Bad Case 时，在同一个 JSONL 文件新增一行；不要改写既有 `sample_id`。
+
+使用人工 overlay 重放：
+
+```powershell
+uv run python scripts/run_evaluation_v2.py `
+  --annotations evaluation/datasets/human_annotations.jsonl `
+  --json-report evaluation/reports/evaluation_human_verified.json `
+  --markdown-report evaluation/reports/evaluation_human_verified.md
+```
+
+runner 会按 `sample_id` 合并 overlay。空白的 `UNREVIEWED` 队列行不会覆盖现有机器回归 expected；填写后可重放。`DISPUTED` 会保留在 ALL 中，但排除 HUMAN_VERIFIED_ONLY。runner 永远不会把 `UNREVIEWED` 或 `DISPUTED` 自动升级为 `HUMAN_VERIFIED`。
+
+## 每条数据需要填写的字段
+
+| 字段 | 人工填写规则 |
+| --- | --- |
+| `sample_id` | 来源中的稳定 ID；不得按 parser 版本改名。 |
+| `platform` | `taobao`、`jd`、`meituan`、`generic` 或仓库已有平台名。 |
+| `source_type` | `synthetic`、`fixture`、`real_anonymized`；合成数据永远保持 `synthetic`。 |
+| `anonymized_source` | 脱敏文件路径、fixture JSON selector 或采集记录编号；不得放账号、Cookie、支付信息。 |
+| `query` | 当时的用户查询，不自行改写成商品标题。 |
+| `product_title` | 页面可见的商品标题；没有标题时留空。 |
+| `raw_text` | 可复现的脱敏文本，保留影响判断的促销、SKU、数量和价格。 |
+| `expected_quantity` | 只写主购买数量和主包装含量；赠品、第二件优惠数量分开写在 notes。无法确定时为 `null`。 |
+| `expected_spec` | 写容量、颜色、版本、存储、套餐/组合等规格。观察不到时为 `null`，并说明原因。 |
+| `expected_displayed_price` | 页面直接展示的价格口径，`price_kind` 使用 `displayed`。价格区间不能硬选一个数。 |
+| `expected_effective_price` | 根据明确优惠条件可计算的实际口径；无足够条件时为 `null`，不能把 displayed price 复制过来冒充到手价。 |
+| `expected_product_name` | 去除营销词后的核心商品名；无法确认时为 `null`，不要猜。 |
+| `ambiguity_type` | 从 `evaluation/bad_case_taxonomy.json` 选择最主要的一个类型；必要的次要歧义写入 notes。 |
+| `annotation_status` | 新行使用 `UNREVIEWED`；有明确分歧使用 `DISPUTED`；只有人工完成复核和确认后才使用 `HUMAN_VERIFIED`。 |
+| `annotator_notes` | 记录判断依据、缺失字段、优惠条件和复核意见；HUMAN_VERIFIED 必须非空。 |
+
+## 字段判定细则
+
+### quantity
+
+只标用户购买的主商品数量。例如 `550ml×12` 的 `count=12`、`content_amount=550`、`content_unit=ml`；`买2赠1` 的“买 2”是促销条件，不要在无法确定包装数量时标成 `count=3`；`1L×2 + 赠250ml×2` 的主数量是 2，赠品写入 notes。
+
+### specification
+
+规格包含容量、重量、颜色、尺寸、存储、版本、SKU 或套餐关系。不同规格没有选择依据时，`expected_spec` 可以为 `null`，`ambiguity_type` 标为 `multi_spec` 或 `sku_mixed_text`，在 notes 写清缺失信息。不要把营销词当成规格。
+
+### displayed price 与 effective price
+
+`expected_displayed_price` 是页面直接读到的金额，例如 `¥19.90`。`expected_effective_price` 只有在优惠条件明确且计算口径可复现时才填写，例如明确“券后 ¥17.90”。“到手价”“预估价”“第二件折扣”如果缺少门槛、会员、数量或时间条件，effective price 应为 `null`，并标记对应 Bad Case。当前 Parser 输出主要验证 displayed price；报告不会把 effective price 标注伪装成已实现的模型能力。
+
+### 区间价格
+
+如 `¥9.90-19.90`、`9.9 起` 或不同 SKU 的价格区间，不要选择最低价或最高价作为单值。`expected_displayed_price` 设为 `null`，`ambiguity_type=price_range`，notes 保存原始区间和无法选择单 SKU 的原因。
+
+### 信息不足、重复节点和 popup/loading
+
+缺失价格、规格或商品名时保留 `null`，标 `missing_information`。同一商品重复出现时在 notes 记录重复节点证据，标 `duplicate_node`，不要把重复节点当成两个商品。弹窗或加载状态遮挡主体内容时标 `popup_loading`；如果页面当时没有可确认商品信息，expected 字段保持 `null`。
+
+### 动态价格
+
+价格随时间、用户身份、库存或交互变化时，必须记录观察时间/条件和页面原文；无法在脱敏 fixture 中重现的，`expected_effective_price=null`，标 `dynamic_price`，不得用另一次访问的价格替代。
+
+## 什么时候可以标 HUMAN_VERIFIED
+
+同时满足以下条件才可以人工填写 `HUMAN_VERIFIED`：
+
+1. 人工实际查看了脱敏原文或 fixture，不是根据 parser 输出反推 expected。
+2. `source_type` 不是 `synthetic`；synthetic 只能保留为 synthetic regression。
+3. quantity、spec、displayed/effective price 和 product name 已逐字段填写；无法确认的字段明确填 `null` 并解释原因。
+4. `ambiguity_type` 与原文一致，优惠门槛和区间价格没有被简化掉。
+5. `annotator_notes` 写明依据，并完成第二次复核或明确确认。
+6. 标注人手工将状态改为 `HUMAN_VERIFIED` 后，再运行 runner；Codex、parser、FakeLLM 和 runner 都不得替你改变这个状态。
+
+如果两名标注人无法达成一致，使用 `DISPUTED`，保留分歧说明；该样本可以进入 ALL 回归，但不会进入 HUMAN_VERIFIED_ONLY。
+
+## 当前优先补充的 Bad Case
+
+当前 taxonomy 已预留但尚无可靠样本的类型：`second_item_discount`、`coupon_price`、`price_range`、`sku_mixed_text`、`missing_information`、`duplicate_node`、`popup_loading`、`dynamic_price`。优先从脱敏真实页面或可审计 fixture 补充，不要为了填满列表而编造商品、价格或人工结论。

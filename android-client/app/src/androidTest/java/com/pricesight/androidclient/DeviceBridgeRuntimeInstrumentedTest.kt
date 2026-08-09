@@ -1,8 +1,13 @@
 package com.pricesight.androidclient
 
 import android.provider.Settings
-import android.test.InstrumentationTestCase
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import org.json.JSONObject
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
+import org.junit.Test
+import org.junit.runner.RunWith
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.UUID
@@ -11,7 +16,9 @@ import java.util.UUID
  * Real-device/emulator harness for the complete observation -> action -> callback loop.
  * It intentionally fails with BLOCKED when the accessibility service or backend is not provisioned.
  */
-class DeviceBridgeRuntimeInstrumentedTest : InstrumentationTestCase() {
+@RunWith(AndroidJUnit4::class)
+class DeviceBridgeRuntimeInstrumentedTest {
+    @Test
     fun testObservationUploadBackPollExecutionCallback() {
         assertTrue(
             "BLOCKED: PriceSightAccessibilityService is not enabled",
@@ -33,7 +40,7 @@ class DeviceBridgeRuntimeInstrumentedTest : InstrumentationTestCase() {
     }
 
     private fun isAccessibilityServiceEnabled(): Boolean {
-        val enabled = instrumentation.targetContext.contentResolver
+        val enabled = InstrumentationRegistry.getInstrumentation().targetContext.contentResolver
             .let { Settings.Secure.getString(it, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES).orEmpty() }
         return enabled.contains("com.pricesight.androidclient/com.pricesight.androidclient.PriceSightAccessibilityService")
     }

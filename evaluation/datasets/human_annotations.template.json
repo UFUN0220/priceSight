@@ -1,0 +1,26 @@
+{
+  "purpose": "人工填写模板，不是可直接计入指标的样本数据",
+  "copy_to": "evaluation/datasets/human_annotations.jsonl",
+  "one_json_object_per_line": true,
+  "required_fields": ["sample_id", "platform", "source_type", "anonymized_source", "query", "product_title", "raw_text", "expected_quantity", "expected_spec", "expected_displayed_price", "expected_effective_price", "expected_product_name", "ambiguity_type", "annotation_status", "annotator_notes"],
+  "record_template": {
+    "sample_id": "stable-id-from-source",
+    "platform": "taobao|jd|meituan|generic",
+    "source_type": "fixture|real_anonymized|synthetic",
+    "anonymized_source": "脱敏文件路径、fixture 引用或采集记录编号",
+    "query": "用户查询",
+    "product_title": "可见商品标题；没有则留空",
+    "raw_text": "可回放的脱敏原始文本",
+    "expected_quantity": {"count": 1, "content_amount": "500", "content_unit": "ml", "container_unit": "bottle"},
+    "expected_spec": {"package_type": null, "notes": "无法确认时填 null 并说明原因"},
+    "expected_displayed_price": {"amount": "19.90", "currency": "CNY", "price_kind": "displayed"},
+    "expected_effective_price": {"amount": "17.90", "currency": "CNY", "price_kind": "coupon"},
+    "expected_product_name": "人工确认的核心商品名",
+    "ambiguity_type": "none",
+    "annotation_status": "UNREVIEWED",
+    "annotator_notes": "填写判断依据；HUMAN_VERIFIED 必须由人工明确确认，不能由 runner 自动生成。"
+  },
+  "status_values": ["UNREVIEWED", "HUMAN_VERIFIED", "DISPUTED"],
+  "ambiguity_type_note": "bulk 可用于人工标注的整箱/连包；multi_pack 可用于通用多件装。两者均保留原始标注值。",
+  "new_bad_case_types_to_prioritize": ["second_item_discount", "coupon_price", "price_range", "sku_mixed_text", "missing_information", "duplicate_node", "popup_loading", "dynamic_price"]
+}

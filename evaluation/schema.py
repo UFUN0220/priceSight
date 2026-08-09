@@ -20,11 +20,13 @@ class AnnotationStatus(StrEnum):
     MACHINE_DRAFT = "MACHINE_DRAFT"
     HUMAN_REVIEWED = "HUMAN_REVIEWED"
     HUMAN_VERIFIED = "HUMAN_VERIFIED"
+    DISPUTED = "DISPUTED"
     REJECTED = "REJECTED"
 
 
 class AmbiguityType(StrEnum):
     NONE = "none"
+    BULK = "bulk"
     MULTI_PACK = "multi_pack"
     MULTI_SPEC = "multi_spec"
     SECOND_ITEM_DISCOUNT = "second_item_discount"
@@ -98,6 +100,8 @@ class EvaluationSample(BaseModel):
     expected_quantity: ExpectedQuantity | None = None
     expected_spec: ExpectedSpecification | None = None
     expected_price: ExpectedPrice | None = None
+    expected_displayed_price: ExpectedPrice | None = None
+    expected_effective_price: ExpectedPrice | None = None
     expected_product_name: str | None = None
     ambiguity_type: AmbiguityType = AmbiguityType.NONE
     annotation_status: AnnotationStatus = AnnotationStatus.UNREVIEWED
@@ -112,7 +116,44 @@ class EvaluationSample(BaseModel):
         if self.raw_observation is None and not self.fixture_reference:
             raise ValueError("sample must include raw_observation or fixture_reference")
         if self.annotation_status is AnnotationStatus.HUMAN_VERIFIED and self.source_type is SourceType.SYNTHETIC:
-            raise ValueError("synthetic samples cannot be HUMAN_VERIFIED without a human annotation record")
+            raise ValueError("synthetic samples cannot be HUMAN_VERIFIED")
+        if self.expected_displayed_price is None:
+            self.expected_displayed_price = self.expected_price
+        if self.expected_price is None:
+            self.expected_price = self.expected_displayed_price
+        return self
+
+
+class HumanAnnotationRecord(BaseModel):
+    """Human-editable annotation overlay; never generated as verified by replay."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    sample_id: str = Field(min_length=1)
+    platform: str = Field(min_length=1)
+    source_type: SourceType
+    anonymized_source: str = Field(min_length=1)
+    query: str = Field(min_length=1)
+    product_title: str = ""
+    raw_text: str = Field(min_length=1)
+    expected_quantity: ExpectedQuantity | None = None
+    expected_spec: ExpectedSpecification | None = None
+    expected_displayed_price: ExpectedPrice | None = None
+    expected_effective_price: ExpectedPrice | None = None
+    expected_product_name: str | None = None
+    ambiguity_type: AmbiguityType = AmbiguityType.NONE
+    annotation_status: AnnotationStatus = AnnotationStatus.UNREVIEWED
+    annotator_notes: str = ""
+
+    @model_validator(mode="after")
+    def require_human_confirmation_evidence(self) -> "HumanAnnotationRecord":
+        if self.annotation_status is AnnotationStatus.HUMAN_VERIFIED:
+            if self.source_type is SourceType.SYNTHETIC:
+                raise ValueError("synthetic samples cannot be HUMAN_VERIFIED")
+            if not self.annotator_notes.strip():
+                raise ValueError("HUMAN_VERIFIED records require annotator_notes")
+            if self.expected_product_name is None:
+                raise ValueError("HUMAN_VERIFIED records require expected_product_name")
         return self
 
 
@@ -120,3 +161,9 @@ def load_sample(line: str) -> EvaluationSample:
     """Validate one JSONL line and fail closed on unknown fields."""
 
     return EvaluationSample.model_validate_json(line)
+
+
+def load_human_annotation(line: str) -> HumanAnnotationRecord:
+    """Validate one human annotation JSONL line and fail closed on unknown fields."""
+
+    return HumanAnnotationRecord.model_validate_json(line)
