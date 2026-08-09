@@ -60,11 +60,16 @@ _DOM_SNAPSHOT_SCRIPT = r"""
     while (parent && !idByElement.has(parent)) parent = parent.parentElement;
     return parent ? idByElement.get(parent) : null;
   };
-  const nodes = elements.map((element, index) => {
+    const nodes = elements.map((element, index) => {
     const rect = element.getBoundingClientRect();
     const text = (element.innerText || element.textContent || "").trim().replace(/\s+/g, " ");
-    const aria = element.getAttribute("aria-label") || element.getAttribute("title");
-    const resource = element.getAttribute("data-testid") || element.id || element.getAttribute("name");
+      const aria = element.getAttribute("aria-label") || element.getAttribute("title");
+      const resource = element.getAttribute("data-testid") || element.id || element.getAttribute("name");
+    const href = element.tagName.toLowerCase() === "a" ? element.href : null;
+    const attributeNames = ["data-item-id", "data-id", "data-seller", "data-shop", "data-sales"];
+    const attributes = Object.fromEntries(attributeNames
+      .map((name) => [name, element.getAttribute(name)])
+      .filter((entry) => entry[1] !== null));
     const children = elements.filter((candidate) => candidate.parentElement === element)
       .map((candidate) => idByElement.get(candidate));
     const style = window.getComputedStyle(element);
@@ -72,9 +77,12 @@ _DOM_SNAPSHOT_SCRIPT = r"""
       node_id: ids[index],
       parent_id: parentFor(element),
       class_name: element.tagName.toLowerCase(),
+      role: element.getAttribute("role"),
       text: text || null,
       content_description: aria,
       resource_id: resource,
+      href: href,
+      attributes: attributes,
       clickable: interactive(element),
       editable: editable(element),
       scrollable: element.scrollHeight > element.clientHeight ||

@@ -19,9 +19,12 @@ class ObservationNode(BaseModel):
     node_id: str
     parent_id: str | None = None
     class_name: str | None = None
+    role: str | None = None
     text: str | None = None
     content_description: str | None = None
     resource_id: str | None = None
+    href: str | None = None
+    attributes: dict[str, str] = Field(default_factory=dict)
     clickable: bool = False
     editable: bool = False
     scrollable: bool = False

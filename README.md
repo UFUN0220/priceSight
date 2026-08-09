@@ -194,6 +194,7 @@ scripts/             reproducible evaluation and benchmark runners
 - [阶段14报告](docs/PHASE_14_REPORT.md)
 - [阶段15报告](docs/PHASE_15_REPORT.md)
 - [阶段16报告](docs/PHASE_16_REPORT.md)
+- [淘宝实时只读验证报告](evaluation/reports/taobao_live_readonly_validation.md)
 - [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)
 - [结构化验收结果](evaluation/reports/project_acceptance_2026-08-09.json)
 - [安全边界](docs/SAFETY.md)

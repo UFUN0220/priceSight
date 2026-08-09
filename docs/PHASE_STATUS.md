@@ -118,6 +118,14 @@
 - [ ] 尚未访问实时淘宝页面，真实 DOM/ARIA 选择器和线上网页稳定性仍未验证。
 - [x] 报告：[PHASE_16_REPORT.md](PHASE_16_REPORT.md)。
 
+### 阶段1——淘宝实时网页只读链路验证
+
+- [x] 增加淘宝页面状态识别、host allowlist、DOM/ARIA 可选证据字段和有序 selector fallback。
+- [x] 增加 `scripts/run_taobao_readonly.py`，只读 runner 入口和非变更行为测试通过。
+- [x] 浏览器入口实际访问淘宝公开搜索页并观察到搜索控件、商品链接和价格文本。
+- [ ] 项目独立 runner 进程被当前审批通道阻断，未完成项目内实时 Observation→TaobaoAdapter 标准化链路。
+- [x] 报告：[taobao_live_readonly_validation.md](../evaluation/reports/taobao_live_readonly_validation.md)。
+
 ## 当前能力
 
 - Action 可基于 fresh observation grounding、执行和验证，并拒绝 stale observation。

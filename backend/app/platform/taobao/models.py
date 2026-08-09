@@ -8,6 +8,8 @@ been reviewed.
 
 from decimal import Decimal
 
+from enum import StrEnum
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.platform.web.models import WebSelectorConfig
@@ -33,6 +35,41 @@ class TaobaoSelectorConfig(WebSelectorConfig):
     search_submit_resource_id: str = "taobao-search-submit"
     checkout_resource_id: str = "taobao-checkout"
     add_to_cart_resource_id: str = "taobao-add-to-cart"
+    selector_fallbacks: dict[str, list[str]] = Field(
+        default_factory=lambda: {
+            "product_result": [
+                "aria_semantic",
+                "stable_attribute",
+                "href_product_id",
+                "dom_structure",
+                "text_assisted",
+            ],
+            "search_input": ["aria_semantic", "stable_attribute", "text_assisted"],
+            "search_submit": ["aria_semantic", "stable_attribute", "text_assisted"],
+        }
+    )
+
+
+class TaobaoPageState(StrEnum):
+    SEARCH_RESULT = "SEARCH_RESULT"
+    PRODUCT_LIST = "PRODUCT_LIST"
+    PRODUCT_DETAIL = "PRODUCT_DETAIL"
+    LOGIN_REQUIRED = "LOGIN_REQUIRED"
+    LOADING = "LOADING"
+    POPUP = "POPUP"
+    EMPTY_RESULT = "EMPTY_RESULT"
+    RISK_BLOCKED = "RISK_BLOCKED"
+    UNKNOWN = "UNKNOWN"
+
+
+class TaobaoPageAssessment(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    state: TaobaoPageState
+    reason: str
+    host_verified: bool
+    selector_strategy: dict[str, str] = Field(default_factory=dict)
+    selector_fallback_level: dict[str, int] = Field(default_factory=dict)
 
 
 class TaobaoProductFixture(BaseModel):

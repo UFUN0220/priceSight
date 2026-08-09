@@ -30,6 +30,17 @@ class PlatformProduct(BaseModel):
     identity: ProductIdentity
     specification: ProductSpecification
     price: Price | None = None
+    displayed_price: Price | None = None
+    original_price: Price | None = None
+    product_url: str | None = None
+    product_id: str | None = None
+    seller: str | None = None
+    sales_info: str | None = None
+    observation_id: str | None = None
+    extraction_source: str = "observation"
+    selector_strategy: str | None = None
+    selector_fallback_level: int | None = Field(default=None, ge=1)
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     promotions: list[Promotion] = Field(default_factory=list)
 
 
@@ -44,6 +55,8 @@ class AdapterExtraction(BaseModel):
     price: Price | None = None
     promotions: list[Promotion] = Field(default_factory=list)
     selector_candidates: dict[str, list[ActionTarget]] = Field(default_factory=dict)
+    selector_strategy: dict[str, str] = Field(default_factory=dict)
+    selector_fallback_level: dict[str, int] = Field(default_factory=dict)
     failure_reason: str | None = None
 
 
