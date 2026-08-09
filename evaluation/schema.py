@@ -76,6 +76,10 @@ class ParsedOutput(BaseModel):
     spec: ExpectedSpecification | None = None
     price: ExpectedPrice | None = None
     source: str | None = None
+    parser_source: str | None = None
+    candidate_count: int | None = None
+    reason_code: str | None = None
+    reason: str | None = None
     ambiguous: bool | None = None
     confidence: float | None = Field(default=None, ge=0.0, le=1.0)
 

@@ -14,6 +14,7 @@ from app.parser.models import (
     ParseSource,
     ProductIdentity,
     ProductSpecification,
+    ParserSource,
 )
 from app.parser.product import ProductParser
 
@@ -37,6 +38,7 @@ class HybridProductParser:
         rule_result = self.rule_parser.parse(text)
         if not rule_result.ambiguous and rule_result.confidence >= self.confidence_threshold:
             return rule_result
+        invocation_reason = rule_result.reason_code
         try:
             response = self.provider.complete(
                 LLMRequest(
@@ -52,7 +54,12 @@ class HybridProductParser:
             return rule_result.model_copy(
                 update={
                     "source": ParseSource.RULE_FALLBACK,
+                    "parser_source": ParserSource.HYBRID,
+                    "reason_code": "llm_schema_or_provider_failure",
+                    "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
                     "llm_fallback_attempted": True,
+                    "llm_schema_valid": False,
+                    "llm_invocation_reason": invocation_reason,
                     "fallback_reason": f"structured fallback unavailable: {type(error).__name__}",
                 }
             )
@@ -76,7 +83,13 @@ class HybridProductParser:
             confidence=suggestion.confidence,
             ambiguous=suggestion.confidence < self.confidence_threshold,
             source=ParseSource.LLM,
+            parser_source=ParserSource.HYBRID,
+            candidate_count=rule_result.candidate_count,
+            reason_code=suggestion.reason_code,
+            reason=suggestion.reason_summary,
             llm_fallback_attempted=True,
+            llm_schema_valid=True,
+            llm_invocation_reason=invocation_reason,
         )
 
     @staticmethod

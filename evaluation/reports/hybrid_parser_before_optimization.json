@@ -1,0 +1,17 @@
+{
+  "report_version": "evaluation_v2_before_phase3",
+  "captured_date": "2026-08-09",
+  "source_report": "evaluation/reports/evaluation_v2.json",
+  "interpretation": "阶段3前机器一致性基线；10条样本均UNREVIEWED，不是人工真实准确率。",
+  "dataset_count": 10,
+  "rule_accuracy": {"numerator": 8, "denominator": 10, "accuracy": 0.8},
+  "hybrid_accuracy": {"numerator": 10, "denominator": 10, "accuracy": 1.0},
+  "ambiguous_accuracy": {"numerator": 10, "denominator": 10, "accuracy": 1.0},
+  "llm_invocation_rate": {"numerator": 4, "denominator": 10, "rate": 0.4},
+  "schema_failure_rate": {"numerator": 0, "denominator": 4, "rate": 0.0},
+  "rule_failure_sample_ids": [
+    "taobao-iphone17-item-1",
+    "taobao-iphone17-item-2"
+  ],
+  "rule_failure_classification": "title_noise -> semantic product identity resolution -> LLM fallback"
+}

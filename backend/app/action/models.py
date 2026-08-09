@@ -1,6 +1,7 @@
 """Framework-neutral action schemas."""
 
 from enum import StrEnum
+from uuid import uuid4
 
 from pydantic import BaseModel, Field
 
@@ -27,6 +28,16 @@ class ActionStatus(StrEnum):
     REPLAN_REQUIRED = "REPLAN_REQUIRED"
 
 
+class ActionLifecycle(StrEnum):
+    QUEUED = "QUEUED"
+    DISPATCHED = "DISPATCHED"
+    EXECUTING = "EXECUTING"
+    SUCCESS = "SUCCESS"
+    FAILED = "FAILED"
+    STALE = "STALE"
+    SAFETY_BLOCKED = "SAFETY_BLOCKED"
+
+
 class ActionTarget(BaseModel):
     node_id: str | None = None
     resource_id: str | None = None
@@ -37,6 +48,7 @@ class ActionTarget(BaseModel):
 
 
 class ActionRequest(BaseModel):
+    action_id: str = Field(default_factory=lambda: uuid4().hex, min_length=1, max_length=128)
     action_type: ActionType
     target: ActionTarget | None = None
     value: str | None = None

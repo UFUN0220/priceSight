@@ -7,6 +7,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
 import java.util.Locale
+import java.util.LinkedHashSet
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -23,20 +24,17 @@ class DeviceBridgeClient(
     private val deviceId: String = DEFAULT_DEVICE_ID,
     private val sharedToken: String = "",
     private val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor(),
+    private val retryPolicy: ExponentialBackoffRetryPolicy = ExponentialBackoffRetryPolicy(),
 ) {
     private val latestObservation = AtomicReference<AccessibilityObservation?>(null)
     private val uploadScheduled = AtomicBoolean(false)
+    private val processedCommandIds = LinkedHashSet<String>()
 
     @Volatile
     private var currentObservationId: String? = null
 
     init {
-        executor.scheduleWithFixedDelay(
-            { runCatching { pollNextAction() }.onFailure(::logFailure) },
-            POLL_INTERVAL_MS,
-            POLL_INTERVAL_MS,
-            TimeUnit.MILLISECONDS,
-        )
+        schedulePoll(POLL_INTERVAL_MS)
     }
 
     fun submitObservationAsync(observation: AccessibilityObservation) {
@@ -54,7 +52,7 @@ class DeviceBridgeClient(
             try {
                 while (true) {
                     val observation = latestObservation.getAndSet(null) ?: break
-                    runCatching { uploadObservation(observation) }.onFailure(::logFailure)
+                    runCatching { uploadObservationWithRetry(observation) }.onFailure(::logFailure)
                 }
             } finally {
                 uploadScheduled.set(false)
@@ -65,18 +63,37 @@ class DeviceBridgeClient(
         }
     }
 
-    private fun uploadObservation(observation: AccessibilityObservation) {
+    private fun uploadObservationWithRetry(observation: AccessibilityObservation) {
         val encodedDeviceId = URLEncoder.encode(deviceId, Charsets.UTF_8.name())
-        val response = request(
-            method = "POST",
-            path = "/observations?device_id=$encodedDeviceId",
-            payload = ObservationSerializer.toJson(observation),
-        )
-        if (response.code !in 200..299) {
-            error("observation upload returned HTTP ${response.code}: ${response.body}")
+        withRetry("observation upload") {
+            val response = request(
+                method = "POST",
+                path = "/observations?device_id=$encodedDeviceId",
+                payload = ObservationSerializer.toJson(observation),
+            )
+            if (response.code !in 200..299) {
+                error("observation upload returned HTTP ${response.code}: ${response.body}")
+            }
         }
         currentObservationId = observation.observationId
-        pollNextAction()
+        pollNextActionWithRetry()
+    }
+
+    private fun schedulePoll(delayMs: Long) {
+        if (executor.isShutdown) return
+        executor.schedule(
+            {
+                runCatching { pollNextActionWithRetry() }
+                    .onFailure(::logFailure)
+                schedulePoll(POLL_INTERVAL_MS)
+            },
+            delayMs,
+            TimeUnit.MILLISECONDS,
+        )
+    }
+
+    private fun pollNextActionWithRetry() {
+        withRetry("action polling") { pollNextAction() }
     }
 
     private fun pollNextAction() {
@@ -89,17 +106,31 @@ class DeviceBridgeClient(
         }
 
         val command = JSONObject(response.body)
-        val result = executeCommand(command, observationId)
+        val commandId = command.getString("command_id")
+        val result = if (isDuplicateCommand(commandId)) {
+            BridgeActionResult(
+                success = false,
+                status = "ACTION_REJECTED",
+                message = "duplicate command ignored; action was not executed twice",
+                observationId = observationId,
+            )
+        } else {
+            executeCommand(command, observationId)
+        }
         val report = JSONObject()
-            .put("command_id", command.getString("command_id"))
+            .put("command_id", commandId)
+            .put("action_id", command.optString("action_id", commandId))
             .put("result", result.toJson())
-        val reportResponse = request(
-            method = "POST",
-            path = "/devices/$encodedDeviceId/action-results",
-            payload = report.toString(),
-        )
-        if (reportResponse.code !in 200..299) {
-            error("action result returned HTTP ${reportResponse.code}: ${reportResponse.body}")
+        val reportResponse = withRetry("action result callback") {
+            val callbackResponse = request(
+                method = "POST",
+                path = "/devices/$encodedDeviceId/action-results",
+                payload = report.toString(),
+            )
+            if (callbackResponse.code !in 200..299) {
+                error("action result returned HTTP ${callbackResponse.code}: ${callbackResponse.body}")
+            }
+            callbackResponse
         }
     }
 
@@ -182,6 +213,34 @@ class DeviceBridgeClient(
         Log.w(TAG, "Device bridge request failed", error)
     }
 
+    private fun <T> withRetry(operation: String, block: () -> T): T {
+        var retryNumber = 0
+        while (true) {
+            try {
+                return block()
+            } catch (error: Throwable) {
+                if (!retryPolicy.shouldRetry(retryNumber)) {
+                    Log.w(TAG, "$operation exhausted retry boundary", error)
+                    throw error
+                }
+                val delayMs = retryPolicy.delayMs(retryNumber)
+                Log.w(TAG, "$operation retry=$retryNumber delayMs=$delayMs", error)
+                Thread.sleep(delayMs)
+                retryNumber += 1
+            }
+        }
+    }
+
+    private fun isDuplicateCommand(commandId: String): Boolean {
+        synchronized(processedCommandIds) {
+            if (!processedCommandIds.add(commandId)) return true
+            while (processedCommandIds.size > MAX_PROCESSED_COMMAND_IDS) {
+                processedCommandIds.remove(processedCommandIds.first())
+            }
+            return false
+        }
+    }
+
     private fun containsBlockedTerm(value: String): Boolean {
         val compact = value.lowercase(Locale.ROOT).replace(Regex("[^a-z0-9\\p{L}]+"), "")
         return BLOCKED_TERMS.any { term ->
@@ -212,6 +271,12 @@ class DeviceBridgeClient(
             .put("status", status)
             .put("message", message)
             .put("observation_id", observationId)
+            .put("lifecycle", when (status) {
+                "SUCCESS" -> "SUCCESS"
+                "STALE_OBSERVATION" -> "STALE"
+                "SAFETY_BLOCKED" -> "SAFETY_BLOCKED"
+                else -> "FAILED"
+            })
             .apply {
                 if (matchedNodeId != null) put("matched_node_id", matchedNodeId)
             }
@@ -223,6 +288,7 @@ class DeviceBridgeClient(
         private const val CONNECT_TIMEOUT_MS = 1500
         private const val READ_TIMEOUT_MS = 2000
         private const val MAX_WAIT_MS = 5000L
+        private const val MAX_PROCESSED_COMMAND_IDS = 256
         const val DEFAULT_BASE_URL = "http://10.0.2.2:8000"
         const val DEFAULT_DEVICE_ID = "android-default"
         private val BLOCKED_TERMS = listOf(

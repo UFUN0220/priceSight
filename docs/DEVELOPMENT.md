@@ -53,6 +53,16 @@ uv run python scripts/run_evaluation_v2.py --sample-id gift-water
 
 `evaluation/reports/evaluation_v2.md` 中的指标均提供 numerator / denominator。当前样本全部是 `UNREVIEWED`，其中淘宝样本是脱敏 fixture 回放；因此不得将报告中的 accuracy 写成真实平台或人工准确率。`evaluation_v2_regression_policy.json` 只保护机器一致性回归。
 
+### 阶段 3 Hybrid Parser 调试
+
+阶段 3 的 Parser 会在 `ParseResult` 中记录 `parser_source`、`reason_code`、`candidate_count` 和 LLM schema 状态。运行阶段3报告：
+
+```powershell
+uv run python scripts/run_hybrid_parser_optimization.py
+```
+
+规则层失败不会被隐藏；报告会列出失败 sample、Bad Case 分类、规则/LLM 归属及优化前后指标。FakeLLMProvider 只验证结构化输出和 fail-closed 路径，不代表线上模型表现。
+
 ## Mock E2E 与平台边界
 
 ```powershell

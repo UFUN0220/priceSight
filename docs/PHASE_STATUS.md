@@ -2,6 +2,23 @@
 
 更新时间：2026-08-09
 
+## 阶段 4：Android 双向闭环 Runtime 验证（BLOCKED）
+
+- 完成 Backend action_id 去重、重复 callback 幂等、lifecycle 状态和 observation_id 双重校验保留。
+- 完成 Android DeviceBridge 指数退避、jitter、timeout、bounded retry、command duplicate protection 和 lifecycle callback 字段。
+- 新增 Mock App instrumented/UI test 与 Android Bridge runtime harness。
+- 本机仅有 ADB，没有 Emulator、AVD 或 Android 34 system image；Emulator/system image 下载未通过当前审批通道，因此没有执行真实 Android runtime。
+- 报告：[android_runtime_validation.md](../evaluation/reports/android_runtime_validation.md)。本阶段不得写成 Runtime Verified；dispatch latency、execution latency、runtime success rate 均为 `NOT_MEASURED / BLOCKED`。
+
+## 阶段 3：强化规则 + LLM Hybrid Parser（已完成）
+
+- Parser 明确拆分为 normalize、candidate extraction、deterministic parse、ambiguity detection、optional LLM、schema validation、confidence/reason。
+- `ParseResult` 新增 `parser_source`（RULE / LLM / HYBRID）、`candidate_count`、`reason_code`、`reason`、`llm_schema_valid` 和 `llm_invocation_reason`。
+- 规则优先处理数量、单位、规格、明确价格、套装和简单促销；语义标题噪声和组合关系才进入 LLM fallback。
+- malformed JSON、Pydantic schema 失败和 provider 异常均 fail closed，保留规则结果并记录失败原因。
+- 阶段3报告：[hybrid_parser_after_optimization.md](../evaluation/reports/hybrid_parser_after_optimization.md)。报告列出两条淘宝标题噪声失败样本，并区分规则失败与 Fake LLM 回放结果。
+- 当前指标未宣称真实提升：Rule `8/10`、Hybrid FakeLLM 回放 `10/10`、LLM invocation `4/10`、schema failure `0/4`；所有样本仍为 `UNREVIEWED`。
+
 ## 阶段 2：可信 Evaluation 与 Bad Case 数据集（已完成框架建设）
 
 - 新增 `evaluation/datasets/evaluation_v2.jsonl`，保留原有 8 条 synthetic 样本，并纳入 2 条淘宝脱敏 fixture 样本。

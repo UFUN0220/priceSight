@@ -30,6 +30,14 @@ class ParseSource(StrEnum):
     RULE_FALLBACK = "rule_fallback"
 
 
+class ParserSource(StrEnum):
+    """Provenance of the complete parser pipeline."""
+
+    RULE = "RULE"
+    LLM = "LLM"
+    HYBRID = "HYBRID"
+
+
 class ProductIdentity(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -97,7 +105,13 @@ class ParseResult(BaseModel):
     confidence: float = Field(ge=0.0, le=1.0)
     ambiguous: bool = False
     source: ParseSource = ParseSource.RULE
+    parser_source: ParserSource = ParserSource.RULE
+    candidate_count: int = Field(default=0, ge=0)
+    reason_code: str = "deterministic_confident"
+    reason: str | None = None
     llm_fallback_attempted: bool = False
+    llm_schema_valid: bool | None = None
+    llm_invocation_reason: str | None = None
     fallback_reason: str | None = None
 
 
@@ -112,3 +126,4 @@ class LLMParseSuggestion(BaseModel):
     promotions: list[Promotion] = Field(default_factory=list)
     confidence: float = Field(ge=0.0, le=1.0)
     reason_summary: str = Field(min_length=1)
+    reason_code: str = Field(default="llm_structured_resolution", min_length=1)

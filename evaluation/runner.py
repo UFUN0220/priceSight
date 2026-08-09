@@ -90,6 +90,10 @@ def output_from_result(result: ParseResult, text: str) -> ParsedOutput:
             else None
         ),
         source=result.source.value,
+        parser_source=result.parser_source.value,
+        candidate_count=result.candidate_count,
+        reason_code=result.reason_code,
+        reason=result.reason,
         ambiguous=result.ambiguous,
         confidence=result.confidence,
     )
@@ -248,6 +252,12 @@ def evaluate_dataset(dataset_path: Path = DEFAULT_DATASET, sample_ids: set[str] 
     case_results = []
     for sample in samples:
         final_output = final_outputs[sample.sample_id]
+        rule_success = _full_equal(sample, rule_outputs[sample.sample_id])
+        model_success = (
+            _full_equal(sample, model_outputs[sample.sample_id])
+            if sample.sample_id in model_outputs
+            else None
+        )
         success = _full_equal(sample, final_output)
         case_results.append(
             {
@@ -258,6 +268,10 @@ def evaluate_dataset(dataset_path: Path = DEFAULT_DATASET, sample_ids: set[str] 
                 "parser_output": rule_outputs[sample.sample_id].model_dump(mode="json"),
                 "model_output": model_outputs[sample.sample_id].model_dump(mode="json") if sample.sample_id in model_outputs else None,
                 "final_output": final_output.model_dump(mode="json"),
+                "rule_success": rule_success,
+                "model_success": model_success,
+                "final_success": success,
+                "rule_failure_reason": None if rule_success else rule_results[sample.sample_id].reason_code,
                 "success": success,
                 "failure_reason": None if success else "machine_output_does_not_match_current_expected_fields",
             }
@@ -265,6 +279,18 @@ def evaluate_dataset(dataset_path: Path = DEFAULT_DATASET, sample_ids: set[str] 
 
     status_counts = Counter(sample.annotation_status.value for sample in samples)
     source_counts = Counter(sample.source_type.value for sample in samples)
+    llm_invocation_count = sum(result.llm_fallback_attempted for result in hybrid_results.values())
+    llm_schema_failure_count = sum(result.llm_schema_valid is False for result in hybrid_results.values())
+    rule_failure_ids = [
+        sample.sample_id
+        for sample in samples
+        if not _full_equal(sample, rule_outputs[sample.sample_id])
+    ]
+    hybrid_failure_ids = [
+        sample.sample_id
+        for sample in samples
+        if not _full_equal(sample, final_outputs[sample.sample_id])
+    ]
     return {
         "report_version": "evaluation_v2",
         "dataset": dataset_path.relative_to(ROOT).as_posix(),
@@ -274,6 +300,10 @@ def evaluate_dataset(dataset_path: Path = DEFAULT_DATASET, sample_ids: set[str] 
         "human_verified_count": status_counts.get("HUMAN_VERIFIED", 0),
         "human_accuracy_claim_available": status_counts.get("HUMAN_VERIFIED", 0) > 0,
         "metric_interpretation": "当前数据未达到 HUMAN_VERIFIED 门槛；accuracy 仅表示机器输出与未复核期望字段的一致性，不是人工真实准确率。",
+        "llm_invocation_rate": _metric(llm_invocation_count, len(samples), "hybrid parser fallback invocations / selected samples"),
+        "schema_failure_rate": _metric(llm_schema_failure_count, llm_invocation_count, "invalid structured LLM responses / LLM invocations"),
+        "rule_failure_sample_ids": rule_failure_ids,
+        "hybrid_failure_sample_ids": hybrid_failure_ids,
         "metrics": metrics,
         "bad_case_coverage": _coverage(samples) if sample_ids is None else [],
         "case_results": case_results,
@@ -288,6 +318,7 @@ def evaluate_dataset(dataset_path: Path = DEFAULT_DATASET, sample_ids: set[str] 
             "LLM 指标使用 FakeLLMProvider 的确定性回放，不代表任何线上模型表现。",
             "taxonomy 中尚无可靠样本的类别标记为 NOT_REPRESENTED，不编造覆盖率。",
             "淘宝数据来自脱敏 fixture 回放，不是实时淘宝数据。",
+            "FakeLLMProvider 回放响应由评测 harness 构造，仅用于验证路由和 schema fail-closed，不可作为 LLM 真实准确率。",
         ],
     }
 

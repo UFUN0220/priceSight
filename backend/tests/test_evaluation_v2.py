@@ -41,3 +41,20 @@ def test_evaluation_v2_machine_consistency_regression_policy() -> None:
         metric = report["metrics"][metric_name]
         assert metric["denominator"] == threshold["denominator"]
         assert metric["numerator"] >= threshold["minimum_numerator"]
+
+
+def test_phase3_failure_classification_keeps_taobao_title_noise_in_llm_scope() -> None:
+    report = evaluate_dataset()
+
+    assert report["rule_failure_sample_ids"] == [
+        "taobao-iphone17-item-1",
+        "taobao-iphone17-item-2",
+    ]
+    assert report["hybrid_failure_sample_ids"] == []
+    assert report["llm_invocation_rate"]["numerator"] == 4
+    assert report["llm_invocation_rate"]["denominator"] == 10
+    taobao_cases = [
+        case for case in report["case_results"] if case["sample_id"].startswith("taobao-")
+    ]
+    assert all(case["rule_success"] is False for case in taobao_cases)
+    assert all(case["final_success"] is True for case in taobao_cases)

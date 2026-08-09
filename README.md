@@ -165,7 +165,11 @@ uv run python scripts/run_evaluation_v2.py --sample-id gift-water
 
 报告位于 [evaluation/reports/evaluation_v2.md](evaluation/reports/evaluation_v2.md) 与 [evaluation/reports/evaluation_v2.json](evaluation/reports/evaluation_v2.json)。当前 10 条样本均为 `UNREVIEWED`，`HUMAN_VERIFIED=0`；报告中的 rule / LLM / hybrid 指标仅用于机器一致性回归，不能替代人工真实准确率。旧报告中的 8 条 synthetic “1.0” 已在新报告中审计，不升级为真实平台指标。
 
+阶段 3 Hybrid Parser 优化报告见 [evaluation/reports/hybrid_parser_after_optimization.md](evaluation/reports/hybrid_parser_after_optimization.md)。Parser 按规则优先、ambiguity detection、结构化 LLM fallback 和 fail-closed schema validation 执行；报告会列出失败样本，不把 FakeLLMProvider 回放写成真实模型准确率。
+
 ## 已知限制
+
+Android 阶段4已补充 DeviceBridge retry、action lifecycle、action_id 去重和 instrumented test harness；本机无 Emulator/AVD/system image，当前仍为 `BLOCKED`，不得写成 Android Runtime Verified。详见 [Android Runtime 验证报告](evaluation/reports/android_runtime_validation.md)。
 
 - Git 已有可追溯基线并加入 CI，但本轮整改变更仍需评审后提交，远端 CI 尚无运行记录。
 - Android—Backend 双向代码闭环已经接通，但未在物理设备或模拟器上完成运行验证。
