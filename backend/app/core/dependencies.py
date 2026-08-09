@@ -10,6 +10,7 @@ from app.transport.base import DeviceTransport
 from app.transport.event import EventDrivenTransport
 from app.transport.fake import FakeTransport
 from app.transport.session import DeviceSessionManager
+from app.transport.store import SQLiteSessionStore
 
 
 @dataclass(frozen=True)
@@ -35,11 +36,21 @@ def build_container(
     if resolved_transport is None and resolved_settings.transport_mode == "event":
         resolved_transport = EventDrivenTransport(stabilization_ms=resolved_settings.event_stabilization_ms)
 
+    resolved_sessions = device_sessions
+    if resolved_sessions is None:
+        store = SQLiteSessionStore(resolved_settings.session_store_path) if resolved_settings.session_store_backend == "sqlite" else None
+        resolved_sessions = DeviceSessionManager(
+            store=store,
+            max_queue_size=resolved_settings.session_max_queue_size,
+            lease_timeout_seconds=resolved_settings.session_lease_timeout_seconds,
+            device_timeout_seconds=resolved_settings.session_device_timeout_seconds,
+            max_lease_retries=resolved_settings.session_max_lease_retries,
+        )
     return AppContainer(
         settings=resolved_settings,
         llm_provider=llm_provider or build_llm_provider(resolved_settings),
         transport=resolved_transport or FakeTransport(),
-        device_sessions=device_sessions or DeviceSessionManager(),
+        device_sessions=resolved_sessions,
     )
 
 

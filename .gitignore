@@ -42,3 +42,5 @@ evaluation/reports/*
 !evaluation/reports/.gitkeep
 !evaluation/reports/*.json
 !evaluation/reports/multi_platform_adapter_validation.md
+!evaluation/reports/session_store_validation.md
+data/

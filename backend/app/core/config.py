@@ -24,6 +24,12 @@ class Settings(BaseModel):
     event_stabilization_ms: int = Field(default=25, ge=0, le=5000)
     device_shared_token: str = ""
     max_transport_message_chars: int = Field(default=1_000_000, ge=1024, le=10_000_000)
+    session_store_backend: Literal["memory", "sqlite"] = "memory"
+    session_store_path: str = "data/device_sessions.sqlite3"
+    session_max_queue_size: int = Field(default=32, ge=1, le=1000)
+    session_lease_timeout_seconds: float = Field(default=30.0, gt=0, le=3600)
+    session_device_timeout_seconds: float = Field(default=60.0, gt=0, le=86400)
+    session_max_lease_retries: int = Field(default=3, ge=0, le=20)
 
 
 def _env_value(environ: Mapping[str, str], name: str, default: str) -> str:
@@ -71,4 +77,10 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         max_transport_message_chars=int(
             _env_value(source, "MAX_TRANSPORT_MESSAGE_CHARS", "1000000")
         ),
+        session_store_backend=_env_value(source, "SESSION_STORE_BACKEND", "sqlite").lower(),
+        session_store_path=_env_value(source, "SESSION_STORE_PATH", "data/device_sessions.sqlite3"),
+        session_max_queue_size=int(_env_value(source, "SESSION_MAX_QUEUE_SIZE", "32")),
+        session_lease_timeout_seconds=float(_env_value(source, "SESSION_LEASE_TIMEOUT_SECONDS", "30")),
+        session_device_timeout_seconds=float(_env_value(source, "SESSION_DEVICE_TIMEOUT_SECONDS", "60")),
+        session_max_lease_retries=int(_env_value(source, "SESSION_MAX_LEASE_RETRIES", "3")),
     )

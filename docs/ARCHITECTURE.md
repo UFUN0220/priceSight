@@ -77,7 +77,9 @@ Android Accessibility Event
   → POST /action-results
 ```
 
-`DeviceSessionManager` 是进程内开发实现，负责最新观察、待执行动作和结果。Android `DeviceBridgeClient` 合并高频观察上传并每 500ms 轮询动作。Debug 清单允许连接 `10.0.2.2` 的明文开发服务，release 清单不开放该设置。
+`DeviceSessionManager` 是安全检查与兼容 API 门面，底层使用 `SessionStore`。development 默认使用本地 `SQLiteSessionStore`，测试显式使用 `InMemorySessionStore`。Store 提供观察保存、动作入队、租约、完成/失败和设备状态查询；租约过期会重新入队并增加 retry count，过期 observation 永不下发，队列达到上限时施加背压。Android `DeviceBridgeClient` 合并高频观察上传并每 500ms 轮询动作。Debug 清单允许连接 `10.0.2.2` 的明文开发服务，release 清单不开放该设置。
+
+SQLite 只用于当前单体应用的轻量持久化，不代表分布式队列或多实例高可用。设备在最后观察超时后被视为断开，不再 lease 新动作；重新上传观察后恢复。详细验证见 [阶段6会话报告](../evaluation/reports/session_store_validation.md)。
 
 WebSocket event ingress 仍保留为后端事件基准，但 Android 当前未实现 WebSocket client。上述闭环已通过后端契约测试和 Android 编译构建，未在真实设备上运行，因此不应解释为真实平台端到端验收通过。详细结论见 [PROJECT_ACCEPTANCE_REPORT.md](PROJECT_ACCEPTANCE_REPORT.md)。
 

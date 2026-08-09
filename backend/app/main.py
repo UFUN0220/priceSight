@@ -16,6 +16,7 @@ from app.transport.session import (
     DeviceActionResultReport,
     DeviceSessionSnapshot,
 )
+from app.transport.store import SessionQueueFullError
 
 
 class HealthResponse(BaseModel):
@@ -103,6 +104,8 @@ def queue_action(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(error)) from error
     except ValueError as error:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(error)) from error
+    except SessionQueueFullError as error:
+        raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=str(error)) from error
     except SafetyViolationError as error:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(error)) from error
     return ActionQueued(status="queued", command_id=command.command_id)
@@ -113,7 +116,7 @@ def next_action(
     device_id: str,
     x_device_token: str | None = Header(default=None),
 ) -> DeviceActionCommand | Response:
-    """Return and remove the next queued action, or HTTP 204 when none exists."""
+    """Lease the next queued action, or return HTTP 204 when none is available."""
 
     _verify_device_token(x_device_token)
     command = device_sessions.next_action(device_id)

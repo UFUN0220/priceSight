@@ -7,13 +7,13 @@
 
 综合评分由 **65/100 提升至 82/100**。
 
-结论：**离线工程原型、桌面浏览器开发基线、淘宝脱敏结构 fixture 回放、Hybrid Parser 和阶段5多平台 Adapter fixture 验证通过；Android 双向 Runtime 因本机缺少 Emulator/AVD/system image 仍为 BLOCKED，实时淘宝/JD/美团网页能力和生产交付仍不通过。**
+结论：**离线工程原型、桌面浏览器开发基线、淘宝脱敏结构 fixture 回放、Hybrid Parser、阶段5多平台 Adapter fixture 和阶段6设备会话可靠性验证通过；Android 双向 Runtime 因本机缺少 Emulator/AVD/system image 仍为 BLOCKED，实时淘宝/JD/美团网页能力和生产交付仍不通过。**
 
 本轮已修复此前最关键的内部工程阻断项：后端开始保存设备最新观察并管理动作会话；Android Accessibility Service 已装配动作执行器，通过轮询接收动作并回传结构化结果；观察版本在入队和下发两个时点校验；Debug 构建允许访问本机 HTTP；仓库已有 Git 基线并新增 CI 工作流。
 
 阶段 4 已完成 Android bridge 的 action_id 去重、lifecycle、指数退避/jitter/timeout/bounded retry 和 Mock/instrumented test harness，但本机没有 Emulator、AVD 或 Android 34 system image，Emulator 安装也未通过审批通道。因此 Android 仍只能归类为 `BUILD_ONLY`/`NOT_VERIFIED`，不能写成 Runtime Verified。桌面端已在本地 Chromium Mock Web 上完成真实浏览器 E2E；淘宝已完成专用 Adapter、脱敏结构 fixture 到 Observation 的转换和只读回放，但实时淘宝 DOM/ARIA 选择器仍未验证。
 
-阶段 5 建立了统一 `PlatformAdapter`/`BasePlatformAdapter` 与 `NormalizedProduct`，Taobao、JD、Meituan 可沿 `Runtime → Observation → PlatformAdapter → NormalizedProduct → ComparisonEngine` 复用核心链路。JD/美团当前仅为脱敏 fixture Adapter 验证，不代表真实平台 selector 或实时网络验证。阶段 5 不改变 82/100 的整体评分，因为新增证据仍属于离线 fixture/mock 范围。
+阶段 5 建立了统一 `PlatformAdapter`/`BasePlatformAdapter` 与 `NormalizedProduct`，Taobao、JD、Meituan 可沿 `Runtime → Observation → PlatformAdapter → NormalizedProduct → ComparisonEngine` 复用核心链路。JD/美团当前仅为脱敏 fixture Adapter 验证，不代表真实平台 selector 或实时网络验证。阶段 6 增加可替换 `SessionStore`、SQLite 持久化、动作租约、幂等和背压；不引入 Redis 或微服务。阶段 5/6 不改变 82/100 的整体评分，因为新增证据仍属于离线 fixture/mock/本地单体范围。
 
 ## 二、评分结果
 
@@ -22,7 +22,7 @@
 | 需求覆盖与核心能力 | 15% | 78 | 92 | 增加 Browser Runtime、淘宝 Adapter、结构 fixture 回放和统一任务编排入口 |
 | 架构与可解释性 | 15% | 84 | 94 | Runtime Port、Observation Parser、淘宝边界和 TaskOrchestrator 清晰 |
 | 安全设计 | 15% | 80 | 90 | 浏览器 allowlist、订单确认停止和既有双重安全防线 |
-| 测试与构建质量 | 15% | 74 | 88 | 最近一次已验证 114 个后端测试、淘宝 fixture 回放、浏览器 Runtime 测试和本地 Chromium E2E；Android instrumented runtime 仍未执行 |
+| 测试与构建质量 | 15% | 74 | 88 | 最近一次已验证 131 个后端测试、淘宝 fixture 回放、浏览器 Runtime 测试和本地 Chromium E2E；Android instrumented runtime 仍未执行 |
 | Evaluation 可信度 | 15% | 52 | 62 | 增加用户提供的脱敏淘宝结构 fixture 回放；仍无实时平台/人工复核指标 |
 | 真实集成与运行就绪度 | 15% | 30 | 64 | 淘宝 Adapter 和只读 fixture 链路完成；Android Emulator runtime、实时 DOM/ARIA 和真实 Bad Case 仍缺失 |
 | 工程治理与交付 | 5% | 20 | 68 | 增加浏览器 CI job；远端 Actions 和质量门槛仍待完善 |
@@ -60,6 +60,14 @@
 - DeviceBridge 增加 exponential backoff、jitter、HTTP timeout、bounded retry 和最多 256 个 command ID 的重复执行保护。
 - Mock App 增加 instrumented/UI test；Android Client 增加完整闭环 instrumented harness。
 - 以上为代码和测试 harness 状态，不等于设备运行证据；当前 Runtime 状态见第 4 节和 [Android Runtime 报告](../evaluation/reports/android_runtime_validation.md)。
+
+### 2.2.1 阶段 6 设备会话可靠性
+
+- 建立 `SessionStore` 抽象，`InMemorySessionStore` 用于测试，`SQLiteSessionStore` 用于 development 默认本地持久化。
+- 统一提供观察保存、最新观察读取、动作入队、lease、完成、失败和设备状态查询。
+- 增加 lease timeout 恢复、retry count、action_id 幂等、队列上限/429 背压、断开设备不下发和 stale observation 清理。
+- InMemory 与 SQLite 均覆盖两个消费者竞争同一动作；SQLite 还覆盖关闭后重建会话的恢复。
+- 该实现仍是单体本地存储，不代表多实例高可用或分布式队列。详细结果见 [设备会话报告](../evaluation/reports/session_store_validation.md)。
 
 ### 2.2 Evaluation 与 Hybrid Parser
 
@@ -111,7 +119,7 @@ CI 文件已完成本地静态配置，但尚无远端 Actions 运行记录，�
 
 | 验证项 | 结果 |
 |---|---|
-| 后端全量测试 | **122 passed，0 failed，1 warning** |
+| 后端全量测试 | **131 passed，0 failed，1 warning** |
 | Python 编译检查 | **通过**：`backend/app`、`backend/tests`、`evaluation`、`scripts` |
 | 新增闭环与安全定向测试 | **15 passed** |
 | 浏览器 Runtime/Parser 定向测试 | **2 passed** |
@@ -121,6 +129,7 @@ CI 文件已完成本地静态配置，但尚无远端 Actions 运行记录，�
 | Mock Shopping App | 历史 `test assembleDebug` **BUILD_ONLY**；instrumented/UI test 未在设备上执行 |
 | Android Emulator / AVD | **BLOCKED**：无 `emulator.exe`、无 AVD、无 Android 34 system image |
 | Android 双向 Runtime | **NOT_VERIFIED / BLOCKED**：未执行 observation upload → action poll → Accessibility execution → result callback |
+| SessionStore 可靠性 | **通过**：InMemory/SQLite 租约、并发、幂等、背压、断开和 stale cleanup 定向测试 9 passed |
 | Android action latency / success rate | **NOT_MEASURED / BLOCKED** |
 | Git 空白错误检查 | `git diff --check` 无错误 |
 
@@ -146,7 +155,7 @@ CI 文件已完成本地静态配置，但尚无远端 Actions 运行记录，�
 2. Android instrumented/UI test harness 已新增，但未在 Emulator/Device 执行；当前设备桥接主要由代码、后端契约测试和历史 BUILD_ONLY 证据覆盖。
 3. 设备共享令牌默认空值，仅适用于本机开发；没有设备注册、令牌轮换和多租户授权。
 4. Android 尚未接入 WebSocket event client；当前 Android 桥接使用 polling，event 路径仍是后端基准实现。
-5. 进程内设备会话没有持久化、背压、多实例协调和断线重投。
+5. SQLite 会话已具备本地持久化、租约和背压；多进程协调、跨机器故障转移和断线后的真实 Android 重连仍未验证。
 6. Evaluation v2 已纳入淘宝脱敏 fixture，但数据仍小且没有 HUMAN_VERIFIED 样本。
 
 ### P2——持续优化

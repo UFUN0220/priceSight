@@ -6,7 +6,7 @@
 
 ## 最新项目级验收
 
-2026-08-09 淘宝 fixture 更新后的项目复验评分为 **82/100**，由整改前的 65 分提升。项目已具备本地浏览器真实执行基线、淘宝脱敏结构 fixture 只读回放和阶段4 Android bridge 工程增强；最近一次已验证 Backend 为 **114 个通过**。Android Emulator Runtime 仍为 BLOCKED，实时平台和生产交付仍不通过。
+2026-08-09 淘宝 fixture 更新后的项目复验评分为 **82/100**，由整改前的 65 分提升。项目已具备本地浏览器真实执行基线、淘宝脱敏结构 fixture 只读回放、阶段5多平台 Adapter fixture 验证和阶段6 SQLite 会话持久化；最近一次已验证 Backend 为 **131 个通过**。Android Emulator Runtime 仍为 BLOCKED，实时平台和生产交付仍不通过。
 
 详见 [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)。
 
@@ -93,7 +93,7 @@ TRANSPORT_MODE=polling   # 默认，保留的基线
 TRANSPORT_MODE=event     # EventDrivenTransport + WebSocket ingress
 ```
 
-事件入口为 `/ws/transport`。桌面端默认通过 `BrowserRuntime` 在进程内执行；Android 桥接默认使用 polling：`POST /observations` 上传观察，`GET /devices/{device_id}/actions/next` 获取动作，`POST /devices/{device_id}/action-results` 回传结果。本地缓存默认内存模式，也可以给 `OfferCache` 传入 SQLite 路径启用持久化。
+事件入口为 `/ws/transport`。桌面端默认通过 `BrowserRuntime` 在进程内执行；Android 桥接默认使用 polling：`POST /observations` 上传观察，`GET /devices/{device_id}/actions/next` 获取带租约动作，`POST /devices/{device_id}/action-results` 回传结果。development 默认使用 SQLite 会话存储，测试使用 InMemory；OfferCache 也支持 SQLite 路径。
 
 ## Mock 演示
 
@@ -186,6 +186,7 @@ Android 阶段4已补充 DeviceBridge retry、action lifecycle、action_id 去�
 - 浏览器依赖为可选项；没有安装 Playwright/Chromium 时只能运行后端和 fixture 测试。
 - SQLite cache 是本地单进程方案，不是分布式缓存。
 - 真实模型、真实网络和生产级延迟未测量。
+- 设备会话 SQLite 适合本地单体持久化；多进程高并发、云数据库和生产级故障转移尚未验证。
 
 ## 目录结构
 
@@ -215,6 +216,7 @@ scripts/             reproducible evaluation and benchmark runners
 - [阶段16报告](docs/PHASE_16_REPORT.md)
 - [淘宝实时只读验证报告](evaluation/reports/taobao_live_readonly_validation.md)
 - [多平台 Adapter 验证报告](evaluation/reports/multi_platform_adapter_validation.md)
+- [设备会话可靠性验证报告](evaluation/reports/session_store_validation.md)
 - [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)
 - [结构化验收结果](evaluation/reports/project_acceptance_2026-08-09.json)
 - [安全边界](docs/SAFETY.md)

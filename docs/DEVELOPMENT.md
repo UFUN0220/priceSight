@@ -179,6 +179,28 @@ uv run pytest -q
 
 报告见 [multi_platform_adapter_validation.md](../evaluation/reports/multi_platform_adapter_validation.md)。
 
+## 阶段 6 设备会话可靠性
+
+设备会话通过 `SessionStore` 抽象管理，development 默认使用 SQLite，测试使用 InMemory：
+
+```text
+SESSION_STORE_BACKEND=sqlite
+SESSION_STORE_PATH=data/device_sessions.sqlite3
+SESSION_MAX_QUEUE_SIZE=32
+SESSION_LEASE_TIMEOUT_SECONDS=30
+SESSION_DEVICE_TIMEOUT_SECONDS=60
+SESSION_MAX_LEASE_RETRIES=3
+```
+
+会话动作通过 `lease_next_action()` 获取租约；租约过期可恢复，已完成动作不会再次 lease，观察版本变化会清理为 `STALE_OBSERVATION`。队列满时返回 429。阶段6验证：
+
+```powershell
+uv run pytest backend/tests/test_session_store.py -q
+uv run pytest -q
+```
+
+报告见 [session_store_validation.md](../evaluation/reports/session_store_validation.md)。SQLite 是本地单体持久化，不是 Redis 或分布式任务队列。
+
 ## Android 构建
 
 ```powershell

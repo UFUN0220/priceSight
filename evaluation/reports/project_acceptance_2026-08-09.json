@@ -1,6 +1,6 @@
 {
   "report_date": "2026-08-09",
-  "assessment_revision": "phase5_multi_platform_adapter_fixture_verified_android_runtime_blocked",
+  "assessment_revision": "phase6_session_store_verified_android_runtime_blocked",
   "previous_score": 65,
   "overall_score": 82,
   "weighted_score_before_rounding": 81.7,
@@ -19,7 +19,7 @@
     {"name": "documentation", "weight": 5, "score": 96}
   ],
   "verification": {
-    "backend_tests": {"passed": 122, "failed": 0, "warnings": 1, "status": "phase5_full_regression_verified"},
+    "backend_tests": {"passed": 131, "failed": 0, "warnings": 1, "status": "phase6_full_regression_verified"},
     "focused_bridge_and_safety_tests": {"passed": 15, "failed": 0},
     "browser_runtime_tests": {"passed": 2, "failed": 0},
     "browser_mock_web_e2e": {
@@ -89,6 +89,15 @@
       "real_jd": "NOT_VERIFIED",
       "real_meituan": "NOT_VERIFIED",
       "report": "evaluation/reports/multi_platform_adapter_validation.md"
+    },
+    "session_store": {
+      "status": "verified_local_single_process",
+      "backends": ["in_memory", "sqlite"],
+      "focused_tests": {"passed": 9, "failed": 0},
+      "features": ["lease", "lease_timeout_recovery", "retry_count", "idempotency", "queue_backpressure", "disconnected_device", "stale_cleanup"],
+      "real_android_reconnect": "NOT_VERIFIED",
+      "multi_process_failover": "NOT_VERIFIED",
+      "report": "evaluation/reports/session_store_validation.md"
     }
   },
   "remediated_blockers": [
@@ -110,6 +119,7 @@
     ,"taobao_adapter_and_sanitized_fixture_replay_is_reproducible"
     ,"taobao_page_structure_converts_to_standard_observation"
     ,"multi_platform_adapter_contract_and_fixture_regression_is_verified"
+    ,"session_store_lease_persistence_and_concurrency_regression_is_verified"
   ],
   "remaining_p0_blockers": [
     "no_live_taobao_dom_aria_selector_verification_or_real_page_replay",

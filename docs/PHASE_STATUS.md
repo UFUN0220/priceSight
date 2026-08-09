@@ -155,6 +155,16 @@
 - [ ] 真实淘宝/JD/Meituan 页面仍未验证；fixture 结果不升级为 real platform verified。
 - [x] 报告：[multi_platform_adapter_validation.md](../evaluation/reports/multi_platform_adapter_validation.md)。
 
+### 阶段6——设备会话可靠性与轻量持久化
+
+- [x] 建立 `SessionStore` 抽象，保留 `InMemorySessionStore` 测试实现。
+- [x] 新增 SQLite 持久化实现；development 默认使用 `data/device_sessions.sqlite3`，未引入 Redis 或微服务。
+- [x] 增加 action lease、lease timeout、retry count、幂等、队列上限/背压、断开设备处理和 stale action 清理。
+- [x] 增加 InMemory 与 SQLite 并发测试、租约恢复、完成幂等、SQLite 重启恢复和 API 回归。
+- [x] 后端全量测试：131 passed；compileall 和 git diff --check 通过。
+- [ ] 未验证多进程高并发、真实 Android 断网重连和生产级故障转移。
+- [x] 报告：[session_store_validation.md](../evaluation/reports/session_store_validation.md)。
+
 ### 阶段1——淘宝实时网页只读链路验证
 
 - [x] 增加淘宝页面状态识别、host allowlist、DOM/ARIA 可选证据字段和有序 selector fallback。
