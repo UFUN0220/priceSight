@@ -158,6 +158,27 @@ uv run python scripts/run_taobao_fixture_replay.py
 
 报告写入 `evaluation/reports/phase16_taobao_fixture_replay.json`。该命令只读取项目内脱敏 fixture，不访问实时淘宝页面。
 
+## 阶段 4 Android Runtime 验证
+
+阶段 4 的 bridge retry、action lifecycle、action_id 去重和 instrumented test harness 已加入，但 Runtime 验证必须在 Emulator/Device 上执行。当前本机没有 Emulator、AVD 或 system image，因此状态是 `BLOCKED`，详见 [android_runtime_validation.md](../evaluation/reports/android_runtime_validation.md)。不能用 APK build 或 JVM test 替代 Runtime Verified。
+
+## 阶段 5 多平台 Adapter 验证
+
+统一平台扩展入口为 `PlatformAdapter`/`BasePlatformAdapter`：
+
+```text
+Runtime → Observation → PlatformAdapter → NormalizedProduct → ComparisonEngine / Agent
+```
+
+Taobao、JD、Meituan 的平台差异应留在各自 Adapter；JD/美团当前使用仓库内脱敏 fixture，不是实时网站连接器。阶段5回归命令：
+
+```powershell
+uv run pytest backend/tests/test_multi_platform_adapters.py backend/tests/test_comparison.py backend/tests/test_taobao_adapter.py backend/tests/test_mock_adapter.py backend/tests/test_web_adapter.py -q
+uv run pytest -q
+```
+
+报告见 [multi_platform_adapter_validation.md](../evaluation/reports/multi_platform_adapter_validation.md)。
+
 ## Android 构建
 
 ```powershell

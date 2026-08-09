@@ -18,10 +18,11 @@ from app.platform.models import (
     PlatformPageType,
     PlatformProduct,
 )
+from app.platform.base import BasePlatformAdapter
 from app.platform.web.models import WebSelectorConfig
 
 
-class WebPlatformAdapter:
+class WebPlatformAdapter(BasePlatformAdapter):
     """Extract offers from normalized browser observations using configuration."""
 
     package_name: str | None = None

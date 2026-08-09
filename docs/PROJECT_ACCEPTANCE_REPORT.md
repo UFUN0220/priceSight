@@ -7,11 +7,13 @@
 
 综合评分由 **65/100 提升至 82/100**。
 
-结论：**离线工程原型、桌面浏览器开发基线和淘宝脱敏结构 fixture 回放通过；实时淘宝网页能力和生产交付仍不通过。**
+结论：**离线工程原型、桌面浏览器开发基线、淘宝脱敏结构 fixture 回放、Hybrid Parser 和阶段5多平台 Adapter fixture 验证通过；Android 双向 Runtime 因本机缺少 Emulator/AVD/system image 仍为 BLOCKED，实时淘宝/JD/美团网页能力和生产交付仍不通过。**
 
 本轮已修复此前最关键的内部工程阻断项：后端开始保存设备最新观察并管理动作会话；Android Accessibility Service 已装配动作执行器，通过轮询接收动作并回传结构化结果；观察版本在入队和下发两个时点校验；Debug 构建允许访问本机 HTTP；仓库已有 Git 基线并新增 CI 工作流。
 
-由于本轮按用户要求不连接物理设备，Android 双向闭环只完成代码、契约测试和 APK 构建验证。桌面端已在本地 Chromium Mock Web 上完成真实浏览器 E2E；淘宝已完成专用 Adapter、脱敏结构 fixture 到 Observation 的转换和只读回放，但实时淘宝 DOM/ARIA 选择器仍未验证。
+阶段 4 已完成 Android bridge 的 action_id 去重、lifecycle、指数退避/jitter/timeout/bounded retry 和 Mock/instrumented test harness，但本机没有 Emulator、AVD 或 Android 34 system image，Emulator 安装也未通过审批通道。因此 Android 仍只能归类为 `BUILD_ONLY`/`NOT_VERIFIED`，不能写成 Runtime Verified。桌面端已在本地 Chromium Mock Web 上完成真实浏览器 E2E；淘宝已完成专用 Adapter、脱敏结构 fixture 到 Observation 的转换和只读回放，但实时淘宝 DOM/ARIA 选择器仍未验证。
+
+阶段 5 建立了统一 `PlatformAdapter`/`BasePlatformAdapter` 与 `NormalizedProduct`，Taobao、JD、Meituan 可沿 `Runtime → Observation → PlatformAdapter → NormalizedProduct → ComparisonEngine` 复用核心链路。JD/美团当前仅为脱敏 fixture Adapter 验证，不代表真实平台 selector 或实时网络验证。阶段 5 不改变 82/100 的整体评分，因为新增证据仍属于离线 fixture/mock 范围。
 
 ## 二、评分结果
 
@@ -20,9 +22,9 @@
 | 需求覆盖与核心能力 | 15% | 78 | 92 | 增加 Browser Runtime、淘宝 Adapter、结构 fixture 回放和统一任务编排入口 |
 | 架构与可解释性 | 15% | 84 | 94 | Runtime Port、Observation Parser、淘宝边界和 TaskOrchestrator 清晰 |
 | 安全设计 | 15% | 80 | 90 | 浏览器 allowlist、订单确认停止和既有双重安全防线 |
-| 测试与构建质量 | 15% | 74 | 88 | 101 个后端测试、淘宝 fixture 回放、2 个浏览器 Runtime 测试和本地 Chromium E2E |
+| 测试与构建质量 | 15% | 74 | 88 | 最近一次已验证 114 个后端测试、淘宝 fixture 回放、浏览器 Runtime 测试和本地 Chromium E2E；Android instrumented runtime 仍未执行 |
 | Evaluation 可信度 | 15% | 52 | 62 | 增加用户提供的脱敏淘宝结构 fixture 回放；仍无实时平台/人工复核指标 |
-| 真实集成与运行就绪度 | 15% | 30 | 64 | 淘宝 Adapter 和只读 fixture 链路完成；实时 DOM/ARIA 和 Bad Case 仍缺失 |
+| 真实集成与运行就绪度 | 15% | 30 | 64 | 淘宝 Adapter 和只读 fixture 链路完成；Android Emulator runtime、实时 DOM/ARIA 和真实 Bad Case 仍缺失 |
 | 工程治理与交付 | 5% | 20 | 68 | 增加浏览器 CI job；远端 Actions 和质量门槛仍待完善 |
 | 文档与可沟通性 | 5% | 90 | 96 | 中文文档同步阶段15、16、淘宝 fixture 边界和运行方法 |
 | **加权总分** | **100%** | **65** | **82** | 加权值约 81.70，四舍五入 |
@@ -49,6 +51,23 @@
 - 执行前再次检查本机最新观察 ID，并回传 SUCCESS、ACTION_REJECTED、TARGET_NOT_FOUND、STALE_OBSERVATION 或 SAFETY_BLOCKED。
 - 修复 Android 将 `bounds` 输出为对象、后端要求四元数组的协议不一致。
 - 明文 HTTP 仅在 `src/debug/AndroidManifest.xml` 开启，release 清单未开放该策略。
+
+### 2.1 阶段 4 Android Runtime 工程增强
+
+- Backend `ActionRequest`/`DeviceActionCommand` 增加 `action_id`、`command_id` 和 lifecycle。
+- 相同 action_id 重复入队返回原 command；重复 result callback 幂等处理。
+- lifecycle 明确为 `QUEUED → DISPATCHED → EXECUTING → SUCCESS / FAILED / STALE / SAFETY_BLOCKED`。
+- DeviceBridge 增加 exponential backoff、jitter、HTTP timeout、bounded retry 和最多 256 个 command ID 的重复执行保护。
+- Mock App 增加 instrumented/UI test；Android Client 增加完整闭环 instrumented harness。
+- 以上为代码和测试 harness 状态，不等于设备运行证据；当前 Runtime 状态见第 4 节和 [Android Runtime 报告](../evaluation/reports/android_runtime_validation.md)。
+
+### 2.2 Evaluation 与 Hybrid Parser
+
+- Evaluation v2 已建立统一 schema、Bad Case taxonomy、人工标注指南和 JSON/Markdown runner。
+- 当前 10 条样本全部 `UNREVIEWED`，其中 synthetic 8 条、淘宝脱敏 fixture 2 条，`HUMAN_VERIFIED=0`。
+- 阶段 3 Parser 已明确规则优先、ambiguity detection、结构化 LLM fallback 和 fail-closed schema validation。
+- 当前机器一致性结果：Rule `8/10`、Hybrid FakeLLM 回放 `10/10`、LLM invocation `4/10`、schema failure `0/4`；这些不是人工真实准确率。
+- 两条淘宝标题噪声规则失败样本已列入 [Hybrid Parser 报告](../evaluation/reports/hybrid_parser_after_optimization.md)，没有使用 sample_id 特判。
 
 ### 3. 安全加固
 
@@ -80,27 +99,36 @@ CI 文件已完成本地静态配置，但尚无远端 Actions 运行记录，�
 - 回放报告明确记录 `real_page_accessed=false`、`external_side_effect=false`，不把 fixture 价格当作实时价格。
 - 当前仍未验证淘宝实时 DOM/ARIA 选择器、登录态、加载态、弹窗和商品详情页。
 
+### 7. 多平台 Adapter 架构
+
+- `BasePlatformAdapter` 提供 `parse_products()`、`parse_product_detail()`、`normalize_product()` 和 `safety_boundary()`，保留原有 `extract_*` 兼容入口。
+- `NormalizedProduct` 统一保留平台、标题、基础价、有效价、数量、规格、店铺、商品标识、置信度和抽取来源。
+- 新增 `JdPlatformAdapter` 与 `MeituanPlatformAdapter`，均使用脱敏 fixture；没有复制 Runtime、Agent 或核心 Workflow。
+- 比较引擎根据规格、数量、显式优惠后的有效单位价和置信度排序；无法计算单位价时不强行推荐。
+- 阶段5定向测试 28 passed；全量后端测试 122 passed。详细证据见 [多平台 Adapter 验证报告](../evaluation/reports/multi_platform_adapter_validation.md)。
+
 ## 四、实际验证结果
 
 | 验证项 | 结果 |
 |---|---|
-| 后端全量测试 | **101 passed，0 failed，1 warning，0.55s** |
+| 后端全量测试 | **122 passed，0 failed，1 warning** |
 | Python 编译检查 | **通过**：`backend/app`、`backend/tests`、`evaluation`、`scripts` |
 | 新增闭环与安全定向测试 | **15 passed** |
 | 浏览器 Runtime/Parser 定向测试 | **2 passed** |
 | Mock Web Chromium E2E | **通过**：价格 `10.90`，安全状态 `SAFETY_BLOCKED`，未提交订单 |
 | 淘宝结构 fixture 回放 | **通过**：搜索词 `iphone17`，识别 2 条商品，价格均为 `5999.00`，无外部副作用 |
-| Android Client | **BUILD SUCCESSFUL**；`test assembleDebug`，64 个任务 |
-| Mock Shopping App | **BUILD SUCCESSFUL**；`test assembleDebug`，64 个任务 |
-| Android Client Debug APK | 已生成，845748 字节 |
-| Mock App Debug APK | 已生成，816411 字节 |
+| Android Client | 历史 `test assembleDebug` **BUILD_ONLY**；阶段4修改后的重新构建/connectedAndroidTest 未完成 |
+| Mock Shopping App | 历史 `test assembleDebug` **BUILD_ONLY**；instrumented/UI test 未在设备上执行 |
+| Android Emulator / AVD | **BLOCKED**：无 `emulator.exe`、无 AVD、无 Android 34 system image |
+| Android 双向 Runtime | **NOT_VERIFIED / BLOCKED**：未执行 observation upload → action poll → Accessibility execution → result callback |
+| Android action latency / success rate | **NOT_MEASURED / BLOCKED** |
 | Git 空白错误检查 | `git diff --check` 无错误 |
 
 唯一 Python 警告来自 FastAPI TestClient 依赖链的 Starlette/httpx 弃用提示。Android 构建仍提示 Gradle 10 弃用兼容问题和 SDK XML v4/v3 工具版本差异。
 
 ## 五、Evaluation 可信度
 
-本轮新增的是用户提供的脱敏、结构化淘宝页面 fixture，不是实时网页采样，也没有人工标注声明。阶段13核心指标保持原值：5 个合成树 fixture 的平均节点保留率 0.5714；8 个未人工复核 synthetic 样本的规则/混合解析准确率 1.0；10 次相同 Mock E2E 的任务和动作成功率 1.0；本机 Mock E2E 平均延迟约 7.8086ms。阶段16另记录了 2 条淘宝 fixture 商品回放，但不生成真实平台准确率或实时延迟指标。
+本轮新增的是用户提供的脱敏、结构化淘宝页面 fixture，不是实时网页采样，也没有人工标注声明。Evaluation v2 当前包含 8 条 synthetic 和 2 条淘宝 fixture，全部 `UNREVIEWED`、`HUMAN_VERIFIED=0`：Rule `8/10`、Hybrid FakeLLM 回放 `10/10`、LLM invocation `4/10`、schema failure `0/4`。阶段13另记录 5 个合成树 fixture 的平均节点保留率 0.5714；10 次相同 Mock E2E 的任务和动作成功率 1.0；本机 Mock E2E 平均延迟约 7.8086ms。阶段16另记录了 2 条淘宝 fixture 商品回放，但不生成真实平台准确率或实时延迟指标。
 
 这些结果只能证明离线 runner 和受控流程可复现，不能证明真实购物平台准确率、真实设备延迟、Agent 泛化能力或生产吞吐。
 
@@ -108,32 +136,33 @@ CI 文件已完成本地静态配置，但尚无远端 Actions 运行记录，�
 
 ### P0——真实平台验收阻断
 
-1. 无实时淘宝 DOM/ARIA 选择器验证，也无 Meituan/JD 的真实平台 Adapter；当前淘宝 fixture 是用户提供的结构化脱敏数据。
+1. 无实时淘宝 DOM/ARIA 选择器验证，也无 Meituan/JD 的真实平台 Adapter 运行；当前 JD/美团 Adapter 和淘宝 fixture 均属于脱敏/离线证据。
 2. 无真实应用 Bad Case、弹窗、加载态、登录态和规格选择恢复验证。
-3. Android 无物理设备或模拟器运行证据；这不阻断当前桌面端主线，但仍是移动端未完成项。
+3. Android 无物理设备或模拟器运行证据；本机 ADB 可用，但 Emulator、AVD 和 Android 34 system image 缺失，阶段4报告为 `BLOCKED`。
 
 ### P1——高可信质量阻断
 
 1. CI 尚无远端执行记录；没有 coverage 门槛、lint、静态类型检查和 pre-commit。
-2. Android JVM 测试数量仍少，无 instrumented/UI 测试；本轮设备桥接主要由编译和后端契约测试覆盖。
+2. Android instrumented/UI test harness 已新增，但未在 Emulator/Device 执行；当前设备桥接主要由代码、后端契约测试和历史 BUILD_ONLY 证据覆盖。
 3. 设备共享令牌默认空值，仅适用于本机开发；没有设备注册、令牌轮换和多租户授权。
 4. Android 尚未接入 WebSocket event client；当前 Android 桥接使用 polling，event 路径仍是后端基准实现。
 5. 进程内设备会话没有持久化、背压、多实例协调和断线重投。
-6. Evaluation 数据仍小且全部为 synthetic/Mock。
+6. Evaluation v2 已纳入淘宝脱敏 fixture，但数据仍小且没有 HUMAN_VERIFIED 样本。
 
 ### P2——持续优化
 
 1. 消除 Gradle 10 和 SDK XML 工具链警告。
 2. 解决 TestClient 弃用警告并加入覆盖率、Ruff/类型检查。
-3. 为桥接增加退避、抖动、命令确认租约和可观测指标。
+3. 在 Emulator/Device 可用后实测桥接退避、抖动、命令确认租约、dispatch/execution latency 和成功率。
 4. 在真实设备条件下重新测量 polling/event 延迟、失败率和分位数。
 
 ## 七、最终判定
 
 - **离线技术演示：通过。**
 - **淘宝脱敏结构 fixture 只读回放：通过。**
-- **真实设备开发基线：通过，但运行验证待办。**
+- **Android 双向 Runtime：BLOCKED / NOT_VERIFIED；代码闭环和 harness 已完成，但没有 Emulator/AVD 运行证据。**
 - **实时淘宝网页和真实跨平台比价能力：不通过/未完成。**
+- **JD/美团 Adapter 合同与脱敏 fixture 比价：通过；真实平台运行：NOT_VERIFIED。**
 - **生产上线：不通过。**
 
 机器可读版本见 [project_acceptance_2026-08-09.json](../evaluation/reports/project_acceptance_2026-08-09.json)。

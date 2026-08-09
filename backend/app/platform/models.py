@@ -7,7 +7,7 @@ from enum import StrEnum
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.action.models import ActionTarget
-from app.parser.models import ProductIdentity, ProductSpecification, Promotion
+from app.parser.models import ProductIdentity, ProductSpecification, Promotion, Quantity
 from app.parser.price import Price
 
 
@@ -42,6 +42,31 @@ class PlatformProduct(BaseModel):
     selector_fallback_level: int | None = Field(default=None, ge=1)
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     promotions: list[Promotion] = Field(default_factory=list)
+
+
+class NormalizedProduct(BaseModel):
+    """Platform-neutral product contract used by comparison and agent layers.
+
+    ``base_price`` is the original/listed price when the adapter can identify
+    one. ``effective_price`` is the price after only explicitly parsed
+    promotions. Both fields preserve the typed ``Price`` value and its source
+    text so downstream code cannot mistake a fixture for live platform data.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    platform: str
+    title: str
+    base_price: Price | None = None
+    effective_price: Price | None = None
+    quantity: Quantity | None = None
+    specification: ProductSpecification
+    seller: str | None = None
+    store: str | None = None
+    product_id: str | None = None
+    product_url: str | None = None
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    extraction_source: str
 
 
 class AdapterExtraction(BaseModel):

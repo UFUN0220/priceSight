@@ -1,6 +1,6 @@
 {
   "report_date": "2026-08-09",
-  "assessment_revision": "desktop_browser_taobao_fixture_replay",
+  "assessment_revision": "phase5_multi_platform_adapter_fixture_verified_android_runtime_blocked",
   "previous_score": 65,
   "overall_score": 82,
   "weighted_score_before_rounding": 81.7,
@@ -19,7 +19,7 @@
     {"name": "documentation", "weight": 5, "score": 96}
   ],
   "verification": {
-    "backend_tests": {"passed": 101, "failed": 0, "warnings": 1},
+    "backend_tests": {"passed": 122, "failed": 0, "warnings": 1, "status": "phase5_full_regression_verified"},
     "focused_bridge_and_safety_tests": {"passed": 15, "failed": 0},
     "browser_runtime_tests": {"passed": 2, "failed": 0},
     "browser_mock_web_e2e": {
@@ -38,15 +38,58 @@
       "selector_roles": ["product_result", "search_input", "search_submit"]
     },
     "python_compileall": "passed",
-    "android_client_test_and_assemble_debug": "build_successful",
+    "android_client_test_and_assemble_debug": "historical_build_only_phase4_changes_not_rebuilt",
     "android_client_gradle_tasks": 64,
-    "mock_app_test_and_assemble_debug": "build_successful",
+    "mock_app_test_and_assemble_debug": "historical_build_only_instrumented_test_not_run",
     "mock_app_gradle_tasks": 64,
     "github_actions_workflow": "backend_android_browser_jobs_added_not_yet_run_remotely",
     "android_lint": "not_completed_missing_offline_lint_dependency",
-    "real_device_runtime": "not_run_by_user_scope",
+    "real_device_runtime": "blocked_no_emulator_no_avd_no_system_image",
+    "android_emulator": {
+      "adb": "available_37.0.1",
+      "emulator_executable": false,
+      "avd_count": 0,
+      "android_34_system_image": false,
+      "runtime_status": "BLOCKED"
+    },
+    "android_runtime_validation": {
+      "status": "BLOCKED_NOT_VERIFIED",
+      "observation_upload": "NOT_VERIFIED",
+      "backend_action": "CONTRACT_VERIFIED",
+      "android_poll": "NOT_VERIFIED",
+      "accessibility_execution": "NOT_VERIFIED",
+      "result_callback": "NOT_VERIFIED",
+      "dispatch_latency": "NOT_MEASURED",
+      "execution_latency": "NOT_MEASURED",
+      "success_rate": "NOT_MEASURED",
+      "report": "evaluation/reports/android_runtime_validation.md"
+    },
+    "evaluation_v2": {
+      "dataset_count": 10,
+      "human_verified_count": 0,
+      "rule_accuracy": {"numerator": 8, "denominator": 10},
+      "hybrid_fake_llm_consistency": {"numerator": 10, "denominator": 10},
+      "llm_invocation_rate": {"numerator": 4, "denominator": 10},
+      "schema_failure_rate": {"numerator": 0, "denominator": 4},
+      "report": "evaluation/reports/evaluation_v2.md"
+    },
+    "hybrid_parser_phase3": {
+      "rule_failure_sample_ids": ["taobao-iphone17-item-1", "taobao-iphone17-item-2"],
+      "failure_classification": "title_noise_semantic_identity_llm_scope",
+      "report": "evaluation/reports/hybrid_parser_after_optimization.md"
+    },
     "real_platform_browser_runtime": "not_verified_live_page_access_blocked_fixture_replay_only",
-    "taobao_adapter_status": "fixture_verified_not_live"
+    "taobao_adapter_status": "fixture_verified_not_live",
+    "multi_platform_adapter": {
+      "status": "fixture_verified_not_live",
+      "adapters": ["taobao", "jd", "meituan"],
+      "normalized_product_contract": "verified",
+      "comparison_basis": ["specification", "quantity", "effective_unit_price", "confidence"],
+      "focused_tests": {"passed": 28, "failed": 0},
+      "real_jd": "NOT_VERIFIED",
+      "real_meituan": "NOT_VERIFIED",
+      "report": "evaluation/reports/multi_platform_adapter_validation.md"
+    }
   },
   "remediated_blockers": [
     "git_baseline_exists",
@@ -55,6 +98,10 @@
     "android_action_executor_is_wired_into_accessibility_service",
     "android_upload_poll_execute_report_loop_is_implemented",
     "stale_observation_is_checked_at_enqueue_and_dispatch",
+    "android_action_id_and_command_id_deduplication_code_is_implemented",
+    "android_action_lifecycle_code_is_implemented",
+    "android_bridge_backoff_jitter_timeout_and_bounded_retry_code_is_implemented",
+    "android_mock_instrumented_test_harness_is_added_not_executed",
     "android_debug_cleartext_policy_is_explicit",
     "ci_workflow_is_present",
     "safety_separator_obfuscation_is_blocked",
@@ -62,11 +109,13 @@
     "mock_web_browser_e2e_is_reproducible"
     ,"taobao_adapter_and_sanitized_fixture_replay_is_reproducible"
     ,"taobao_page_structure_converts_to_standard_observation"
+    ,"multi_platform_adapter_contract_and_fixture_regression_is_verified"
   ],
   "remaining_p0_blockers": [
     "no_live_taobao_dom_aria_selector_verification_or_real_page_replay",
-    "no_meituan_or_jd_real_platform_adapter",
+    "no_meituan_or_jd_real_platform_runtime_verification",
     "no_real_application_bad_case_validation"
+    ,"no_android_emulator_or_avd_runtime_verification"
   ],
   "latest_metrics_unchanged": {
     "tree_compression_retained_ratio_mean": 0.5714285714285714,

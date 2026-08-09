@@ -145,6 +145,16 @@
 - [ ] 尚未访问实时淘宝页面，真实 DOM/ARIA 选择器和线上网页稳定性仍未验证。
 - [x] 报告：[PHASE_16_REPORT.md](PHASE_16_REPORT.md)。
 
+### 阶段5——多平台 Adapter 架构
+
+- [x] 新增统一 `PlatformAdapter`/`BasePlatformAdapter` 接口和 `NormalizedProduct`。
+- [x] Taobao 迁移到统一 `parse_*`、标准化和安全边界兼容层，既有行为保持通过。
+- [x] 新增 JD、Meituan 脱敏 fixture Adapter；未复制 Runtime、Agent 或核心 Workflow。
+- [x] 比较引擎按规格、数量、有效单位价和 confidence 做推荐；加入跨平台回归测试。
+- [x] 后端全量测试：122 passed，Python compileall 和 git diff --check 通过。
+- [ ] 真实淘宝/JD/Meituan 页面仍未验证；fixture 结果不升级为 real platform verified。
+- [x] 报告：[multi_platform_adapter_validation.md](../evaluation/reports/multi_platform_adapter_validation.md)。
+
 ### 阶段1——淘宝实时网页只读链路验证
 
 - [x] 增加淘宝页面状态识别、host allowlist、DOM/ARIA 可选证据字段和有序 selector fallback。

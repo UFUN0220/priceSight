@@ -6,7 +6,7 @@
 
 ## 最新项目级验收
 
-2026-08-09 淘宝 fixture 更新后的项目复验评分为 **82/100**，由整改前的 65 分提升。项目已具备本地浏览器真实执行基线和淘宝脱敏结构 fixture 只读回放；阶段2后端全量测试为 **112 个通过**、浏览器 E2E、Android Client 与 Mock App 构建均通过。实时平台和生产交付仍不通过。
+2026-08-09 淘宝 fixture 更新后的项目复验评分为 **82/100**，由整改前的 65 分提升。项目已具备本地浏览器真实执行基线、淘宝脱敏结构 fixture 只读回放和阶段4 Android bridge 工程增强；最近一次已验证 Backend 为 **114 个通过**。Android Emulator Runtime 仍为 BLOCKED，实时平台和生产交付仍不通过。
 
 详见 [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)。
 
@@ -119,14 +119,16 @@ uv run python scripts/run_browser_mock.py
 
 ## 真实平台适配
 
-当前已有通用网页 Adapter、淘宝 Adapter 骨架、Mock Shopping Adapter 和合成 Fixture Adapter。淘宝 Adapter 已回放用户提供的 `iphone17` 商品列表及页面结构 fixture，但尚未声称真实淘宝网页运行成功。真实应用需要：
+当前已有统一 `PlatformAdapter`/`NormalizedProduct` 契约、通用网页 Adapter、淘宝 Adapter、JD/美团脱敏 fixture Adapter、Mock Shopping Adapter 和合成 Fixture Adapter。淘宝 Adapter 已回放用户提供的 `iphone17` 商品列表及页面结构 fixture，但尚未声称真实淘宝网页运行成功。真实应用需要：
 
 1. 连接设备并采集经过脱敏的 Accessibility fixtures；
 2. 在独立 adapter 中实现页面识别、商品/价格/规格抽取；
 3. 用真实 Bad Case 回放验证 selector 和安全边界；
 4. 单独报告真实 App 结果，不与 Mock 结果混合。
 
-本仓库没有声称已完成 Meituan、JD 或 Taobao 的真实网页适配；淘宝目前仅完成平台边界与 fixture 回放骨架。
+本仓库没有声称已完成 Meituan、JD 或 Taobao 的真实网页适配；JD/美团目前仅完成 Adapter 合同和脱敏 fixture 验证，淘宝目前完成平台边界与 fixture 回放。
+
+阶段5报告：[multi_platform_adapter_validation.md](evaluation/reports/multi_platform_adapter_validation.md)。
 
 网页只读 fixture 可使用 `scripts/capture_web_fixture.py` 采集；必须显式提供允许域名，输出会限制在项目目录并进行脱敏。详见 [阶段15报告](docs/PHASE_15_REPORT.md)。
 
@@ -167,6 +169,8 @@ uv run python scripts/run_evaluation_v2.py --sample-id gift-water
 
 阶段 3 Hybrid Parser 优化报告见 [evaluation/reports/hybrid_parser_after_optimization.md](evaluation/reports/hybrid_parser_after_optimization.md)。Parser 按规则优先、ambiguity detection、结构化 LLM fallback 和 fail-closed schema validation 执行；报告会列出失败样本，不把 FakeLLMProvider 回放写成真实模型准确率。
 
+阶段 5 比价回归通过统一 Adapter 计算规格、数量、有效单位价和置信度；JD/美团结果仍属于 fixture/mock 证据，不是实时平台指标。
+
 ## 已知限制
 
 Android 阶段4已补充 DeviceBridge retry、action lifecycle、action_id 去重和 instrumented test harness；本机无 Emulator/AVD/system image，当前仍为 `BLOCKED`，不得写成 Android Runtime Verified。详见 [Android Runtime 验证报告](evaluation/reports/android_runtime_validation.md)。
@@ -178,7 +182,7 @@ Android 阶段4已补充 DeviceBridge retry、action lifecycle、action_id 去�
 - 解析数据集是 synthetic、未人工复核，不能称为人工标注准确率。
 - Event transport 尚未接入真实 Android Accessibility event timing。
 - Android 设备桥接当前使用 polling，尚无 Android WebSocket event client。
-- Browser Runtime 已在本地 Mock Web 上完成真实 Chromium 执行；真实电商平台 Adapter 尚未完成。
+- Browser Runtime 已在本地 Mock Web 上完成真实 Chromium 执行；真实电商平台只读链路尚未完成，JD/美团 Adapter 目前仅为 fixture 验证。
 - 浏览器依赖为可选项；没有安装 Playwright/Chromium 时只能运行后端和 fixture 测试。
 - SQLite cache 是本地单进程方案，不是分布式缓存。
 - 真实模型、真实网络和生产级延迟未测量。
@@ -210,6 +214,7 @@ scripts/             reproducible evaluation and benchmark runners
 - [阶段15报告](docs/PHASE_15_REPORT.md)
 - [阶段16报告](docs/PHASE_16_REPORT.md)
 - [淘宝实时只读验证报告](evaluation/reports/taobao_live_readonly_validation.md)
+- [多平台 Adapter 验证报告](evaluation/reports/multi_platform_adapter_validation.md)
 - [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)
 - [结构化验收结果](evaluation/reports/project_acceptance_2026-08-09.json)
 - [安全边界](docs/SAFETY.md)

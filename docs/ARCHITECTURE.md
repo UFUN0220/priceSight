@@ -30,12 +30,26 @@ Task Router
 - `workflow`：YAML 加载、有限状态执行、重试和路由。
 - `agent` / `llm`：有界 Agent Context、结构化决策和 provider 抽象。
 - `parser`：规则优先的商品、数量、规格、促销和价格解析。
-- `platform`：通用 adapter、Mock adapter 和 fixture adapter。
+- `platform`：统一 `PlatformAdapter`/`BasePlatformAdapter`、Taobao Web Adapter、JD/Meituan 脱敏 fixture Adapter、Mock adapter 和标准化商品 DTO。
 - `comparison`：规格匹配、最终价计算、推荐和缓存使用。
 - `transport`：保留 polling，增加 event queue 和 WebSocket ingress。
 - `runtime`：统一 Browser、Android 和 Mock 执行端；Browser Runtime 将 DOM/ARIA 节点归一化到统一 Observation，并复用 ActionExecutor。
 - `task`：`TaskOrchestrator` 负责把 Workflow 运行在任意 `ActionDevice` 上，避免 Runtime 选择泄露到平台逻辑。
 - `evaluation`：原始 benchmark、最终指标汇总和范围审计。
+
+### 阶段 5 多平台 Adapter 链路
+
+平台差异停留在 Adapter 层，统一链路为：
+
+```text
+Runtime
+  → Observation
+  → PlatformAdapter
+  → NormalizedProduct
+  → ComparisonEngine / Agent
+```
+
+`PlatformAdapter` 保留既有 `extract_*` 兼容入口，同时提供 `parse_products()`、`parse_product_detail()`、`normalize_product()` 和 `safety_boundary()`。比较引擎按规格、数量、显式优惠后的有效单位价和置信度做保守比较。JD/美团目前只完成脱敏 fixture 验证，不能解释为真实平台支持；详见 [阶段5报告](../evaluation/reports/multi_platform_adapter_validation.md)。
 
 ## 安全边界
 

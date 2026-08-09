@@ -1,0 +1,16 @@
+{
+  "observation_id": "meituan-fixture-results",
+  "platform": "meituan",
+  "package_name": "com.pricesight.fixture.meituan",
+  "page_type": "unknown",
+  "nodes": [
+    {"node_id": "page.title", "text": "商品列表"},
+    {
+      "node_id": "meituan.result.1",
+      "resource_id": "meituan.result.1",
+      "text": "Coca-Cola 500ml×2瓶 | ¥10.00 | 配送到家",
+      "content_description": "product_result",
+      "clickable": true
+    }
+  ]
+}

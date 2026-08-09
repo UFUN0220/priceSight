@@ -7,7 +7,7 @@ from decimal import Decimal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.parser.models import ProductIdentity, ProductSpecification, Promotion
+from app.parser.models import ProductIdentity, ProductSpecification, Promotion, Quantity
 
 
 class NormalizedRequirement(BaseModel):
@@ -38,6 +38,10 @@ class NormalizedOffer(BaseModel):
     specification: ProductSpecification
     promotions: list[Promotion] = Field(default_factory=list)
     final_price: FinalPrice
+    quantity: Quantity | None = None
+    effective_unit_price: Decimal | None = Field(default=None, gt=0)
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    extraction_source: str = "unknown"
     comparable: bool = False
     match_reason: str | None = None
 

@@ -41,3 +41,4 @@ Thumbs.db
 evaluation/reports/*
 !evaluation/reports/.gitkeep
 !evaluation/reports/*.json
+!evaluation/reports/multi_platform_adapter_validation.md

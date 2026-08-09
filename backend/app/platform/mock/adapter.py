@@ -14,9 +14,10 @@ from app.platform.models import (
     PlatformPageType,
     PlatformProduct,
 )
+from app.platform.base import BasePlatformAdapter
 
 
-class MockShoppingAdapter:
+class MockShoppingAdapter(BasePlatformAdapter):
     """Offline adapter with graceful failure and safe cart gating."""
 
     platform_id = "mock-shopping"

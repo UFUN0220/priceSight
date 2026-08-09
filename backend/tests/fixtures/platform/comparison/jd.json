@@ -1,0 +1,16 @@
+{
+  "observation_id": "jd-fixture-results",
+  "platform": "jd",
+  "package_name": "com.pricesight.fixture.jd",
+  "page_type": "unknown",
+  "nodes": [
+    {"node_id": "page.title", "text": "商品列表"},
+    {
+      "node_id": "jd.result.1",
+      "resource_id": "jd.result.1",
+      "text": "可口可乐 500ml×2瓶 | ¥11.80 | 京东自营",
+      "content_description": "product_result",
+      "clickable": true
+    }
+  ]
+}
