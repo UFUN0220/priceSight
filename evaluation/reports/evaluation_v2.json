@@ -1,0 +1,702 @@
+{
+  "report_version": "evaluation_v2",
+  "dataset": "evaluation/datasets/evaluation_v2.jsonl",
+  "dataset_count": 10,
+  "source_type_counts": {
+    "fixture": 2,
+    "synthetic": 8
+  },
+  "annotation_status_counts": {
+    "UNREVIEWED": 10
+  },
+  "human_verified_count": 0,
+  "human_accuracy_claim_available": false,
+  "metric_interpretation": "当前数据未达到 HUMAN_VERIFIED 门槛；accuracy 仅表示机器输出与未复核期望字段的一致性，不是人工真实准确率。",
+  "metrics": {
+    "rule_accuracy": {
+      "numerator": 8,
+      "denominator": 10,
+      "accuracy": 0.8,
+      "basis": "all selected samples; deterministic rule parser"
+    },
+    "rule_quantity_accuracy": {
+      "numerator": 6,
+      "denominator": 6,
+      "accuracy": 1.0,
+      "basis": "all selected samples; deterministic rule parser"
+    },
+    "rule_spec_accuracy": {
+      "numerator": 10,
+      "denominator": 10,
+      "accuracy": 1.0,
+      "basis": "all selected samples; deterministic rule parser"
+    },
+    "rule_price_accuracy": {
+      "numerator": 2,
+      "denominator": 2,
+      "accuracy": 1.0,
+      "basis": "all selected samples; deterministic rule parser"
+    },
+    "rule_ambiguous_case_accuracy": {
+      "numerator": 8,
+      "denominator": 10,
+      "accuracy": 0.8,
+      "basis": "all selected samples; deterministic rule parser"
+    },
+    "llm_accuracy": {
+      "numerator": 4,
+      "denominator": 4,
+      "accuracy": 1.0,
+      "basis": "samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+    },
+    "llm_quantity_accuracy": {
+      "numerator": 0,
+      "denominator": 0,
+      "accuracy": null,
+      "basis": "samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+    },
+    "llm_spec_accuracy": {
+      "numerator": 4,
+      "denominator": 4,
+      "accuracy": 1.0,
+      "basis": "samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+    },
+    "llm_price_accuracy": {
+      "numerator": 2,
+      "denominator": 2,
+      "accuracy": 1.0,
+      "basis": "samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+    },
+    "llm_ambiguous_case_accuracy": {
+      "numerator": 4,
+      "denominator": 4,
+      "accuracy": 1.0,
+      "basis": "samples where FakeLLMProvider fallback returned source=llm; not live model performance"
+    },
+    "hybrid_accuracy": {
+      "numerator": 10,
+      "denominator": 10,
+      "accuracy": 1.0,
+      "basis": "all selected samples; rule-first hybrid with FakeLLMProvider"
+    },
+    "hybrid_quantity_accuracy": {
+      "numerator": 6,
+      "denominator": 6,
+      "accuracy": 1.0,
+      "basis": "all selected samples; rule-first hybrid with FakeLLMProvider"
+    },
+    "hybrid_spec_accuracy": {
+      "numerator": 10,
+      "denominator": 10,
+      "accuracy": 1.0,
+      "basis": "all selected samples; rule-first hybrid with FakeLLMProvider"
+    },
+    "hybrid_price_accuracy": {
+      "numerator": 2,
+      "denominator": 2,
+      "accuracy": 1.0,
+      "basis": "all selected samples; rule-first hybrid with FakeLLMProvider"
+    },
+    "hybrid_ambiguous_case_accuracy": {
+      "numerator": 10,
+      "denominator": 10,
+      "accuracy": 1.0,
+      "basis": "all selected samples; rule-first hybrid with FakeLLMProvider"
+    }
+  },
+  "bad_case_coverage": [
+    {
+      "ambiguity_type": "multi_pack",
+      "description": "标题同时包含单件容量与包装数量",
+      "sample_ids": [
+        "water-550ml-12",
+        "cola-330ml-6",
+        "water-1l-2",
+        "snack-250g-3"
+      ],
+      "replayable": true,
+      "status": "REPRESENTED_REPLAYABLE"
+    },
+    {
+      "ambiguity_type": "multi_spec",
+      "description": "同一商品存在多个规格或组合规格",
+      "sample_ids": [
+        "combo"
+      ],
+      "replayable": true,
+      "status": "REPRESENTED_REPLAYABLE"
+    },
+    {
+      "ambiguity_type": "second_item_discount",
+      "description": "第二件折扣或第二件优惠，不能当作单件价格",
+      "sample_ids": [],
+      "replayable": false,
+      "status": "NOT_REPRESENTED"
+    },
+    {
+      "ambiguity_type": "after_sale_price",
+      "description": "到手价、预估价等价格口径与展示价不同",
+      "sample_ids": [],
+      "replayable": false,
+      "status": "NOT_REPRESENTED"
+    },
+    {
+      "ambiguity_type": "coupon_price",
+      "description": "券后价或优惠券门槛影响最终价格",
+      "sample_ids": [],
+      "replayable": false,
+      "status": "NOT_REPRESENTED"
+    },
+    {
+      "ambiguity_type": "price_range",
+      "description": "价格展示为区间而非单一数值",
+      "sample_ids": [],
+      "replayable": false,
+      "status": "NOT_REPRESENTED"
+    },
+    {
+      "ambiguity_type": "gift",
+      "description": "赠品规格不能并入主商品购买数量",
+      "sample_ids": [
+        "gift-water"
+      ],
+      "replayable": true,
+      "status": "REPRESENTED_REPLAYABLE"
+    },
+    {
+      "ambiguity_type": "sku_mixed_text",
+      "description": "标题混合容量、颜色、存储等 SKU 文本",
+      "sample_ids": [],
+      "replayable": false,
+      "status": "NOT_REPRESENTED"
+    },
+    {
+      "ambiguity_type": "quantity_ambiguity",
+      "description": "促销数量、购买数量和包装数量含义不一致",
+      "sample_ids": [
+        "buy-2-get-1"
+      ],
+      "replayable": true,
+      "status": "REPRESENTED_REPLAYABLE"
+    },
+    {
+      "ambiguity_type": "unit_ambiguity",
+      "description": "单位缺失、同词多义或容器单位不明确",
+      "sample_ids": [
+        "cups-2"
+      ],
+      "replayable": true,
+      "status": "REPRESENTED_REPLAYABLE"
+    },
+    {
+      "ambiguity_type": "title_noise",
+      "description": "营销词、标签和商品核心名称混在标题中",
+      "sample_ids": [
+        "taobao-iphone17-item-1",
+        "taobao-iphone17-item-2"
+      ],
+      "replayable": true,
+      "status": "REPRESENTED_REPLAYABLE"
+    },
+    {
+      "ambiguity_type": "missing_information",
+      "description": "观察中缺少价格、规格或关键字段",
+      "sample_ids": [],
+      "replayable": false,
+      "status": "NOT_REPRESENTED"
+    },
+    {
+      "ambiguity_type": "duplicate_node",
+      "description": "同一商品因 DOM 重复节点被重复抽取",
+      "sample_ids": [],
+      "replayable": false,
+      "status": "NOT_REPRESENTED"
+    },
+    {
+      "ambiguity_type": "popup_loading",
+      "description": "弹窗或加载态遮挡了可用页面信息",
+      "sample_ids": [],
+      "replayable": false,
+      "status": "NOT_REPRESENTED"
+    },
+    {
+      "ambiguity_type": "dynamic_price",
+      "description": "价格随用户、时间或交互动态变化",
+      "sample_ids": [],
+      "replayable": false,
+      "status": "NOT_REPRESENTED"
+    }
+  ],
+  "case_results": [
+    {
+      "sample_id": "water-550ml-12",
+      "source_type": "synthetic",
+      "annotation_status": "UNREVIEWED",
+      "replay_text": "农夫山泉 550ml×12瓶",
+      "parser_output": {
+        "product_name": "农夫山泉",
+        "quantity": {
+          "count": 12,
+          "content_amount": "550",
+          "content_unit": "ml",
+          "container_unit": "bottle"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.98
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "农夫山泉",
+        "quantity": {
+          "count": 12,
+          "content_amount": "550",
+          "content_unit": "ml",
+          "container_unit": "bottle"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.98
+      },
+      "success": true,
+      "failure_reason": null
+    },
+    {
+      "sample_id": "cola-330ml-6",
+      "source_type": "synthetic",
+      "annotation_status": "UNREVIEWED",
+      "replay_text": "可口可乐 330ml*6罐",
+      "parser_output": {
+        "product_name": "可口可乐",
+        "quantity": {
+          "count": 6,
+          "content_amount": "330",
+          "content_unit": "ml",
+          "container_unit": "can"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.98
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "可口可乐",
+        "quantity": {
+          "count": 6,
+          "content_amount": "330",
+          "content_unit": "ml",
+          "container_unit": "can"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.98
+      },
+      "success": true,
+      "failure_reason": null
+    },
+    {
+      "sample_id": "water-1l-2",
+      "source_type": "synthetic",
+      "annotation_status": "UNREVIEWED",
+      "replay_text": "1L×2瓶",
+      "parser_output": {
+        "product_name": "1Lx2瓶",
+        "quantity": {
+          "count": 2,
+          "content_amount": "1",
+          "content_unit": "l",
+          "container_unit": "bottle"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.98
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "1Lx2瓶",
+        "quantity": {
+          "count": 2,
+          "content_amount": "1",
+          "content_unit": "l",
+          "container_unit": "bottle"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.98
+      },
+      "success": true,
+      "failure_reason": null
+    },
+    {
+      "sample_id": "snack-250g-3",
+      "source_type": "synthetic",
+      "annotation_status": "UNREVIEWED",
+      "replay_text": "250g*3袋",
+      "parser_output": {
+        "product_name": "250gx3袋",
+        "quantity": {
+          "count": 3,
+          "content_amount": "250",
+          "content_unit": "g",
+          "container_unit": "bag"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.98
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "250gx3袋",
+        "quantity": {
+          "count": 3,
+          "content_amount": "250",
+          "content_unit": "g",
+          "container_unit": "bag"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.98
+      },
+      "success": true,
+      "failure_reason": null
+    },
+    {
+      "sample_id": "cups-2",
+      "source_type": "synthetic",
+      "annotation_status": "UNREVIEWED",
+      "replay_text": "咖啡 2杯装",
+      "parser_output": {
+        "product_name": "咖啡",
+        "quantity": {
+          "count": 2,
+          "content_amount": null,
+          "content_unit": "cup",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.88
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "咖啡",
+        "quantity": {
+          "count": 2,
+          "content_amount": null,
+          "content_unit": "cup",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.88
+      },
+      "success": true,
+      "failure_reason": null
+    },
+    {
+      "sample_id": "gift-water",
+      "source_type": "synthetic",
+      "annotation_status": "UNREVIEWED",
+      "replay_text": "矿泉水 1L×2 + 赠250ml×2",
+      "parser_output": {
+        "product_name": "矿泉水",
+        "quantity": {
+          "count": 2,
+          "content_amount": "1",
+          "content_unit": "l",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.99
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "矿泉水",
+        "quantity": {
+          "count": 2,
+          "content_amount": "1",
+          "content_unit": "l",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": false,
+        "confidence": 0.99
+      },
+      "success": true,
+      "failure_reason": null
+    },
+    {
+      "sample_id": "buy-2-get-1",
+      "source_type": "synthetic",
+      "annotation_status": "UNREVIEWED",
+      "replay_text": "零食 买2赠1",
+      "parser_output": {
+        "product_name": "零食",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "零食",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "零食",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "success": true,
+      "failure_reason": null
+    },
+    {
+      "sample_id": "combo",
+      "source_type": "synthetic",
+      "annotation_status": "UNREVIEWED",
+      "replay_text": "双人套餐",
+      "parser_output": {
+        "product_name": "双人套餐",
+        "quantity": null,
+        "spec": {
+          "package_type": "combo",
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "双人套餐",
+        "quantity": null,
+        "spec": {
+          "package_type": "combo",
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "双人套餐",
+        "quantity": null,
+        "spec": {
+          "package_type": "combo",
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "success": true,
+      "failure_reason": null
+    },
+    {
+      "sample_id": "taobao-iphone17-item-1",
+      "source_type": "fixture",
+      "annotation_status": "UNREVIEWED",
+      "replay_text": "【淘金币可叠加国家补贴】Apple/苹果 iPhone 17 手机 全国联保 现货速发 全新未拆封 游戏拍照 ¥5999.00",
+      "parser_output": {
+        "product_name": "【淘金币可叠加国家补贴】Apple/苹果 iPhone 17 手机 全国联保 现货速发 全新未拆封 游戏拍照 ¥5999.00",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": {
+          "amount": "5999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "source": "rule",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "Apple/苹果 iPhone 17",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": {
+          "amount": "5999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "source": "llm",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "Apple/苹果 iPhone 17",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": {
+          "amount": "5999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "source": "llm",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "success": true,
+      "failure_reason": null
+    },
+    {
+      "sample_id": "taobao-iphone17-item-2",
+      "source_type": "fixture",
+      "annotation_status": "UNREVIEWED",
+      "replay_text": "【12期免息/国家补贴15%】Apple/苹果 iPhone 17 手机 A19 芯片 2025 新款 全新未拆封 多仓速发 官方正品 ¥5999.00",
+      "parser_output": {
+        "product_name": "【12期免息/国家补贴15%】Apple/苹果 iPhone 17 手机 A19 芯片 2025 新款 全新未拆封 多仓速发 官方正品 ¥5999.00",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": {
+          "amount": "5999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "source": "rule",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "Apple/苹果 iPhone 17",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": {
+          "amount": "5999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "source": "llm",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "Apple/苹果 iPhone 17",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": {
+          "amount": "5999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "source": "llm",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "success": true,
+      "failure_reason": null
+    }
+  ],
+  "legacy_claim_review": {
+    "legacy_report": "evaluation/reports/phase7_product_parsing.json",
+    "legacy_claim": "8 条 synthetic 样本上的 rule/hybrid 1.0",
+    "accepted_as_real_accuracy": false,
+    "reason": "历史样本均为 synthetic 且 not_human_reviewed，旧报告没有 numerator/denominator 和人工复核证据。"
+  },
+  "limitations": [
+    "当前没有 HUMAN_VERIFIED 样本，因此不发布复杂商品识别的真实准确率。",
+    "LLM 指标使用 FakeLLMProvider 的确定性回放，不代表任何线上模型表现。",
+    "taxonomy 中尚无可靠样本的类别标记为 NOT_REPRESENTED，不编造覆盖率。",
+    "淘宝数据来自脱敏 fixture 回放，不是实时淘宝数据。"
+  ]
+}

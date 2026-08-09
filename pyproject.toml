@@ -27,7 +27,7 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["backend/tests"]
-pythonpath = ["backend"]
+pythonpath = ["backend", "."]
 addopts = "-ra"
 
 [tool.setuptools.packages.find]

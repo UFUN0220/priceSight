@@ -1,0 +1,13 @@
+{
+  "policy_version": "evaluation_v2_machine_consistency_baseline_2026-08-09",
+  "interpretation": "These thresholds protect deterministic replay consistency on UNREVIEWED synthetic/fixture samples. They are not human accuracy claims.",
+  "dataset_count": 10,
+  "required_metrics": {
+    "rule_accuracy": {"denominator": 10, "minimum_numerator": 8},
+    "hybrid_accuracy": {"denominator": 10, "minimum_numerator": 10},
+    "hybrid_quantity_accuracy": {"denominator": 6, "minimum_numerator": 6},
+    "hybrid_spec_accuracy": {"denominator": 10, "minimum_numerator": 10},
+    "hybrid_price_accuracy": {"denominator": 2, "minimum_numerator": 2},
+    "hybrid_ambiguous_case_accuracy": {"denominator": 10, "minimum_numerator": 10}
+  }
+}

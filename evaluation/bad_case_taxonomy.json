@@ -1,0 +1,17 @@
+{
+  "multi_pack": {"description": "标题同时包含单件容量与包装数量", "sample_ids": ["water-550ml-12", "cola-330ml-6", "water-1l-2", "snack-250g-3"]},
+  "multi_spec": {"description": "同一商品存在多个规格或组合规格", "sample_ids": ["combo"]},
+  "second_item_discount": {"description": "第二件折扣或第二件优惠，不能当作单件价格", "sample_ids": []},
+  "after_sale_price": {"description": "到手价、预估价等价格口径与展示价不同", "sample_ids": []},
+  "coupon_price": {"description": "券后价或优惠券门槛影响最终价格", "sample_ids": []},
+  "price_range": {"description": "价格展示为区间而非单一数值", "sample_ids": []},
+  "gift": {"description": "赠品规格不能并入主商品购买数量", "sample_ids": ["gift-water"]},
+  "sku_mixed_text": {"description": "标题混合容量、颜色、存储等 SKU 文本", "sample_ids": []},
+  "quantity_ambiguity": {"description": "促销数量、购买数量和包装数量含义不一致", "sample_ids": ["buy-2-get-1"]},
+  "unit_ambiguity": {"description": "单位缺失、同词多义或容器单位不明确", "sample_ids": ["cups-2"]},
+  "title_noise": {"description": "营销词、标签和商品核心名称混在标题中", "sample_ids": ["taobao-iphone17-item-1", "taobao-iphone17-item-2"]},
+  "missing_information": {"description": "观察中缺少价格、规格或关键字段", "sample_ids": []},
+  "duplicate_node": {"description": "同一商品因 DOM 重复节点被重复抽取", "sample_ids": []},
+  "popup_loading": {"description": "弹窗或加载态遮挡了可用页面信息", "sample_ids": []},
+  "dynamic_price": {"description": "价格随用户、时间或交互动态变化", "sample_ids": []}
+}

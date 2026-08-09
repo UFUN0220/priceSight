@@ -37,6 +37,22 @@ uv run python scripts/evaluate_product_parsing.py
 
 默认使用 `FakeLLMProvider`。真实 provider 必须通过环境变量配置，不能写入 key。商品解析数据集是 synthetic、未人工复核。
 
+### Evaluation v2 与 Bad Case 回放
+
+阶段 2 的统一数据集、schema、人工标注指南和 Bad Case taxonomy 位于 `evaluation/`。一条命令重放全部样本并生成 JSON + Markdown 报告：
+
+```powershell
+uv run python scripts/run_evaluation_v2.py
+```
+
+单条 Bad Case 可独立重放：
+
+```powershell
+uv run python scripts/run_evaluation_v2.py --sample-id gift-water
+```
+
+`evaluation/reports/evaluation_v2.md` 中的指标均提供 numerator / denominator。当前样本全部是 `UNREVIEWED`，其中淘宝样本是脱敏 fixture 回放；因此不得将报告中的 accuracy 写成真实平台或人工准确率。`evaluation_v2_regression_policy.json` 只保护机器一致性回归。
+
 ## Mock E2E 与平台边界
 
 ```powershell

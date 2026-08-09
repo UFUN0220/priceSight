@@ -2,6 +2,16 @@
 
 更新时间：2026-08-09
 
+## 阶段 2：可信 Evaluation 与 Bad Case 数据集（已完成框架建设）
+
+- 新增 `evaluation/datasets/evaluation_v2.jsonl`，保留原有 8 条 synthetic 样本，并纳入 2 条淘宝脱敏 fixture 样本。
+- 新增严格 Pydantic schema、`evaluation/ANNOTATION_GUIDE.md` 和 `evaluation/bad_case_taxonomy.json`。
+- 新增 `scripts/run_evaluation_v2.py`：默认全量回放，也支持 `--sample-id` 单条重放；输出 `evaluation/reports/evaluation_v2.json` 与 `evaluation/reports/evaluation_v2.md`。
+- 报告分别统计 rule / Fake LLM fallback / hybrid、quantity、spec、price、ambiguous-case，并提供 numerator / denominator。
+- 新增 `backend/tests/test_evaluation_v2.py` 与机器一致性回归门禁。该门禁不是人工准确率门禁。
+- 当前 10 条样本均为 `UNREVIEWED`，`HUMAN_VERIFIED=0`；旧的“50% → 85%”类历史指标不被升级为真实准确率。
+- taxonomy 中尚无可靠样本的类别明确标为 `NOT_REPRESENTED`，不编造样本或覆盖率。
+
 ## 已完成阶段
 
 ### 阶段0复验——优化前可复现 Baseline

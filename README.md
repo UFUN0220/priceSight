@@ -6,7 +6,7 @@
 
 ## 最新项目级验收
 
-2026-08-09 淘宝 fixture 更新后的项目复验评分为 **82/100**，由整改前的 65 分提升。项目已具备本地浏览器真实执行基线和淘宝脱敏结构 fixture 只读回放；后端 **101 个测试**、浏览器 E2E、Android Client 与 Mock App 构建均通过。实时平台和生产交付仍不通过。
+2026-08-09 淘宝 fixture 更新后的项目复验评分为 **82/100**，由整改前的 65 分提升。项目已具备本地浏览器真实执行基线和淘宝脱敏结构 fixture 只读回放；阶段2后端全量测试为 **112 个通过**、浏览器 E2E、Android Client 与 Mock App 构建均通过。实时平台和生产交付仍不通过。
 
 详见 [项目全面验收报告](docs/PROJECT_ACCEPTANCE_REPORT.md)。
 
@@ -153,6 +153,17 @@ uv run python scripts/run_final_evaluation.py
 | Safety stop accuracy | 1.0 | 10 次安全停止场景 |
 
 Polling/event 延迟、原始样本和缓存年龄见 [evaluation/reports/phase12_benchmark.json](evaluation/reports/phase12_benchmark.json)。所有结果是本地离线测量，不代表真实设备、网络或生产吞吐。
+
+### Evaluation v2：可信数据集与 Bad Case
+
+阶段 2 使用统一 schema、脱敏淘宝 fixture、Bad Case taxonomy 和人工标注指南建立新的评测入口：
+
+```powershell
+uv run python scripts/run_evaluation_v2.py
+uv run python scripts/run_evaluation_v2.py --sample-id gift-water
+```
+
+报告位于 [evaluation/reports/evaluation_v2.md](evaluation/reports/evaluation_v2.md) 与 [evaluation/reports/evaluation_v2.json](evaluation/reports/evaluation_v2.json)。当前 10 条样本均为 `UNREVIEWED`，`HUMAN_VERIFIED=0`；报告中的 rule / LLM / hybrid 指标仅用于机器一致性回归，不能替代人工真实准确率。旧报告中的 8 条 synthetic “1.0” 已在新报告中审计，不升级为真实平台指标。
 
 ## 已知限制
 
