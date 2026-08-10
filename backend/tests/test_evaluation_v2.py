@@ -8,7 +8,14 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from evaluation.runner import DEFAULT_DATASET, DEFAULT_TAXONOMY, evaluate_dataset, load_dataset, replay_text
+from evaluation.runner import (
+    DEFAULT_DATASET,
+    DEFAULT_TAXONOMY,
+    _quantity_equal,
+    evaluate_dataset,
+    load_dataset,
+    replay_text,
+)
 from evaluation.schema import EvaluationSample, HumanAnnotationRecord
 
 
@@ -45,6 +52,41 @@ def test_evaluation_v2_machine_consistency_regression_policy() -> None:
         metric = report["metrics"][metric_name]
         assert metric["denominator"] == threshold["denominator"]
         assert metric["numerator"] >= threshold["minimum_numerator"]
+
+
+def test_ambiguous_case_accuracy_is_scoped_full_match_and_detection_is_separate() -> None:
+    report = evaluate_dataset()
+    metrics = report["metrics_by_scope"]["ALL"]
+
+    assert metrics["hybrid_ambiguous_case_accuracy"] == metrics["hybrid_accuracy"]
+    assert metrics["hybrid_ambiguous_detection_accuracy"]["denominator"] == 10
+    assert metrics["hybrid_ambiguous_detection_accuracy"]["numerator"] == 0
+
+
+def test_quantity_metric_compares_equivalent_base_units_without_relaxing_count_or_container() -> None:
+    base_liters = EvaluationSample.model_validate(
+        {
+            "sample_id": "quantity-audit-a",
+            "platform": "generic",
+            "source_type": "fixture",
+            "query": "油",
+            "raw_observation": {"text": "油 4L"},
+            "expected_quantity": {"count": 1, "content_amount": "4", "content_unit": "l", "container_unit": "bottle"},
+        }
+    ).expected_quantity
+    base_milliliters = EvaluationSample.model_validate(
+        {
+            "sample_id": "quantity-audit-b",
+            "platform": "generic",
+            "source_type": "fixture",
+            "query": "油",
+            "raw_observation": {"text": "油 4000ml"},
+            "expected_quantity": {"count": 1, "content_amount": "4000", "content_unit": "ml", "container_unit": "bottle"},
+        }
+    ).expected_quantity
+
+    assert base_liters is not None and base_milliliters is not None
+    assert _quantity_equal(base_liters, base_milliliters)
 
 
 def test_phase3_failure_classification_keeps_taobao_title_noise_in_llm_scope() -> None:

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 from collections import Counter
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Callable
 
@@ -232,14 +233,33 @@ def _quantity_output(quantity: Any) -> ExpectedQuantity | None:
 
 
 def output_from_result(result: ParseResult, text: str) -> ParsedOutput:
-    price = PriceParser().parse(text)
+    prices = PriceParser().parse_prices(text, result.specification.primary_quantity)
+    displayed = prices.displayed
+    effective = prices.effective
     return ParsedOutput(
         product_name=result.product_identity.name,
         quantity=_quantity_output(result.specification.primary_quantity),
-        spec={"package_type": result.specification.package_type},
+        spec={
+            "package_type": result.specification.package_type,
+            "components": [_quantity_output(item) for item in result.specification.components],
+        },
         price=(
-            {"amount": price.amount, "currency": price.currency, "price_kind": "displayed"}
-            if price
+            {"amount": displayed.amount, "currency": displayed.currency, "price_kind": "displayed"}
+            if displayed
+            else None
+        ),
+        displayed_price=(
+            {"amount": displayed.amount, "currency": displayed.currency, "price_kind": "displayed"}
+            if displayed
+            else None
+        ),
+        effective_price=(
+            {
+                "amount": effective.amount,
+                "currency": effective.currency,
+                "price_kind": prices.effective_kind or "effective",
+            }
+            if effective
             else None
         ),
         source=result.source.value,
@@ -279,7 +299,18 @@ def _llm_response(sample: EvaluationSample, text: str) -> LLMResponse:
 def _quantity_equal(expected: ExpectedQuantity | None, actual: ExpectedQuantity | None) -> bool:
     if expected is None or actual is None:
         return expected is actual
-    return expected == actual
+    def canonical(quantity: ExpectedQuantity) -> tuple[Any, Decimal | None, str | None, str | None]:
+        amount = quantity.content_amount
+        unit = quantity.content_unit.casefold() if quantity.content_unit else None
+        if amount is not None and unit == "l":
+            amount *= Decimal("1000")
+            unit = "ml"
+        elif amount is not None and unit == "kg":
+            amount *= Decimal("1000")
+            unit = "g"
+        return quantity.count, amount, unit, quantity.container_unit
+
+    return canonical(expected) == canonical(actual)
 
 
 def _spec_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
@@ -288,26 +319,58 @@ def _spec_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
     return (expected.package_type if expected else None) == (actual.package_type if actual else None)
 
 
+def _effective_price_eligible(sample: EvaluationSample) -> bool:
+    """Only score effective price when the replay text contains price evidence."""
+
+    if sample.expected_effective_price is None or sample.raw_observation is None:
+        return False
+    text = " ".join(
+        str(sample.raw_observation.get(key, ""))
+        for key in ("text", "raw_text", "title")
+    )
+    return bool(re.search(r"\d+(?:\.\d+)?\s*元|¥|￥|券后|到手价|第二(?:件|双)", text))
+
+
 def _price_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
     expected = sample.expected_displayed_price or sample.expected_price
-    actual = output.price
+    actual = output.displayed_price or output.price
     if expected is None or actual is None:
         return expected is actual
     return expected.amount == actual.amount and expected.currency == actual.currency and expected.price_kind == actual.price_kind
 
 
+def _effective_price_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
+    expected = sample.expected_effective_price
+    actual = output.effective_price
+    if expected is None or actual is None:
+        return expected is actual
+    return expected.amount == actual.amount and expected.currency == actual.currency
+
+
 def _full_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
     product_equal = (sample.expected_product_name or "").casefold() == (output.product_name or "").casefold()
-    return product_equal and _quantity_equal(sample.expected_quantity, output.quantity) and _spec_equal(sample, output) and _price_equal(sample, output)
+    effective_equal = (
+        True
+        if not _effective_price_eligible(sample)
+        else _effective_price_equal(sample, output)
+    )
+    return product_equal and _quantity_equal(sample.expected_quantity, output.quantity) and _spec_equal(sample, output) and _price_equal(sample, output) and effective_equal
 
 
 def _field_equal(sample: EvaluationSample, output: ParsedOutput, field: str) -> bool:
+    if field == "product_name":
+        return (sample.expected_product_name or "").casefold() == (output.product_name or "").casefold()
     if field == "quantity":
         return _quantity_equal(sample.expected_quantity, output.quantity)
     if field == "spec":
         return _spec_equal(sample, output)
     if field == "price":
         return _price_equal(sample, output)
+    if field == "effective_price":
+        return _effective_price_equal(sample, output)
+    if field == "ambiguous_detection":
+        expected_ambiguous = sample.ambiguity_type.value != "none"
+        return output.ambiguous is not None and expected_ambiguous == output.ambiguous
     raise ValueError(f"unsupported metric field: {field}")
 
 
@@ -342,15 +405,32 @@ def _metrics_for_scope(
         return True
 
     field_predicates = {
+        "product_name": lambda sample: sample.expected_product_name is not None,
         "quantity": lambda sample: sample.expected_quantity is not None,
         "spec": lambda sample: sample.expected_spec is not None,
         "specification": lambda sample: sample.expected_spec is not None,
         "price": lambda sample: sample.expected_displayed_price is not None or sample.expected_price is not None,
         "displayed_price": lambda sample: sample.expected_displayed_price is not None or sample.expected_price is not None,
+        "effective_price": _effective_price_eligible,
         "ambiguous_case": lambda sample: sample.ambiguity_type.value != "none",
+        "ambiguous_detection": lambda sample: sample.ambiguity_type.value != "none",
     }
     outputs_by_parser = {"rule": rule_outputs, "llm": model_outputs, "hybrid": final_outputs}
     metrics: dict[str, dict[str, Any]] = {}
+
+    def field_comparator(field: str) -> Callable[[EvaluationSample, ParsedOutput], bool]:
+        if field == "ambiguous_case":
+            return _full_equal
+        comparison_field = {
+            "specification": "spec",
+            "displayed_price": "price",
+        }.get(field, field)
+
+        def compare(sample: EvaluationSample, output: ParsedOutput) -> bool:
+            return _field_equal(sample, output, comparison_field)
+
+        return compare
+
     for parser_name, outputs in outputs_by_parser.items():
         basis = {
             "rule": "selected samples in scope; deterministic rule parser",
@@ -359,21 +439,8 @@ def _metrics_for_scope(
         }[parser_name]
         metrics[f"{parser_name}_accuracy"] = _metric_for(samples, outputs, all_predicate, _full_equal, basis)
         for field, predicate in field_predicates.items():
-            comparator = (
-                _full_equal
-                if field == "ambiguous_case"
-                else lambda sample, output, field=field: _field_equal(
-                    sample,
-                    output,
-                    "spec" if field in {"specification"} else ("price" if field == "displayed_price" else field),
-                )
-            )
+            comparator = field_comparator(field)
             metrics[f"{parser_name}_{field}_accuracy"] = _metric_for(samples, outputs, predicate, comparator, basis)
-        metrics[f"{parser_name}_effective_price_accuracy"] = _metric(
-            0,
-            0,
-            "NOT_AVAILABLE: current parser output exposes displayed price, not effective price",
-        )
     return metrics
 
 

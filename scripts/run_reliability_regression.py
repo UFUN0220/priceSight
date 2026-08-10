@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from collections import Counter
 from pathlib import Path
+from typing import cast
 
 from app.action.fake import FakeActionDevice
 from app.observation.models import Observation, ObservationNode, PageType
@@ -79,7 +80,7 @@ def main() -> None:
     observed = Counter(
         event["bad_case"]
         for case in cases
-        for event in case["trace_events"]
+        for event in cast(list[dict[str, object]], case["trace_events"])
         if event["bad_case"] is not None
     )
     report = {

@@ -289,6 +289,23 @@
 - [x] provenance/Evaluation 专项 19 passed；Backend 147 passed；Ruff、mypy、compile、85.19% branch coverage、git diff --check 通过。
 - [x] 生成 [evaluation_provenance_final.md](../evaluation/reports/evaluation_provenance_final.md) 和 [evaluation_human_verified_final.md](../evaluation/reports/evaluation_human_verified_final.md)。
 
+### 阶段11——Human Evaluation 驱动的 Hybrid Parser 定向调优
+
+- [x] 先完成 Evaluation Contract 审计：区分 ambiguity case exact accuracy 与 ambiguity detection；quantity 的 L/kg 等价单位归一，但 count/container 仍严格比较；effective price 分母为 0 明确为 N/A。
+- [x] 冻结 `evaluation/datasets/human_eval_split.json`：seed=20260810，DEV 32、HOLDOUT 8；Parser 调优没有使用 HOLDOUT 结果写特判规则。
+- [x] 仅针对 DEV 逐轮处理 PRICE_RULE、QUANTITY_RULE、SPEC_RULE、AMBIGUITY_ROUTING，并为新增规则增加 Parser 回归测试；没有 sample_id 特判，也没有把所有输入发送给 FakeLLM。
+- [x] 生成 [human_parser_clean_baseline.md](../evaluation/reports/human_parser_clean_baseline.md) 和 [hybrid_parser_optimization_final.md](../evaluation/reports/hybrid_parser_optimization_final.md)。最终 Hybrid exact：DEV 5/32、HOLDOUT 0/8、ALL 5/40；这些是人工复核脱敏离线回放口径，不是线上总体准确率。
+- [x] FakeLLM structured replay 的 schema failure 为 ALL 3/29，失败集中在 GB/mm/inch 等当前 Unit schema 不接受的 SKU/尺寸字段；保持 fail-closed，未将其描述为线上 LLM 指标。
+
+### 阶段12——Schema 补全、Effective Price 与 Holdout 泛化收口
+
+- [x] 补全 `GB/TB/mm/cm/m/inch/sheet` Unit schema 与 canonical mapping；非法单位仍由 Pydantic 拒绝。
+- [x] 数字存储/长度值进入 `ProductSpecification.components`，不再作为购买数量；新增 `12GB+256GB`、GB/mm/inch 和非法单位回归测试。
+- [x] `ParsedOutput` 分离 `displayed_price` 与 `effective_price`；支持显式券后价、无门槛元券、数量明确的第二件优惠；满减阈值和价格区间 fail-closed。
+- [x] 按冻结 DEV/HOLDOUT split 生成 Holdout 逐条字段分析和阶段 11→阶段 12对比报告：[hybrid_parser_phase12_final.md](../evaluation/reports/hybrid_parser_phase12_final.md)。
+- [x] 阶段12最终人工回放：Hybrid exact 2/40；DEV 2/32；HOLDOUT 0/8；effective price 0/12（保守分母）；这些均为离线人工复核文本回放，不是线上总体准确率。
+- [x] Parser 调优在本阶段停止；后续仅接受回归、安全或构建修复，不再为提高指标继续调整规则。
+
 ## 后续外部前置条件
 
 连接物理设备、采集脱敏真实 App fixture、单独完成安全评审后，才可开始真实平台 adapter 和真实运行验证。

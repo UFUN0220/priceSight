@@ -21,6 +21,15 @@ class Unit(StrEnum):
     CUP = "cup"
     BOX = "box"
     CASE = "case"
+    PAIR = "pair"
+    ROLL = "roll"
+    SHEET = "sheet"
+    GB = "GB"
+    TB = "TB"
+    MM = "mm"
+    CM = "cm"
+    M = "m"
+    INCH = "inch"
     UNKNOWN = "unknown"
 
 
@@ -67,6 +76,8 @@ class PromotionType(StrEnum):
     GIFT = "gift"
     COMBO = "combo"
     COUPON = "coupon"
+    SECOND_ITEM_DISCOUNT = "second_item_discount"
+    AFTER_SALE = "after_sale"
     OTHER = "other"
 
 
@@ -80,6 +91,7 @@ class Promotion(BaseModel):
     gift_quantity: Quantity | None = None
     threshold_amount: Decimal | None = Field(default=None, gt=0)
     discount_amount: Decimal | None = Field(default=None, gt=0)
+    discount_ratio: Decimal | None = Field(default=None, ge=0, le=1)
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
 
 

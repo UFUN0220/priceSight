@@ -16,6 +16,7 @@ from app.parser.models import (
     ProductSpecification,
     ParserSource,
 )
+from app.parser.quantity import QuantityParser
 from app.parser.product import ProductParser
 
 
@@ -73,7 +74,11 @@ class HybridProductParser:
             ),
             specification=ProductSpecification(
                 original_text=rule_result.normalized_text,
-                primary_quantity=suggestion.quantity,
+                primary_quantity=(
+                    suggestion.quantity
+                    if suggestion.quantity is not None and QuantityParser.is_product_quantity(suggestion.quantity)
+                    else None
+                ),
                 components=[suggestion.quantity] if suggestion.quantity else [],
                 package_type=rule_result.specification.package_type,
                 ambiguous=suggestion.confidence < self.confidence_threshold,

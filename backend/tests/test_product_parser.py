@@ -1,12 +1,29 @@
 """Tests for deterministic product quantity, specification, and hybrid parsing."""
 
 import json
+from decimal import Decimal
+
+import pytest
 
 from app.llm.base import LLMResponse
 from app.llm.fake import FakeLLMProvider
 from app.parser.hybrid import HybridProductParser
 from app.parser.models import ParseSource, ParserSource, PromotionType, Unit
 from app.parser.product import ProductParser
+from app.parser.price import PriceParser
+
+
+def test_price_parser_supports_yuan_and_labeled_current_price() -> None:
+    parser = PriceParser()
+
+    assert parser.parse("落地扇 199元 满100减30") is not None
+    assert parser.parse("落地扇 199元 满100减30").amount == 199
+    labeled_price = parser.parse("早餐奶 原价49.9 限时特价39.9 箱装")
+    assert labeled_price is not None and labeled_price.amount == Decimal("39.9")
+
+
+def test_price_parser_rejects_price_range_without_selecting_an_endpoint() -> None:
+    assert PriceParser().parse("运动手表 199-399元 多款") is None
 
 
 def test_measurement_and_package_count_are_separate() -> None:
@@ -34,6 +51,91 @@ def test_liter_and_kilogram_units_normalize_to_base_units() -> None:
     assert liter.normalized_content_unit is Unit.ML
     assert kilogram is not None and kilogram.normalized_content_amount == 250
     assert kilogram.normalized_content_unit is Unit.G
+
+
+def test_quantity_parser_handles_prefix_counts_and_non_decimal_package_units() -> None:
+    bottle = ProductParser().parse("红酒 6瓶 750ml").specification.primary_quantity
+    pairs = ProductParser().parse("袜子 5双装").specification.primary_quantity
+    shoes = ProductParser().parse("运动鞋 两双").specification.primary_quantity
+
+    assert bottle is not None and bottle.count == 6 and bottle.container_unit is Unit.BOTTLE
+    assert pairs is not None and pairs.count == 5 and pairs.container_unit is Unit.PAIR
+    assert shoes is not None and shoes.count == 2 and shoes.container_unit is Unit.PAIR
+
+
+def test_quantity_parser_does_not_treat_storage_gb_as_weight_g() -> None:
+    result = ProductParser().parse("平板电脑 128GB 灰色")
+
+    assert result.specification.primary_quantity is None
+    assert result.specification.components[0].content_unit is Unit.GB
+
+
+def test_digital_and_length_units_are_schema_valid_specification_components() -> None:
+    parser = ProductParser()
+
+    digital = parser.parse("平板电脑 12GB+256GB")
+    length = parser.parse("耳机 驱动单元 40mm")
+    inch = parser.parse("显示器 27inch")
+
+    assert digital.specification.primary_quantity is None
+    assert [item.content_unit for item in digital.specification.components] == [Unit.GB, Unit.GB]
+    assert length.specification.primary_quantity is None
+    assert length.specification.components[0].content_unit is Unit.MM
+    assert inch.specification.components[0].content_unit is Unit.INCH
+
+
+def test_invalid_units_are_rejected_by_structured_quantity_schema() -> None:
+    from pydantic import ValidationError
+    from app.parser.models import Quantity
+
+    for invalid in ("foobar", "unknown_unit", "abc123"):
+        with pytest.raises(ValidationError):
+            Quantity(raw_text=invalid, content_amount=1, content_unit=invalid)
+
+
+def test_package_type_requires_explicit_packaging_evidence() -> None:
+    parser = ProductParser()
+
+    assert parser.parse("月饼礼盒 8枚").specification.package_type == "box"
+    assert parser.parse("早餐奶 箱装").specification.package_type == "box"
+    assert parser.parse("垃圾袋 袋装").specification.package_type == "bag"
+    assert parser.parse("运动鞋 黑色").specification.package_type is None
+
+
+def test_promotional_or_noisy_titles_are_routed_to_semantic_review() -> None:
+    parser = ProductParser()
+
+    assert parser.parse("早餐奶 原价49.9 限时特价39.9 箱装").ambiguous is True
+    assert parser.parse("运动鞋 第二双半价 两双").ambiguous is True
+    assert parser.parse("商品 黑色 多规格").ambiguous is True
+
+
+def test_effective_price_parser_is_deterministic_and_fail_closed() -> None:
+    price_parser = PriceParser()
+
+    coupon = price_parser.parse_prices("商品 99元，10元券")
+    assert coupon.displayed is not None and coupon.displayed.amount == Decimal("99")
+    assert coupon.effective is not None and coupon.effective.amount == Decimal("89")
+
+    threshold = price_parser.parse_prices("商品 199元 满199减10")
+    assert threshold.displayed is not None and threshold.displayed.amount == Decimal("199")
+    assert threshold.effective is None
+
+    assert price_parser.parse_prices("商品 199-399元").displayed is None
+    assert price_parser.parse_prices("商品 券后89元").displayed is None
+    assert price_parser.parse_prices("商品 券后89元").effective is not None
+
+
+def test_second_item_promotion_and_effective_unit_price_require_two_items() -> None:
+    result = ProductParser().parse("运动鞋 299元 第二双半价 两双")
+    quantity = result.specification.primary_quantity
+    assert quantity is not None and quantity.count == 2
+    assert result.promotions[0].kind is PromotionType.SECOND_ITEM_DISCOUNT
+
+    prices = PriceParser().parse_prices("运动鞋 299元 第二双半价 两双", quantity)
+    assert prices.effective is not None and prices.effective.amount == Decimal("224.25")
+    unknown_quantity = PriceParser().parse_prices("运动鞋 299元 第二双半价")
+    assert unknown_quantity.effective is None
 
 
 def test_count_only_package_and_gift_are_not_conflated() -> None:

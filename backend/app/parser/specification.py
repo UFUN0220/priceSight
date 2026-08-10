@@ -12,7 +12,8 @@ from app.parser.quantity import QuantityParser
 class PromotionParser:
     """Keep promotional quantities separate from purchased quantities."""
 
-    _buy_get = re.compile(r"买\s*(\d+)\s*(?:赠|送)\s*(\d+)")
+    _buy_get = re.compile(r"买\s*(\d+|一|二|两|三|四|五|六|七|八|九|十)\s*(?:赠|送)\s*(\d+|一|二|两|三|四|五|六|七|八|九|十)")
+    _second_item = re.compile(r"第二(?:件|双)\s*(半价|免费|5折)")
 
     def __init__(self, quantity_parser: QuantityParser | None = None) -> None:
         self.quantity_parser = quantity_parser or QuantityParser()
@@ -21,13 +22,26 @@ class PromotionParser:
         normalized = self.quantity_parser.normalize(text)
         promotions: list[Promotion] = []
         for match in self._buy_get.finditer(normalized):
+            buy_count = self._to_count(match.group(1))
+            gift_count = self._to_count(match.group(2))
             promotions.append(
                 Promotion(
                     raw_text=match.group(0),
                     kind=PromotionType.BUY_GET,
-                    buy_count=int(match.group(1)),
-                    gift_count=int(match.group(2)),
+                    buy_count=buy_count,
+                    gift_count=gift_count,
                     confidence=0.98,
+                )
+            )
+
+        for match in self._second_item.finditer(normalized):
+            promotions.append(
+                Promotion(
+                    raw_text=match.group(0),
+                    kind=PromotionType.SECOND_ITEM_DISCOUNT,
+                    buy_count=2,
+                    discount_ratio=Decimal("0") if match.group(1) == "免费" else Decimal("0.5"),
+                    confidence=0.96,
                 )
             )
 
@@ -66,3 +80,9 @@ class PromotionParser:
                 )
             )
         return promotions
+
+    @staticmethod
+    def _to_count(value: str) -> int:
+        if value.isdigit():
+            return int(value)
+        return QuantityParser._count_words[value]

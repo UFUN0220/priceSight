@@ -60,6 +60,7 @@ class ExpectedSpecification(BaseModel):
 
     package_type: str | None = None
     notes: str | None = None
+    components: list[ExpectedQuantity] = Field(default_factory=list)
 
 
 class ExpectedPrice(BaseModel):
@@ -79,6 +80,8 @@ class ParsedOutput(BaseModel):
     quantity: ExpectedQuantity | None = None
     spec: ExpectedSpecification | None = None
     price: ExpectedPrice | None = None
+    displayed_price: ExpectedPrice | None = None
+    effective_price: ExpectedPrice | None = None
     source: str | None = None
     parser_source: str | None = None
     candidate_count: int | None = None

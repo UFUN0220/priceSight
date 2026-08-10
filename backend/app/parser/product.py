@@ -28,16 +28,22 @@ class ProductParser:
     def parse(self, text: str) -> ParseResult:
         normalized = self.normalize(text)
         candidates = self.extract_candidates(normalized)
-        primary_match = candidates[0] if candidates else None
+        primary_match = next(
+            (candidate for candidate in candidates if self.quantity_parser.is_product_quantity(candidate.quantity)),
+            None,
+        )
         promotions = self.promotion_parser.parse(normalized)
         components = [item.quantity for item in candidates]
         primary_quantity = primary_match.quantity if primary_match else None
-        package_type = "combo" if any(item.kind.value == "combo" for item in promotions) else None
+        package_type = self._package_type(normalized, promotions)
         identity_name = self._identity_name(normalized, primary_match.start if primary_match else None)
-        ambiguous = primary_quantity is None or package_type == "combo"
+        semantic_review = self._requires_semantic_review(normalized)
+        ambiguous = primary_quantity is None or package_type == "combo" or semantic_review
         confidence = primary_quantity.confidence if primary_quantity else 0.45
         if package_type == "combo":
             confidence = min(confidence, 0.58)
+        if semantic_review:
+            confidence = min(confidence, 0.70)
         if promotions and primary_quantity is not None and package_type != "combo":
             confidence = min(1.0, confidence + 0.01)
         reason_code, reason = self._reason(ambiguous, package_type, promotions, candidates)
@@ -52,7 +58,7 @@ class ProductParser:
             specification=ProductSpecification(
                 original_text=normalized,
                 primary_quantity=primary_quantity,
-                components=components[:1],
+                components=components,
                 package_type=package_type,
                 ambiguous=ambiguous,
                 confidence=confidence,
@@ -85,6 +91,10 @@ class ProductParser:
     ) -> tuple[str, str]:
         if package_type == "combo":
             return "ambiguous_combo_semantics", "组合商品需要判断组件关系，交给结构化 LLM 复核。"
+        if ambiguous and candidates and not promotions:
+            return "ambiguous_title_or_sku_semantics", "标题含噪声或多候选规格，需要结构化 LLM 复核。"
+        if ambiguous and candidates:
+            return "ambiguous_promotion_semantics", "促销/价格条件可能改变商品语义，需要结构化 LLM 复核。"
         if not candidates:
             return "ambiguous_missing_primary_quantity", "未提取到主数量，商品核心名称或规格可能需要语义判断。"
         if promotions:
@@ -102,3 +112,23 @@ class ProductParser:
         if not candidate:
             candidate = re.sub(r"\s*(?:买\d+赠\d+|赠.*)$", "", text).strip()
         return candidate or text
+
+    @staticmethod
+    def _package_type(text: str, promotions: list[Promotion]) -> str | None:
+        if any(item.kind.value == "combo" for item in promotions):
+            return "combo"
+        if re.search(r"礼盒(?:装)?|盒装|箱装|\d+\s*箱", text):
+            return "box"
+        if re.search(r"袋装", text):
+            return "bag"
+        return None
+
+    @staticmethod
+    def _requires_semantic_review(text: str) -> bool:
+        return bool(
+            re.search(
+                r"第二(?:件|双)|买[一二两\d]+[赠送]|满\d+(?:\.\d+)?减|优惠券|券后|到手价|"
+                r"原价|特价|现价|多款|官方旗舰|重复|多规格",
+                text,
+            )
+        )
