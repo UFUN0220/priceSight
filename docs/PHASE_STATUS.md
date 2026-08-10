@@ -23,6 +23,7 @@
 - Android Mock App：18 observations/actions、0 failed、0 timeout，`MOCK_RUNTIME_VERIFIED`。
 - Evaluation：96 条样本，40 条 HUMAN_VERIFIED_ELIGIBLE，DEV 32 / HOLDOUT 8；HOLDOUT exact 0/8，泛化 `LIMITED`。
 - Final acceptance：87/100，加权 86.85。
+- CI 修复验证（2026-08-10）：统一人工标注路径后，Python 测试 161 passed，分支覆盖率 86%；GitHub Actions 重跑待确认。
 
 ## 未完成或不应外推
 

@@ -328,3 +328,12 @@ def test_phase13_exact_metric_versions_keep_core_and_strict_comparable() -> None
     assert human["hybrid_exact_strict_v2_accuracy"]["numerator"] == 2
     assert human["hybrid_exact_strict_v2_accuracy"]["denominator"] == 40
     assert all("core_success" in case and "strict_success" in case for case in report["case_results"])
+
+
+def test_human_annotation_provenance_uses_resolved_annotation_path() -> None:
+    annotations = ROOT / "evaluation" / "datasets" / ".." / "datasets" / "human_annotations.jsonl"
+    report = evaluate_dataset(annotations_path=annotations)
+    human = report["metrics_by_scope"]["HUMAN_VERIFIED_ONLY"]
+
+    assert human["hybrid_exact_core_v1_accuracy"]["numerator"] == 5
+    assert human["hybrid_exact_core_v1_accuracy"]["denominator"] == 40

@@ -46,6 +46,7 @@ def _read_jsonl(path: Path) -> list[str]:
 def load_human_annotations(path: Path = DEFAULT_HUMAN_ANNOTATIONS) -> list[HumanAnnotationRecord]:
     """Load human annotations; an absent or empty work file is a valid empty queue."""
 
+    path = path.resolve()
     provenance_by_id: dict[str, dict[str, Any]] = {}
     if path == DEFAULT_HUMAN_ANNOTATIONS and DEFAULT_HUMAN_PROVENANCE.exists():
         provenance_by_id = {
