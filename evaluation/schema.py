@@ -154,6 +154,20 @@ class HumanAnnotationRecord(BaseModel):
     annotation_status: AnnotationStatus = AnnotationStatus.UNREVIEWED
     annotator_notes: str = ""
 
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_annotation_nulls(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        normalized = dict(value)
+        if normalized.get("product_title") is None:
+            normalized["product_title"] = ""
+        for field_name in ("expected_displayed_price", "expected_effective_price"):
+            field_value = normalized.get(field_name)
+            if isinstance(field_value, dict) and field_value.get("amount") is None:
+                normalized[field_name] = None
+        return normalized
+
     @model_validator(mode="after")
     def require_human_confirmation_evidence(self) -> "HumanAnnotationRecord":
         if self.annotation_status is AnnotationStatus.HUMAN_VERIFIED:
@@ -161,7 +175,10 @@ class HumanAnnotationRecord(BaseModel):
                 raise ValueError("synthetic samples cannot be HUMAN_VERIFIED")
             if not self.annotator_notes.strip():
                 raise ValueError("HUMAN_VERIFIED records require annotator_notes")
-            if self.expected_product_name is None:
+            if self.expected_product_name is None and self.ambiguity_type not in {
+                AmbiguityType.MISSING_INFORMATION,
+                AmbiguityType.POPUP_LOADING,
+            }:
                 raise ValueError("HUMAN_VERIFIED records require expected_product_name")
         return self
 

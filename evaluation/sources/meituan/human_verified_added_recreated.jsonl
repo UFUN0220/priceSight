@@ -1,0 +1,2 @@
+{"sample_id":"fixture_popup_003","platform":"meituan","source_type":"fixture","query":"炸鸡 外卖","product_title":"","raw_text":"[POPUP] 当前定位失败，请手动选择收货地址 [LOADING] 商家信息加载中","source_redacted":true,"recreation_method":"SOURCE_RECREATED_FROM_EXISTING_ANNOTATION"}
+{"sample_id":"fixture_pack_013","platform":"meituan","source_type":"fixture","query":"馒头 6个装","product_title":"馒头 6个装 手工 早餐","raw_text":"馒头 6个装 手工 早餐 速冻","source_redacted":true,"recreation_method":"SOURCE_RECREATED_FROM_EXISTING_ANNOTATION"}

@@ -228,7 +228,7 @@
 
 - 无物理 Android 设备和真实购物 App 运行验证。
 - 淘宝仅有一次公开页面只读 selector/价格抽取证据；无真实 Meituan/JD 运行证据。
-- 商品解析数据集未人工复核，不能称为人工标注准确率。
+- 商品解析数据集已有 40 条 provenance-eligible HUMAN_VERIFIED；但 source 均为从 annotation raw_text 重建的脱敏文本，不是原始网页 capture，不能外推为线上总体准确率。
 - Event transport 未接入真实 Accessibility event timing。
 - 双向 bridge 仅通过契约测试和 APK 构建验证，尚无设备运行结论。
 - 浏览器 Runtime 仅在本地 Mock Web 上实测，尚无真实购物网站只读结果。
@@ -278,6 +278,16 @@
 - [x] 9D 最终矩阵：普通动作和安全/异常动作均有真实 Emulator + Mock App 证据；本地结果为 `observation_count=18`、`total_action_count=18`、`failed=0`、`timeout=0`。
 - [x] 修复一次 Harness viewport 断言缺陷：SCROLL 改为比较可见节点文本、bounds 和 visibility 指纹；未修改 Android Runtime。
 - [x] Android Runtime 状态升级为 `MOCK_RUNTIME_VERIFIED`；真实淘宝/JD/美团 Android App、物理设备和生产环境仍为 `NOT_VERIFIED`。
+
+### 阶段10——Evaluation Provenance 修复与 Human Dataset 收口
+
+- [x] 新增 provenance contract、SHA-256 hash 校验、仓库内路径安全校验和 source drift 检测。
+- [x] 现有 22 条与新增 18 条人工样本均建立脱敏 source；共 40 条 `HUMAN_VERIFIED_ELIGIBLE`，source audit 为 40/40，缺失 0。
+- [x] 新增 `evaluation/datasets/human_provenance.jsonl`、`evaluation/sources/`、`scripts/validate_evaluation_provenance.py` 和人工 intake 模板。
+- [x] 按 `REGRESSION_ALL`、`HUMAN_ANNOTATED`、`HUMAN_VERIFIED_ELIGIBLE` 分集合输出 Evaluation；最终形式化 qualification 为 `true`。
+- [x] 明确 40 条 source 均为 `SOURCE_RECREATED_FROM_EXISTING_ANNOTATION`，不是原始网页 capture；FakeLLM 仍只是 structured replay。
+- [x] provenance/Evaluation 专项 19 passed；Backend 147 passed；Ruff、mypy、compile、85.19% branch coverage、git diff --check 通过。
+- [x] 生成 [evaluation_provenance_final.md](../evaluation/reports/evaluation_provenance_final.md) 和 [evaluation_human_verified_final.md](../evaluation/reports/evaluation_human_verified_final.md)。
 
 ## 后续外部前置条件
 

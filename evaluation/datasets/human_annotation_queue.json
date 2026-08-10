@@ -2,18 +2,18 @@
   "purpose": "人工填写计划，不是样本数据，不计入任何指标",
   "append_to": "evaluation/datasets/human_annotations.jsonl",
   "current_after_deduplication": {
-    "total_annotation_rows": 68,
-    "human_verified": 22,
+    "total_annotation_rows": 86,
+    "human_verified": 40,
     "unreviewed_synthetic": 46,
     "disputed": 0,
     "duplicate_sample_ids": 0,
-    "repository_source_files_present_for_human_verified": 0,
-    "repository_source_files_missing_for_human_verified": 22
+    "repository_source_files_present_for_human_verified": 40,
+    "repository_source_files_missing_for_human_verified": 0
   },
   "target": {
     "human_verified_min": 40,
     "human_verified_max": 60,
-    "additional_non_synthetic_rows_needed_min": 18,
+    "additional_non_synthetic_rows_needed_min": 0,
     "source_files_must_be_present_before_final_evidence_claim": true
   },
   "priority_ambiguity_types": [

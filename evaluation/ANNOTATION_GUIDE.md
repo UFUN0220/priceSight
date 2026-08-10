@@ -4,7 +4,7 @@
 
 Evaluation v2 用于建立可追溯的商品解析评测集。`synthetic` 是历史规则样本，`fixture` 是仓库内脱敏页面回放，`real_anonymized` 只能在真实页面经过脱敏和人工复核后使用。三类来源都必须保留来源证据；来源类型不等于人工标注状态。
 
-当前 annotation 文件在清理重复 sample_id 后共有 68 条：22 条已声明 `HUMAN_VERIFIED`、46 条 `UNREVIEWED` synthetic。synthetic 永远不能进入 HUMAN_VERIFIED；当前目标是新增并人工复核至少 18 条非 synthetic 样本，使 HUMAN_VERIFIED 达到 40 条以上。Codex、parser、FakeLLM 和 runner 都不得替人工修改状态。
+当前 annotation 文件共有 86 条：40 条已声明 `HUMAN_VERIFIED`、46 条 `UNREVIEWED` synthetic。40 条目前均通过 provenance/hash 审计，但 source 是从已有 annotation raw_text 重建的脱敏文本，不是原始网页 capture。Codex、parser、FakeLLM 和 runner 都不得替人工修改状态。
 
 ## 标注流程
 
@@ -50,7 +50,7 @@ evaluation/datasets/human_annotations.jsonl
 evaluation/datasets/human_annotations.template.json
 ```
 
-当前文件已经包含 22 条人工确认记录和 46 条 synthetic 回归记录。不要把 synthetic 行改成 HUMAN_VERIFIED；新增真实脱敏页面或经人工确认的 fixture 时，在同一个 JSONL 文件追加新 sample_id，不要重复使用既有 ID。目标总量为 40～60 条 HUMAN_VERIFIED，不足部分需要人工新增至少 18 条非 synthetic 样本。
+当前文件已经包含 40 条人工确认记录和 46 条 synthetic 回归记录。不要把 synthetic 行改成 HUMAN_VERIFIED；新增真实脱敏页面或经人工确认的 fixture 时，在同一个 JSONL 文件追加新 sample_id，不要重复使用既有 ID。目标总量为 40～60 条 HUMAN_VERIFIED，当前数量已达到最低门槛。
 
 使用人工 overlay 重放：
 
@@ -136,4 +136,4 @@ runner 会按 `sample_id` 合并 overlay。空白的 `UNREVIEWED` 队列行不�
 
 ## 当前优先补充的 Bad Case
 
-当前 HUMAN_VERIFIED 已覆盖：`bulk`、`unit_ambiguity`、`gift`、`quantity_ambiguity`、`sku_mixed_text`、`price_range`、`coupon_price`、`second_item_discount`、`dynamic_price`、`title_noise`。仍应优先补充 `multi_pack`、`multi_spec`、`after_sale_price`、`duplicate_node`、`popup_loading`，以及更多真实来源的已覆盖类型。不要为了填满列表而编造商品、价格或人工结论。
+当前 HUMAN_VERIFIED 已覆盖：`bulk`、`unit_ambiguity`、`gift`、`quantity_ambiguity`、`sku_mixed_text`、`price_range`、`coupon_price`、`second_item_discount`、`dynamic_price`、`title_noise`、`duplicate_node`、`popup_loading`。新增记录的 `annotator_notes` 中还注明了 multi_pack、multi_spec、after_sale_price，但其正式 `ambiguity_type` 仍使用现有 taxonomy 类型；后续如需单独统计，应由人工确认后调整标签。不要为了填满列表而编造商品、价格或人工结论。

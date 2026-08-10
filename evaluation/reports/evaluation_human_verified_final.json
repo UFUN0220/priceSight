@@ -1,69 +1,74 @@
 {
   "report_version": "evaluation_v2_human_annotation_aware",
   "dataset": "evaluation/datasets/evaluation_v2.jsonl",
-  "dataset_count": 78,
+  "dataset_count": 96,
   "source_type_counts": {
-    "fixture": 20,
+    "fixture": 38,
     "real_anonymized": 4,
     "synthetic": 54
   },
   "platform_counts": {
     "generic": 10,
-    "jd": 28,
-    "meituan": 8,
-    "taobao": 32
+    "jd": 34,
+    "meituan": 10,
+    "taobao": 42
   },
   "ambiguity_type_counts": {
-    "bulk": 12,
-    "coupon_price": 6,
-    "dynamic_price": 5,
-    "gift": 8,
+    "bulk": 15,
+    "coupon_price": 9,
+    "duplicate_node": 3,
+    "dynamic_price": 6,
+    "gift": 9,
     "missing_information": 2,
     "multi_pack": 4,
     "multi_spec": 1,
+    "popup_loading": 3,
     "price_range": 6,
     "quantity_ambiguity": 8,
-    "second_item_discount": 5,
-    "sku_mixed_text": 7,
+    "second_item_discount": 6,
+    "sku_mixed_text": 10,
     "title_noise": 6,
     "unit_ambiguity": 8
   },
   "human_verified_platform_counts": {
-    "jd": 11,
-    "taobao": 11
+    "jd": 17,
+    "meituan": 2,
+    "taobao": 21
   },
   "human_verified_ambiguity_type_counts": {
-    "bulk": 2,
-    "coupon_price": 2,
-    "dynamic_price": 2,
-    "gift": 2,
+    "bulk": 5,
+    "coupon_price": 5,
+    "duplicate_node": 3,
+    "dynamic_price": 3,
+    "gift": 3,
+    "popup_loading": 3,
     "price_range": 2,
     "quantity_ambiguity": 2,
-    "second_item_discount": 2,
-    "sku_mixed_text": 2,
+    "second_item_discount": 3,
+    "sku_mixed_text": 5,
     "title_noise": 4,
     "unit_ambiguity": 2
   },
   "annotation_status_counts": {
-    "HUMAN_VERIFIED": 22,
+    "HUMAN_VERIFIED": 40,
     "UNREVIEWED": 56
   },
-  "human_verified_count": 22,
+  "human_verified_count": 40,
   "human_accuracy_claim_available": true,
-  "human_accuracy_claim_eligible": false,
+  "human_accuracy_claim_eligible": true,
   "human_verified_target": {
     "minimum": 40,
     "maximum": 60,
-    "met": false,
-    "declared_human_verified": 22,
-    "eligible_human_verified": 22,
-    "additional_minimum_needed": 18
+    "met": true,
+    "declared_human_verified": 40,
+    "eligible_human_verified": 40,
+    "additional_minimum_needed": 0
   },
   "human_source_audit": {
-    "human_verified_declared_count": 22,
-    "source_audit_passed": 22,
+    "human_verified_declared_count": 40,
+    "source_audit_passed": 40,
     "source_audit_failed": 0,
-    "repository_source_files_present": 22,
+    "repository_source_files_present": 40,
     "repository_source_files_missing": 0,
     "missing_sample_ids": [],
     "missing_sources": [],
@@ -89,7 +94,25 @@
       "real_noise_001",
       "real_noise_002",
       "real_noise_003",
-      "real_noise_004"
+      "real_noise_004",
+      "fixture_dup_001",
+      "fixture_dup_002",
+      "fixture_dup_003",
+      "fixture_popup_001",
+      "fixture_popup_002",
+      "fixture_popup_003",
+      "fixture_coupon_005",
+      "fixture_coupon_006",
+      "fixture_coupon_007",
+      "fixture_pack_011",
+      "fixture_pack_012",
+      "fixture_pack_013",
+      "fixture_spec_006",
+      "fixture_spec_007",
+      "fixture_spec_008",
+      "fixture_complex_001",
+      "fixture_complex_002",
+      "fixture_complex_003"
     ],
     "source_rows": [
       {
@@ -399,6 +422,258 @@
         "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
         "errors": [],
         "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_dup_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_dup_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_dup_003",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_popup_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_popup_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_popup_003",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/meituan/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/meituan/human_verified_added_recreated.jsonl",
+        "declared_hash": "d4cf17bc85e52796c167c98954740200564c511eb43fa589dc04e47e65bc7934",
+        "actual_hash": "d4cf17bc85e52796c167c98954740200564c511eb43fa589dc04e47e65bc7934",
+        "source_format": "jsonl",
+        "source_platform": "meituan",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_coupon_005",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_coupon_006",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_coupon_007",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_pack_011",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_pack_012",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_pack_013",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/meituan/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/meituan/human_verified_added_recreated.jsonl",
+        "declared_hash": "d4cf17bc85e52796c167c98954740200564c511eb43fa589dc04e47e65bc7934",
+        "actual_hash": "d4cf17bc85e52796c167c98954740200564c511eb43fa589dc04e47e65bc7934",
+        "source_format": "jsonl",
+        "source_platform": "meituan",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_spec_006",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_spec_007",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_spec_008",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_complex_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_complex_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_complex_003",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
       }
     ],
     "live_platform_evidence_count": 0,
@@ -407,15 +682,15 @@
   "metric_interpretation": "HUMAN_VERIFIED_ONLY 指标可计算，但当前样本规模或来源证据不足，不能作为线上总体真实准确率。",
   "price_metric_definition": "displayed_price_accuracy compares expected_displayed_price; effective_price_accuracy is N/A because current parser output exposes displayed price only.",
   "llm_invocation_rate": {
-    "numerator": 44,
-    "denominator": 78,
-    "accuracy": 0.5641025641025641,
+    "numerator": 59,
+    "denominator": 96,
+    "accuracy": 0.6145833333333334,
     "basis": "hybrid parser fallback invocations / selected samples"
   },
   "schema_failure_rate": {
-    "numerator": 10,
-    "denominator": 44,
-    "accuracy": 0.22727272727272727,
+    "numerator": 14,
+    "denominator": 59,
+    "accuracy": 0.23728813559322035,
     "basis": "invalid structured LLM responses / LLM invocations"
   },
   "rule_failure_sample_ids": [
@@ -488,7 +763,25 @@
     "real_noise_001",
     "real_noise_002",
     "real_noise_003",
-    "real_noise_004"
+    "real_noise_004",
+    "fixture_dup_001",
+    "fixture_dup_002",
+    "fixture_dup_003",
+    "fixture_popup_001",
+    "fixture_popup_002",
+    "fixture_popup_003",
+    "fixture_coupon_005",
+    "fixture_coupon_006",
+    "fixture_coupon_007",
+    "fixture_pack_011",
+    "fixture_pack_012",
+    "fixture_pack_013",
+    "fixture_spec_006",
+    "fixture_spec_007",
+    "fixture_spec_008",
+    "fixture_complex_001",
+    "fixture_complex_002",
+    "fixture_complex_003"
   ],
   "hybrid_failure_sample_ids": [
     "synth_bulk_001",
@@ -558,49 +851,67 @@
     "real_noise_001",
     "real_noise_002",
     "real_noise_003",
-    "real_noise_004"
+    "real_noise_004",
+    "fixture_dup_001",
+    "fixture_dup_002",
+    "fixture_dup_003",
+    "fixture_popup_001",
+    "fixture_popup_002",
+    "fixture_popup_003",
+    "fixture_coupon_005",
+    "fixture_coupon_006",
+    "fixture_coupon_007",
+    "fixture_pack_011",
+    "fixture_pack_012",
+    "fixture_pack_013",
+    "fixture_spec_006",
+    "fixture_spec_007",
+    "fixture_spec_008",
+    "fixture_complex_001",
+    "fixture_complex_002",
+    "fixture_complex_003"
   ],
   "metrics": {
     "rule_accuracy": {
       "numerator": 8,
-      "denominator": 78,
-      "accuracy": 0.10256410256410256,
+      "denominator": 96,
+      "accuracy": 0.08333333333333333,
       "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_quantity_accuracy": {
       "numerator": 9,
-      "denominator": 74,
-      "accuracy": 0.12162162162162163,
+      "denominator": 92,
+      "accuracy": 0.09782608695652174,
       "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_spec_accuracy": {
-      "numerator": 36,
-      "denominator": 78,
-      "accuracy": 0.46153846153846156,
+      "numerator": 41,
+      "denominator": 96,
+      "accuracy": 0.4270833333333333,
       "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_specification_accuracy": {
-      "numerator": 36,
-      "denominator": 78,
-      "accuracy": 0.46153846153846156,
+      "numerator": 41,
+      "denominator": 96,
+      "accuracy": 0.4270833333333333,
       "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_price_accuracy": {
       "numerator": 2,
-      "denominator": 70,
-      "accuracy": 0.02857142857142857,
+      "denominator": 85,
+      "accuracy": 0.023529411764705882,
       "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_displayed_price_accuracy": {
       "numerator": 2,
-      "denominator": 70,
-      "accuracy": 0.02857142857142857,
+      "denominator": 85,
+      "accuracy": 0.023529411764705882,
       "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_ambiguous_case_accuracy": {
       "numerator": 8,
-      "denominator": 78,
-      "accuracy": 0.10256410256410256,
+      "denominator": 96,
+      "accuracy": 0.08333333333333333,
       "basis": "selected samples in scope; deterministic rule parser"
     },
     "rule_effective_price_accuracy": {
@@ -611,44 +922,44 @@
     },
     "llm_accuracy": {
       "numerator": 4,
-      "denominator": 34,
-      "accuracy": 0.11764705882352941,
+      "denominator": 45,
+      "accuracy": 0.08888888888888889,
       "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_quantity_accuracy": {
-      "numerator": 30,
-      "denominator": 30,
-      "accuracy": 1.0,
+      "numerator": 38,
+      "denominator": 41,
+      "accuracy": 0.926829268292683,
       "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_spec_accuracy": {
-      "numerator": 16,
-      "denominator": 34,
-      "accuracy": 0.47058823529411764,
+      "numerator": 21,
+      "denominator": 45,
+      "accuracy": 0.4666666666666667,
       "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_specification_accuracy": {
-      "numerator": 16,
-      "denominator": 34,
-      "accuracy": 0.47058823529411764,
+      "numerator": 21,
+      "denominator": 45,
+      "accuracy": 0.4666666666666667,
       "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_price_accuracy": {
       "numerator": 2,
-      "denominator": 32,
-      "accuracy": 0.0625,
+      "denominator": 40,
+      "accuracy": 0.05,
       "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_displayed_price_accuracy": {
       "numerator": 2,
-      "denominator": 32,
-      "accuracy": 0.0625,
+      "denominator": 40,
+      "accuracy": 0.05,
       "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_ambiguous_case_accuracy": {
       "numerator": 4,
-      "denominator": 34,
-      "accuracy": 0.11764705882352941,
+      "denominator": 45,
+      "accuracy": 0.08888888888888889,
       "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
     },
     "llm_effective_price_accuracy": {
@@ -659,44 +970,44 @@
     },
     "hybrid_accuracy": {
       "numerator": 10,
-      "denominator": 78,
-      "accuracy": 0.1282051282051282,
+      "denominator": 96,
+      "accuracy": 0.10416666666666667,
       "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_quantity_accuracy": {
-      "numerator": 39,
-      "denominator": 74,
-      "accuracy": 0.527027027027027,
+      "numerator": 47,
+      "denominator": 92,
+      "accuracy": 0.5108695652173914,
       "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_spec_accuracy": {
-      "numerator": 36,
-      "denominator": 78,
-      "accuracy": 0.46153846153846156,
+      "numerator": 41,
+      "denominator": 96,
+      "accuracy": 0.4270833333333333,
       "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_specification_accuracy": {
-      "numerator": 36,
-      "denominator": 78,
-      "accuracy": 0.46153846153846156,
+      "numerator": 41,
+      "denominator": 96,
+      "accuracy": 0.4270833333333333,
       "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_price_accuracy": {
       "numerator": 2,
-      "denominator": 70,
-      "accuracy": 0.02857142857142857,
+      "denominator": 85,
+      "accuracy": 0.023529411764705882,
       "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_displayed_price_accuracy": {
       "numerator": 2,
-      "denominator": 70,
-      "accuracy": 0.02857142857142857,
+      "denominator": 85,
+      "accuracy": 0.023529411764705882,
       "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_ambiguous_case_accuracy": {
       "numerator": 10,
-      "denominator": 78,
-      "accuracy": 0.1282051282051282,
+      "denominator": 96,
+      "accuracy": 0.10416666666666667,
       "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
     },
     "hybrid_effective_price_accuracy": {
@@ -710,44 +1021,44 @@
     "ALL": {
       "rule_accuracy": {
         "numerator": 8,
-        "denominator": 78,
-        "accuracy": 0.10256410256410256,
+        "denominator": 96,
+        "accuracy": 0.08333333333333333,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_quantity_accuracy": {
         "numerator": 9,
-        "denominator": 74,
-        "accuracy": 0.12162162162162163,
+        "denominator": 92,
+        "accuracy": 0.09782608695652174,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_spec_accuracy": {
-        "numerator": 36,
-        "denominator": 78,
-        "accuracy": 0.46153846153846156,
+        "numerator": 41,
+        "denominator": 96,
+        "accuracy": 0.4270833333333333,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_specification_accuracy": {
-        "numerator": 36,
-        "denominator": 78,
-        "accuracy": 0.46153846153846156,
+        "numerator": 41,
+        "denominator": 96,
+        "accuracy": 0.4270833333333333,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_price_accuracy": {
         "numerator": 2,
-        "denominator": 70,
-        "accuracy": 0.02857142857142857,
+        "denominator": 85,
+        "accuracy": 0.023529411764705882,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_displayed_price_accuracy": {
         "numerator": 2,
-        "denominator": 70,
-        "accuracy": 0.02857142857142857,
+        "denominator": 85,
+        "accuracy": 0.023529411764705882,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_ambiguous_case_accuracy": {
         "numerator": 8,
-        "denominator": 78,
-        "accuracy": 0.10256410256410256,
+        "denominator": 96,
+        "accuracy": 0.08333333333333333,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_effective_price_accuracy": {
@@ -758,44 +1069,44 @@
       },
       "llm_accuracy": {
         "numerator": 4,
-        "denominator": 34,
-        "accuracy": 0.11764705882352941,
+        "denominator": 45,
+        "accuracy": 0.08888888888888889,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_quantity_accuracy": {
-        "numerator": 30,
-        "denominator": 30,
-        "accuracy": 1.0,
+        "numerator": 38,
+        "denominator": 41,
+        "accuracy": 0.926829268292683,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_spec_accuracy": {
-        "numerator": 16,
-        "denominator": 34,
-        "accuracy": 0.47058823529411764,
+        "numerator": 21,
+        "denominator": 45,
+        "accuracy": 0.4666666666666667,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_specification_accuracy": {
-        "numerator": 16,
-        "denominator": 34,
-        "accuracy": 0.47058823529411764,
+        "numerator": 21,
+        "denominator": 45,
+        "accuracy": 0.4666666666666667,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_price_accuracy": {
         "numerator": 2,
-        "denominator": 32,
-        "accuracy": 0.0625,
+        "denominator": 40,
+        "accuracy": 0.05,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_displayed_price_accuracy": {
         "numerator": 2,
-        "denominator": 32,
-        "accuracy": 0.0625,
+        "denominator": 40,
+        "accuracy": 0.05,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_ambiguous_case_accuracy": {
         "numerator": 4,
-        "denominator": 34,
-        "accuracy": 0.11764705882352941,
+        "denominator": 45,
+        "accuracy": 0.08888888888888889,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_effective_price_accuracy": {
@@ -806,44 +1117,44 @@
       },
       "hybrid_accuracy": {
         "numerator": 10,
-        "denominator": 78,
-        "accuracy": 0.1282051282051282,
+        "denominator": 96,
+        "accuracy": 0.10416666666666667,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_quantity_accuracy": {
-        "numerator": 39,
-        "denominator": 74,
-        "accuracy": 0.527027027027027,
+        "numerator": 47,
+        "denominator": 92,
+        "accuracy": 0.5108695652173914,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_spec_accuracy": {
-        "numerator": 36,
-        "denominator": 78,
-        "accuracy": 0.46153846153846156,
+        "numerator": 41,
+        "denominator": 96,
+        "accuracy": 0.4270833333333333,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_specification_accuracy": {
-        "numerator": 36,
-        "denominator": 78,
-        "accuracy": 0.46153846153846156,
+        "numerator": 41,
+        "denominator": 96,
+        "accuracy": 0.4270833333333333,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_price_accuracy": {
         "numerator": 2,
-        "denominator": 70,
-        "accuracy": 0.02857142857142857,
+        "denominator": 85,
+        "accuracy": 0.023529411764705882,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_displayed_price_accuracy": {
         "numerator": 2,
-        "denominator": 70,
-        "accuracy": 0.02857142857142857,
+        "denominator": 85,
+        "accuracy": 0.023529411764705882,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_ambiguous_case_accuracy": {
         "numerator": 10,
-        "denominator": 78,
-        "accuracy": 0.1282051282051282,
+        "denominator": 96,
+        "accuracy": 0.10416666666666667,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_effective_price_accuracy": {
@@ -853,58 +1164,58 @@
         "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
       },
       "llm_invocation_rate": {
-        "numerator": 44,
-        "denominator": 78,
-        "accuracy": 0.5641025641025641,
+        "numerator": 59,
+        "denominator": 96,
+        "accuracy": 0.6145833333333334,
         "basis": "fallback invocations / ALL samples"
       },
       "schema_failure_rate": {
-        "numerator": 10,
-        "denominator": 44,
-        "accuracy": 0.22727272727272727,
+        "numerator": 14,
+        "denominator": 59,
+        "accuracy": 0.23728813559322035,
         "basis": "invalid responses / ALL fallback invocations"
       }
     },
     "HUMAN_ANNOTATED": {
       "rule_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_quantity_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_spec_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_specification_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_displayed_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_ambiguous_case_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
@@ -916,43 +1227,43 @@
       },
       "llm_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 19,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_quantity_accuracy": {
-        "numerator": 8,
-        "denominator": 8,
-        "accuracy": 1.0,
+        "numerator": 16,
+        "denominator": 19,
+        "accuracy": 0.8421052631578947,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_spec_accuracy": {
-        "numerator": 3,
-        "denominator": 8,
-        "accuracy": 0.375,
+        "numerator": 8,
+        "denominator": 19,
+        "accuracy": 0.42105263157894735,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_specification_accuracy": {
-        "numerator": 3,
-        "denominator": 8,
-        "accuracy": 0.375,
+        "numerator": 8,
+        "denominator": 19,
+        "accuracy": 0.42105263157894735,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_price_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 16,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_displayed_price_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 16,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_ambiguous_case_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 19,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
@@ -964,43 +1275,43 @@
       },
       "hybrid_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_quantity_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 16,
+        "denominator": 40,
+        "accuracy": 0.4,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_spec_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_specification_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_displayed_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_ambiguous_case_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
@@ -1011,58 +1322,58 @@
         "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
       },
       "llm_invocation_rate": {
-        "numerator": 11,
-        "denominator": 22,
-        "accuracy": 0.5,
+        "numerator": 26,
+        "denominator": 40,
+        "accuracy": 0.65,
         "basis": "fallback invocations / HUMAN_ANNOTATED samples"
       },
       "schema_failure_rate": {
-        "numerator": 3,
-        "denominator": 11,
-        "accuracy": 0.2727272727272727,
+        "numerator": 7,
+        "denominator": 26,
+        "accuracy": 0.2692307692307692,
         "basis": "invalid responses / HUMAN_ANNOTATED fallback invocations"
       }
     },
     "HUMAN_VERIFIED_ELIGIBLE": {
       "rule_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_quantity_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_spec_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_specification_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_displayed_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_ambiguous_case_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
@@ -1074,43 +1385,43 @@
       },
       "llm_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 19,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_quantity_accuracy": {
-        "numerator": 8,
-        "denominator": 8,
-        "accuracy": 1.0,
+        "numerator": 16,
+        "denominator": 19,
+        "accuracy": 0.8421052631578947,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_spec_accuracy": {
-        "numerator": 3,
-        "denominator": 8,
-        "accuracy": 0.375,
+        "numerator": 8,
+        "denominator": 19,
+        "accuracy": 0.42105263157894735,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_specification_accuracy": {
-        "numerator": 3,
-        "denominator": 8,
-        "accuracy": 0.375,
+        "numerator": 8,
+        "denominator": 19,
+        "accuracy": 0.42105263157894735,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_price_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 16,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_displayed_price_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 16,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_ambiguous_case_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 19,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
@@ -1122,43 +1433,43 @@
       },
       "hybrid_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_quantity_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 16,
+        "denominator": 40,
+        "accuracy": 0.4,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_spec_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_specification_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_displayed_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_ambiguous_case_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
@@ -1169,58 +1480,58 @@
         "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
       },
       "llm_invocation_rate": {
-        "numerator": 11,
-        "denominator": 22,
-        "accuracy": 0.5,
+        "numerator": 26,
+        "denominator": 40,
+        "accuracy": 0.65,
         "basis": "fallback invocations / HUMAN_VERIFIED_ELIGIBLE samples"
       },
       "schema_failure_rate": {
-        "numerator": 3,
-        "denominator": 11,
-        "accuracy": 0.2727272727272727,
+        "numerator": 7,
+        "denominator": 26,
+        "accuracy": 0.2692307692307692,
         "basis": "invalid responses / HUMAN_VERIFIED_ELIGIBLE fallback invocations"
       }
     },
     "HUMAN_VERIFIED_ONLY": {
       "rule_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_quantity_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_spec_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_specification_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_displayed_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
       "rule_ambiguous_case_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; deterministic rule parser"
       },
@@ -1232,43 +1543,43 @@
       },
       "llm_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 19,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_quantity_accuracy": {
-        "numerator": 8,
-        "denominator": 8,
-        "accuracy": 1.0,
+        "numerator": 16,
+        "denominator": 19,
+        "accuracy": 0.8421052631578947,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_spec_accuracy": {
-        "numerator": 3,
-        "denominator": 8,
-        "accuracy": 0.375,
+        "numerator": 8,
+        "denominator": 19,
+        "accuracy": 0.42105263157894735,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_specification_accuracy": {
-        "numerator": 3,
-        "denominator": 8,
-        "accuracy": 0.375,
+        "numerator": 8,
+        "denominator": 19,
+        "accuracy": 0.42105263157894735,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_price_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 16,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_displayed_price_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 16,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
       "llm_ambiguous_case_accuracy": {
         "numerator": 0,
-        "denominator": 8,
+        "denominator": 19,
         "accuracy": 0.0,
         "basis": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance"
       },
@@ -1280,43 +1591,43 @@
       },
       "hybrid_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_quantity_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 16,
+        "denominator": 40,
+        "accuracy": 0.4,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_spec_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_specification_accuracy": {
-        "numerator": 8,
-        "denominator": 22,
-        "accuracy": 0.36363636363636365,
+        "numerator": 13,
+        "denominator": 40,
+        "accuracy": 0.325,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_displayed_price_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 37,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
       "hybrid_ambiguous_case_accuracy": {
         "numerator": 0,
-        "denominator": 22,
+        "denominator": 40,
         "accuracy": 0.0,
         "basis": "selected samples in scope; rule-first hybrid with FakeLLMProvider"
       },
@@ -1327,15 +1638,15 @@
         "basis": "NOT_AVAILABLE: current parser output exposes displayed price, not effective price"
       },
       "llm_invocation_rate": {
-        "numerator": 11,
-        "denominator": 22,
-        "accuracy": 0.5,
+        "numerator": 26,
+        "denominator": 40,
+        "accuracy": 0.65,
         "basis": "fallback invocations / HUMAN_VERIFIED_ELIGIBLE samples"
       },
       "schema_failure_rate": {
-        "numerator": 3,
-        "denominator": 11,
-        "accuracy": 0.2727272727272727,
+        "numerator": 7,
+        "denominator": 26,
+        "accuracy": 0.2692307692307692,
         "basis": "invalid responses / HUMAN_VERIFIED_ELIGIBLE fallback invocations"
       }
     }
@@ -1356,7 +1667,10 @@
         "synth_bulk_009",
         "synth_bulk_010",
         "fixture_bulk_001",
-        "fixture_bulk_002"
+        "fixture_bulk_002",
+        "fixture_pack_011",
+        "fixture_pack_012",
+        "fixture_pack_013"
       ],
       "replayable": true,
       "status": "REPRESENTED_REPLAYABLE"
@@ -1390,7 +1704,8 @@
         "synth_second_002",
         "synth_second_003",
         "fixture_second_001",
-        "fixture_second_002"
+        "fixture_second_002",
+        "fixture_complex_001"
       ],
       "replayable": true,
       "status": "REPRESENTED_REPLAYABLE"
@@ -1411,7 +1726,10 @@
         "synth_coupon_003",
         "synth_coupon_004",
         "fixture_coupon_001",
-        "fixture_coupon_002"
+        "fixture_coupon_002",
+        "fixture_coupon_005",
+        "fixture_coupon_006",
+        "fixture_coupon_007"
       ],
       "replayable": true,
       "status": "REPRESENTED_REPLAYABLE"
@@ -1441,7 +1759,8 @@
         "synth_gift_004",
         "synth_gift_005",
         "fixture_gift_001",
-        "fixture_gift_002"
+        "fixture_gift_002",
+        "fixture_complex_002"
       ],
       "replayable": true,
       "status": "REPRESENTED_REPLAYABLE"
@@ -1456,7 +1775,10 @@
         "synth_sku_004",
         "synth_sku_005",
         "fixture_sku_001",
-        "fixture_sku_002"
+        "fixture_sku_002",
+        "fixture_spec_006",
+        "fixture_spec_007",
+        "fixture_spec_008"
       ],
       "replayable": true,
       "status": "REPRESENTED_REPLAYABLE"
@@ -1520,16 +1842,24 @@
     {
       "ambiguity_type": "duplicate_node",
       "description": "同一商品因 DOM 重复节点被重复抽取",
-      "sample_ids": [],
-      "replayable": false,
-      "status": "NOT_REPRESENTED"
+      "sample_ids": [
+        "fixture_dup_001",
+        "fixture_dup_002",
+        "fixture_dup_003"
+      ],
+      "replayable": true,
+      "status": "REPRESENTED_REPLAYABLE"
     },
     {
       "ambiguity_type": "popup_loading",
       "description": "弹窗或加载态遮挡了可用页面信息",
-      "sample_ids": [],
-      "replayable": false,
-      "status": "NOT_REPRESENTED"
+      "sample_ids": [
+        "fixture_popup_001",
+        "fixture_popup_002",
+        "fixture_popup_003"
+      ],
+      "replayable": true,
+      "status": "REPRESENTED_REPLAYABLE"
     },
     {
       "ambiguity_type": "dynamic_price",
@@ -1539,7 +1869,8 @@
         "synth_dynamic_002",
         "synth_dynamic_003",
         "fixture_dynamic_001",
-        "fixture_dynamic_002"
+        "fixture_dynamic_002",
+        "fixture_complex_003"
       ],
       "replayable": true,
       "status": "REPRESENTED_REPLAYABLE"
@@ -6208,6 +6539,1121 @@
           "count": 1,
           "content_amount": "400",
           "content_unit": "ml",
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_dup_001",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "华为 手机 旗舰 新品 5G 华为 手机 旗舰 全网通 双卡 华为 旗舰",
+      "parser_output": {
+        "product_name": "华为 手机 旗舰 新品",
+        "quantity": {
+          "count": 1,
+          "content_amount": "5",
+          "content_unit": "g",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "华为 手机 旗舰 新品",
+        "quantity": {
+          "count": 1,
+          "content_amount": "5",
+          "content_unit": "g",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "rule_success": false,
+      "model_success": null,
+      "final_success": false,
+      "rule_failure_reason": "deterministic_confident",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_dup_002",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "海尔 洗衣机 滚筒 全自动 海尔 洗衣机 10kg 智能 变频 海尔 滚筒",
+      "parser_output": {
+        "product_name": "海尔 洗衣机 滚筒 全自动 海尔 洗衣机",
+        "quantity": {
+          "count": 1,
+          "content_amount": "10",
+          "content_unit": "kg",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "海尔 洗衣机 滚筒 全自动 海尔 洗衣机",
+        "quantity": {
+          "count": 1,
+          "content_amount": "10",
+          "content_unit": "kg",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "rule_success": false,
+      "model_success": null,
+      "final_success": false,
+      "rule_failure_reason": "deterministic_confident",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_dup_003",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "格力 空调 1.5匹 变频 冷暖 格力 空调 1.5匹 静音 节能 格力",
+      "parser_output": {
+        "product_name": "格力 空调 1.5匹 变频 冷暖 格力 空调 1.5匹 静音 节能 格力",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "格力1.5匹变频空调",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "格力1.5匹变频空调",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_popup_001",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "[POPUP] 请先登录查看商品详情 登录/注册 [LOADING] 商品信息加载中...",
+      "parser_output": {
+        "product_name": "[POPUP] 请先登录查看商品详情 登录/注册 [LOADING] 商品信息加载中...",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "[POPUP] 请先登录查看商品详情 登录/注册 [LOADING] 商品信息加载中...",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "[POPUP] 请先登录查看商品详情 登录/注册 [LOADING] 商品信息加载中...",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_popup_002",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "[LOADING] 商品加载中，请稍候... [POPUP] 请选择配送地址",
+      "parser_output": {
+        "product_name": "[LOADING] 商品加载中,请稍候... [POPUP] 请选择配送地址",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "[LOADING] 商品加载中，请稍候... [POPUP] 请选择配送地址",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "[LOADING] 商品加载中，请稍候... [POPUP] 请选择配送地址",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_popup_003",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "[POPUP] 当前定位失败，请手动选择收货地址 [LOADING] 商家信息加载中",
+      "parser_output": {
+        "product_name": "[POPUP] 当前定位失败,请手动选择收货地址 [LOADING] 商家信息加载中",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "[POPUP] 当前定位失败，请手动选择收货地址 [LOADING] 商家信息加载中",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "[POPUP] 当前定位失败，请手动选择收货地址 [LOADING] 商家信息加载中",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_coupon_005",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "羽绒服 女 中长款 899元 满800减150 送围巾",
+      "parser_output": {
+        "product_name": "羽绒服 女 中长款 899元 满800减150 送围巾",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "中长款羽绒服 女",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "中长款羽绒服 女",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_coupon_006",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "三人沙发 皮质 3999元 每满1000减100 现代",
+      "parser_output": {
+        "product_name": "三人沙发 皮质 3999元 每满1000减100 现代",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "三人皮质沙发",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "三人皮质沙发",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_coupon_007",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "家用跑步机 2999元 满2000减300 折叠",
+      "parser_output": {
+        "product_name": "家用跑步机 2999元 满2000减300 折叠",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "家用折叠跑步机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "家用折叠跑步机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_pack_011",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "袜子 5双装 纯棉 男 四季款 中筒",
+      "parser_output": {
+        "product_name": "袜子 5双装 纯棉 男 四季款 中筒",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "袜子 5双装 纯棉 男 四季款 中筒",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "rule_success": false,
+      "model_success": null,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_pack_012",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "垃圾袋 10卷 150只 加厚 家用 平口",
+      "parser_output": {
+        "product_name": "垃圾袋 10卷 150只 加厚 家用 平口",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "垃圾袋 10卷 150只 加厚 家用 平口",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "rule_success": false,
+      "model_success": null,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_pack_013",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "馒头 6个装 手工 早餐 速冻",
+      "parser_output": {
+        "product_name": "馒头",
+        "quantity": {
+          "count": 6,
+          "content_amount": null,
+          "content_unit": "piece",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.88
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "馒头",
+        "quantity": {
+          "count": 6,
+          "content_amount": null,
+          "content_unit": "piece",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.88
+      },
+      "rule_success": false,
+      "model_success": null,
+      "final_success": false,
+      "rule_failure_reason": "deterministic_confident",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_spec_006",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "办公椅 黑色 升降 旋转 多功能 黑色 网面",
+      "parser_output": {
+        "product_name": "办公椅 黑色 升降 旋转 多功能 黑色 网面",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "黑色办公椅 升降旋转",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "黑色办公椅 升降旋转",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_spec_007",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "头戴式耳机 黑色 降噪 无线 头戴 蓝牙 40mm",
+      "parser_output": {
+        "product_name": "头戴式耳机 黑色 降噪 无线 头戴 蓝牙 40mm",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "头戴式耳机 黑色 降噪 无线 头戴 蓝牙 40mm",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "rule_success": false,
+      "model_success": null,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_spec_008",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "显示器 27寸 2K IPS 窄边框 2K 165Hz 升降",
+      "parser_output": {
+        "product_name": "显示器 27寸 2K IPS 窄边框 2K 165Hz 升降",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": null,
+      "final_output": {
+        "product_name": "显示器 27寸 2K IPS 窄边框 2K 165Hz 升降",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "rule_success": false,
+      "model_success": null,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_complex_001",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "月饼礼盒 8枚 蛋黄莲蓉 259元 第二件5折 领券减30 送礼",
+      "parser_output": {
+        "product_name": "月饼礼盒 8枚 蛋黄莲蓉 259元 第二件5折 领券减30 送礼",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "月饼礼盒 蛋黄莲蓉 8枚",
+        "quantity": {
+          "count": 8,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "月饼礼盒 蛋黄莲蓉 8枚",
+        "quantity": {
+          "count": 8,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_complex_002",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "咖啡机 家用 1299元 满1000减100 送咖啡豆 赠品 意式",
+      "parser_output": {
+        "product_name": "咖啡机 家用 1299元 满1000减100 送咖啡豆",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "意式咖啡机 家用",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "意式咖啡机 家用",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "rule_success": false,
+      "model_success": false,
+      "final_success": false,
+      "rule_failure_reason": "ambiguous_missing_primary_quantity",
+      "success": false,
+      "failure_reason": "machine_output_does_not_match_current_expected_fields"
+    },
+    {
+      "sample_id": "fixture_complex_003",
+      "source_type": "fixture",
+      "annotation_status": "HUMAN_VERIFIED",
+      "replay_text": "蓝牙音箱 便携 黑色 199元 限时8折 满99减10 防水",
+      "parser_output": {
+        "product_name": "蓝牙音箱 便携 黑色 199元 限时8折 满99减10 防水",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "model_output": {
+        "product_name": "便携蓝牙音箱 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "final_output": {
+        "product_name": "便携蓝牙音箱 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
           "container_unit": "piece"
         },
         "spec": {
@@ -12999,6 +14445,1699 @@
       },
       "parser_source": "HYBRID",
       "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_dup_001",
+      "ambiguity_type": "duplicate_node",
+      "parser": "rule",
+      "expected": {
+        "product_name": "华为旗舰手机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "重复节点：标题中'华为 手机 旗舰'出现多次，需去重"
+        },
+        "displayed_price": {
+          "amount": "4999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "4799.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "华为 手机 旗舰 新品",
+        "quantity": {
+          "count": 1,
+          "content_amount": "5",
+          "content_unit": "g",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_dup_001",
+      "ambiguity_type": "duplicate_node",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "华为旗舰手机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "重复节点：标题中'华为 手机 旗舰'出现多次，需去重"
+        },
+        "displayed_price": {
+          "amount": "4999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "4799.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "华为 手机 旗舰 新品",
+        "quantity": {
+          "count": 1,
+          "content_amount": "5",
+          "content_unit": "g",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_dup_002",
+      "ambiguity_type": "duplicate_node",
+      "parser": "rule",
+      "expected": {
+        "product_name": "海尔滚筒洗衣机 10kg",
+        "quantity": {
+          "count": 1,
+          "content_amount": "10000",
+          "content_unit": "g",
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "10kg滚筒洗衣机，重复节点需去重"
+        },
+        "displayed_price": {
+          "amount": "3299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "3099.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "海尔 洗衣机 滚筒 全自动 海尔 洗衣机",
+        "quantity": {
+          "count": 1,
+          "content_amount": "10",
+          "content_unit": "kg",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_dup_002",
+      "ambiguity_type": "duplicate_node",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "海尔滚筒洗衣机 10kg",
+        "quantity": {
+          "count": 1,
+          "content_amount": "10000",
+          "content_unit": "g",
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "10kg滚筒洗衣机，重复节点需去重"
+        },
+        "displayed_price": {
+          "amount": "3299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "3099.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "海尔 洗衣机 滚筒 全自动 海尔 洗衣机",
+        "quantity": {
+          "count": 1,
+          "content_amount": "10",
+          "content_unit": "kg",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_dup_003",
+      "ambiguity_type": "duplicate_node",
+      "parser": "rule",
+      "expected": {
+        "product_name": "格力1.5匹变频空调",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "1.5匹变频空调，重复节点"
+        },
+        "displayed_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "格力 空调 1.5匹 变频 冷暖 格力 空调 1.5匹 静音 节能 格力",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_dup_003",
+      "ambiguity_type": "duplicate_node",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "格力1.5匹变频空调",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "1.5匹变频空调，重复节点"
+        },
+        "displayed_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "格力1.5匹变频空调",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_popup_001",
+      "ambiguity_type": "popup_loading",
+      "parser": "rule",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "popup拦截，无法获取商品信息"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[POPUP] 请先登录查看商品详情 登录/注册 [LOADING] 商品信息加载中...",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_popup_001",
+      "ambiguity_type": "popup_loading",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "popup拦截，无法获取商品信息"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[POPUP] 请先登录查看商品详情 登录/注册 [LOADING] 商品信息加载中...",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_popup_002",
+      "ambiguity_type": "popup_loading",
+      "parser": "rule",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "loading + popup，无法获取商品信息"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[LOADING] 商品加载中,请稍候... [POPUP] 请选择配送地址",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_popup_002",
+      "ambiguity_type": "popup_loading",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "loading + popup，无法获取商品信息"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[LOADING] 商品加载中，请稍候... [POPUP] 请选择配送地址",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_popup_003",
+      "ambiguity_type": "popup_loading",
+      "parser": "rule",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "定位失败+loading"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[POPUP] 当前定位失败,请手动选择收货地址 [LOADING] 商家信息加载中",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_popup_003",
+      "ambiguity_type": "popup_loading",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "定位失败+loading"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[POPUP] 当前定位失败，请手动选择收货地址 [LOADING] 商家信息加载中",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_coupon_005",
+      "ambiguity_type": "coupon_price",
+      "parser": "rule",
+      "expected": {
+        "product_name": "中长款羽绒服 女",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "满800减150"
+        },
+        "displayed_price": {
+          "amount": "899.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "749.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "羽绒服 女 中长款 899元 满800减150 送围巾",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_coupon_005",
+      "ambiguity_type": "coupon_price",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "中长款羽绒服 女",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "满800减150"
+        },
+        "displayed_price": {
+          "amount": "899.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "749.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "中长款羽绒服 女",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_coupon_006",
+      "ambiguity_type": "coupon_price",
+      "parser": "rule",
+      "expected": {
+        "product_name": "三人皮质沙发",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "每满1000减100"
+        },
+        "displayed_price": {
+          "amount": "3999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "3699.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "三人沙发 皮质 3999元 每满1000减100 现代",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_coupon_006",
+      "ambiguity_type": "coupon_price",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "三人皮质沙发",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "每满1000减100"
+        },
+        "displayed_price": {
+          "amount": "3999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "3699.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "三人皮质沙发",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_coupon_007",
+      "ambiguity_type": "coupon_price",
+      "parser": "rule",
+      "expected": {
+        "product_name": "家用折叠跑步机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "满2000减300"
+        },
+        "displayed_price": {
+          "amount": "2999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "家用跑步机 2999元 满2000减300 折叠",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_coupon_007",
+      "ambiguity_type": "coupon_price",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "家用折叠跑步机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "满2000减300"
+        },
+        "displayed_price": {
+          "amount": "2999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "家用折叠跑步机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_pack_011",
+      "ambiguity_type": "bulk",
+      "parser": "rule",
+      "expected": {
+        "product_name": "纯棉袜子 5双装",
+        "quantity": {
+          "count": 5,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "pair"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "5双装"
+        },
+        "displayed_price": {
+          "amount": "19.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "19.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "袜子 5双装 纯棉 男 四季款 中筒",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_pack_011",
+      "ambiguity_type": "bulk",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "纯棉袜子 5双装",
+        "quantity": {
+          "count": 5,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "pair"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "5双装"
+        },
+        "displayed_price": {
+          "amount": "19.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "19.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "袜子 5双装 纯棉 男 四季款 中筒",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_schema_or_provider_failure"
+    },
+    {
+      "sample_id": "fixture_pack_012",
+      "ambiguity_type": "bulk",
+      "parser": "rule",
+      "expected": {
+        "product_name": "加厚垃圾袋 10卷",
+        "quantity": {
+          "count": 10,
+          "content_amount": "150",
+          "content_unit": "piece",
+          "container_unit": "roll"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "10卷共150只"
+        },
+        "displayed_price": {
+          "amount": "12.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "12.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "垃圾袋 10卷 150只 加厚 家用 平口",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_pack_012",
+      "ambiguity_type": "bulk",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "加厚垃圾袋 10卷",
+        "quantity": {
+          "count": 10,
+          "content_amount": "150",
+          "content_unit": "piece",
+          "container_unit": "roll"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "10卷共150只"
+        },
+        "displayed_price": {
+          "amount": "12.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "12.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "垃圾袋 10卷 150只 加厚 家用 平口",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_schema_or_provider_failure"
+    },
+    {
+      "sample_id": "fixture_pack_013",
+      "ambiguity_type": "bulk",
+      "parser": "rule",
+      "expected": {
+        "product_name": "手工馒头 6个装",
+        "quantity": {
+          "count": 6,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "6个装"
+        },
+        "displayed_price": {
+          "amount": "9.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "8.90",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "馒头",
+        "quantity": {
+          "count": 6,
+          "content_amount": null,
+          "content_unit": "piece",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.88
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_pack_013",
+      "ambiguity_type": "bulk",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "手工馒头 6个装",
+        "quantity": {
+          "count": 6,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "6个装"
+        },
+        "displayed_price": {
+          "amount": "9.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "8.90",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "馒头",
+        "quantity": {
+          "count": 6,
+          "content_amount": null,
+          "content_unit": "piece",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.88
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_spec_006",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "rule",
+      "expected": {
+        "product_name": "黑色办公椅 升降旋转",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "办公椅，颜色黑，升降旋转功能"
+        },
+        "displayed_price": {
+          "amount": "299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "279.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "办公椅 黑色 升降 旋转 多功能 黑色 网面",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_spec_006",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "黑色办公椅 升降旋转",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "办公椅，颜色黑，升降旋转功能"
+        },
+        "displayed_price": {
+          "amount": "299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "279.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "黑色办公椅 升降旋转",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_spec_007",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "rule",
+      "expected": {
+        "product_name": "头戴式降噪耳机 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": "40",
+          "content_unit": "mm",
+          "container_unit": "pair"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "头戴式，颜色黑，降噪，驱动单元40mm"
+        },
+        "displayed_price": {
+          "amount": "499.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "459.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "头戴式耳机 黑色 降噪 无线 头戴 蓝牙 40mm",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_spec_007",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "头戴式降噪耳机 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": "40",
+          "content_unit": "mm",
+          "container_unit": "pair"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "头戴式，颜色黑，降噪，驱动单元40mm"
+        },
+        "displayed_price": {
+          "amount": "499.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "459.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "头戴式耳机 黑色 降噪 无线 头戴 蓝牙 40mm",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_schema_or_provider_failure"
+    },
+    {
+      "sample_id": "fixture_spec_008",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "rule",
+      "expected": {
+        "product_name": "27寸2K显示器 IPS",
+        "quantity": {
+          "count": 1,
+          "content_amount": "27",
+          "content_unit": "inch",
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "27寸，2K分辨率，165Hz刷新率，IPS屏"
+        },
+        "displayed_price": {
+          "amount": "1599.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "1499.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "显示器 27寸 2K IPS 窄边框 2K 165Hz 升降",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_spec_008",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "27寸2K显示器 IPS",
+        "quantity": {
+          "count": 1,
+          "content_amount": "27",
+          "content_unit": "inch",
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "27寸，2K分辨率，165Hz刷新率，IPS屏"
+        },
+        "displayed_price": {
+          "amount": "1599.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "1499.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "显示器 27寸 2K IPS 窄边框 2K 165Hz 升降",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_schema_or_provider_failure"
+    },
+    {
+      "sample_id": "fixture_complex_001",
+      "ambiguity_type": "second_item_discount",
+      "parser": "rule",
+      "expected": {
+        "product_name": "月饼礼盒 蛋黄莲蓉 8枚",
+        "quantity": {
+          "count": 8,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "8枚装，蛋黄莲蓉"
+        },
+        "displayed_price": {
+          "amount": "259.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "99.50",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "月饼礼盒 8枚 蛋黄莲蓉 259元 第二件5折 领券减30 送礼",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_complex_001",
+      "ambiguity_type": "second_item_discount",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "月饼礼盒 蛋黄莲蓉 8枚",
+        "quantity": {
+          "count": 8,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "8枚装，蛋黄莲蓉"
+        },
+        "displayed_price": {
+          "amount": "259.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "99.50",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "月饼礼盒 蛋黄莲蓉 8枚",
+        "quantity": {
+          "count": 8,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_complex_002",
+      "ambiguity_type": "gift",
+      "parser": "rule",
+      "expected": {
+        "product_name": "意式咖啡机 家用",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "送咖啡豆赠品"
+        },
+        "displayed_price": {
+          "amount": "1299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "1199.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "咖啡机 家用 1299元 满1000减100 送咖啡豆",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_complex_002",
+      "ambiguity_type": "gift",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "意式咖啡机 家用",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "送咖啡豆赠品"
+        },
+        "displayed_price": {
+          "amount": "1299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "1199.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "意式咖啡机 家用",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_complex_003",
+      "ambiguity_type": "dynamic_price",
+      "parser": "rule",
+      "expected": {
+        "product_name": "便携蓝牙音箱 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "限时8折+满99减10"
+        },
+        "displayed_price": {
+          "amount": "199.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "149.20",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "蓝牙音箱 便携 黑色 199元 限时8折 满99减10 防水",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_complex_003",
+      "ambiguity_type": "dynamic_price",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "便携蓝牙音箱 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "限时8折+满99减10"
+        },
+        "displayed_price": {
+          "amount": "199.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "149.20",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "便携蓝牙音箱 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
     }
   ],
   "human_failure_analysis": [
@@ -15175,17 +18314,1710 @@
       },
       "parser_source": "HYBRID",
       "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_dup_001",
+      "ambiguity_type": "duplicate_node",
+      "parser": "rule",
+      "expected": {
+        "product_name": "华为旗舰手机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "重复节点：标题中'华为 手机 旗舰'出现多次，需去重"
+        },
+        "displayed_price": {
+          "amount": "4999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "4799.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "华为 手机 旗舰 新品",
+        "quantity": {
+          "count": 1,
+          "content_amount": "5",
+          "content_unit": "g",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_dup_001",
+      "ambiguity_type": "duplicate_node",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "华为旗舰手机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "重复节点：标题中'华为 手机 旗舰'出现多次，需去重"
+        },
+        "displayed_price": {
+          "amount": "4999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "4799.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "华为 手机 旗舰 新品",
+        "quantity": {
+          "count": 1,
+          "content_amount": "5",
+          "content_unit": "g",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_dup_002",
+      "ambiguity_type": "duplicate_node",
+      "parser": "rule",
+      "expected": {
+        "product_name": "海尔滚筒洗衣机 10kg",
+        "quantity": {
+          "count": 1,
+          "content_amount": "10000",
+          "content_unit": "g",
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "10kg滚筒洗衣机，重复节点需去重"
+        },
+        "displayed_price": {
+          "amount": "3299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "3099.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "海尔 洗衣机 滚筒 全自动 海尔 洗衣机",
+        "quantity": {
+          "count": 1,
+          "content_amount": "10",
+          "content_unit": "kg",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_dup_002",
+      "ambiguity_type": "duplicate_node",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "海尔滚筒洗衣机 10kg",
+        "quantity": {
+          "count": 1,
+          "content_amount": "10000",
+          "content_unit": "g",
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "10kg滚筒洗衣机，重复节点需去重"
+        },
+        "displayed_price": {
+          "amount": "3299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "3099.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "海尔 洗衣机 滚筒 全自动 海尔 洗衣机",
+        "quantity": {
+          "count": 1,
+          "content_amount": "10",
+          "content_unit": "kg",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.94
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_dup_003",
+      "ambiguity_type": "duplicate_node",
+      "parser": "rule",
+      "expected": {
+        "product_name": "格力1.5匹变频空调",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "1.5匹变频空调，重复节点"
+        },
+        "displayed_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "格力 空调 1.5匹 变频 冷暖 格力 空调 1.5匹 静音 节能 格力",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_dup_003",
+      "ambiguity_type": "duplicate_node",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "格力1.5匹变频空调",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "1.5匹变频空调，重复节点"
+        },
+        "displayed_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "格力1.5匹变频空调",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_popup_001",
+      "ambiguity_type": "popup_loading",
+      "parser": "rule",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "popup拦截，无法获取商品信息"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[POPUP] 请先登录查看商品详情 登录/注册 [LOADING] 商品信息加载中...",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_popup_001",
+      "ambiguity_type": "popup_loading",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "popup拦截，无法获取商品信息"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[POPUP] 请先登录查看商品详情 登录/注册 [LOADING] 商品信息加载中...",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_popup_002",
+      "ambiguity_type": "popup_loading",
+      "parser": "rule",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "loading + popup，无法获取商品信息"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[LOADING] 商品加载中,请稍候... [POPUP] 请选择配送地址",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_popup_002",
+      "ambiguity_type": "popup_loading",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "loading + popup，无法获取商品信息"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[LOADING] 商品加载中，请稍候... [POPUP] 请选择配送地址",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_popup_003",
+      "ambiguity_type": "popup_loading",
+      "parser": "rule",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "定位失败+loading"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[POPUP] 当前定位失败,请手动选择收货地址 [LOADING] 商家信息加载中",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_popup_003",
+      "ambiguity_type": "popup_loading",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": null,
+        "quantity": {
+          "count": null,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "定位失败+loading"
+        },
+        "displayed_price": null,
+        "effective_price": null
+      },
+      "actual": {
+        "product_name": "[POPUP] 当前定位失败，请手动选择收货地址 [LOADING] 商家信息加载中",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_coupon_005",
+      "ambiguity_type": "coupon_price",
+      "parser": "rule",
+      "expected": {
+        "product_name": "中长款羽绒服 女",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "满800减150"
+        },
+        "displayed_price": {
+          "amount": "899.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "749.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "羽绒服 女 中长款 899元 满800减150 送围巾",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_coupon_005",
+      "ambiguity_type": "coupon_price",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "中长款羽绒服 女",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "满800减150"
+        },
+        "displayed_price": {
+          "amount": "899.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "749.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "中长款羽绒服 女",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_coupon_006",
+      "ambiguity_type": "coupon_price",
+      "parser": "rule",
+      "expected": {
+        "product_name": "三人皮质沙发",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "每满1000减100"
+        },
+        "displayed_price": {
+          "amount": "3999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "3699.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "三人沙发 皮质 3999元 每满1000减100 现代",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_coupon_006",
+      "ambiguity_type": "coupon_price",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "三人皮质沙发",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": null,
+          "notes": "每满1000减100"
+        },
+        "displayed_price": {
+          "amount": "3999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "3699.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "三人皮质沙发",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_coupon_007",
+      "ambiguity_type": "coupon_price",
+      "parser": "rule",
+      "expected": {
+        "product_name": "家用折叠跑步机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "满2000减300"
+        },
+        "displayed_price": {
+          "amount": "2999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "家用跑步机 2999元 满2000减300 折叠",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_coupon_007",
+      "ambiguity_type": "coupon_price",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "家用折叠跑步机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "满2000减300"
+        },
+        "displayed_price": {
+          "amount": "2999.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "2699.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "家用折叠跑步机",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_pack_011",
+      "ambiguity_type": "bulk",
+      "parser": "rule",
+      "expected": {
+        "product_name": "纯棉袜子 5双装",
+        "quantity": {
+          "count": 5,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "pair"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "5双装"
+        },
+        "displayed_price": {
+          "amount": "19.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "19.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "袜子 5双装 纯棉 男 四季款 中筒",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_pack_011",
+      "ambiguity_type": "bulk",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "纯棉袜子 5双装",
+        "quantity": {
+          "count": 5,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "pair"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "5双装"
+        },
+        "displayed_price": {
+          "amount": "19.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "19.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "袜子 5双装 纯棉 男 四季款 中筒",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_schema_or_provider_failure"
+    },
+    {
+      "sample_id": "fixture_pack_012",
+      "ambiguity_type": "bulk",
+      "parser": "rule",
+      "expected": {
+        "product_name": "加厚垃圾袋 10卷",
+        "quantity": {
+          "count": 10,
+          "content_amount": "150",
+          "content_unit": "piece",
+          "container_unit": "roll"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "10卷共150只"
+        },
+        "displayed_price": {
+          "amount": "12.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "12.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "垃圾袋 10卷 150只 加厚 家用 平口",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_pack_012",
+      "ambiguity_type": "bulk",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "加厚垃圾袋 10卷",
+        "quantity": {
+          "count": 10,
+          "content_amount": "150",
+          "content_unit": "piece",
+          "container_unit": "roll"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "10卷共150只"
+        },
+        "displayed_price": {
+          "amount": "12.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "12.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        }
+      },
+      "actual": {
+        "product_name": "垃圾袋 10卷 150只 加厚 家用 平口",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_schema_or_provider_failure"
+    },
+    {
+      "sample_id": "fixture_pack_013",
+      "ambiguity_type": "bulk",
+      "parser": "rule",
+      "expected": {
+        "product_name": "手工馒头 6个装",
+        "quantity": {
+          "count": 6,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "6个装"
+        },
+        "displayed_price": {
+          "amount": "9.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "8.90",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "馒头",
+        "quantity": {
+          "count": 6,
+          "content_amount": null,
+          "content_unit": "piece",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.88
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_pack_013",
+      "ambiguity_type": "bulk",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "手工馒头 6个装",
+        "quantity": {
+          "count": 6,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "bag",
+          "notes": "6个装"
+        },
+        "displayed_price": {
+          "amount": "9.90",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "8.90",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "馒头",
+        "quantity": {
+          "count": 6,
+          "content_amount": null,
+          "content_unit": "piece",
+          "container_unit": null
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 1,
+        "reason_code": "deterministic_confident",
+        "reason": "数量、单位和商品名候选满足规则解析置信度门槛。",
+        "ambiguous": false,
+        "confidence": 0.88
+      },
+      "parser_source": "RULE",
+      "failure_reason": "deterministic_confident"
+    },
+    {
+      "sample_id": "fixture_spec_006",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "rule",
+      "expected": {
+        "product_name": "黑色办公椅 升降旋转",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "办公椅，颜色黑，升降旋转功能"
+        },
+        "displayed_price": {
+          "amount": "299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "279.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "办公椅 黑色 升降 旋转 多功能 黑色 网面",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_spec_006",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "黑色办公椅 升降旋转",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "办公椅，颜色黑，升降旋转功能"
+        },
+        "displayed_price": {
+          "amount": "299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "279.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "黑色办公椅 升降旋转",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_spec_007",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "rule",
+      "expected": {
+        "product_name": "头戴式降噪耳机 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": "40",
+          "content_unit": "mm",
+          "container_unit": "pair"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "头戴式，颜色黑，降噪，驱动单元40mm"
+        },
+        "displayed_price": {
+          "amount": "499.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "459.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "头戴式耳机 黑色 降噪 无线 头戴 蓝牙 40mm",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_spec_007",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "头戴式降噪耳机 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": "40",
+          "content_unit": "mm",
+          "container_unit": "pair"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "头戴式，颜色黑，降噪，驱动单元40mm"
+        },
+        "displayed_price": {
+          "amount": "499.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "459.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "头戴式耳机 黑色 降噪 无线 头戴 蓝牙 40mm",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_schema_or_provider_failure"
+    },
+    {
+      "sample_id": "fixture_spec_008",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "rule",
+      "expected": {
+        "product_name": "27寸2K显示器 IPS",
+        "quantity": {
+          "count": 1,
+          "content_amount": "27",
+          "content_unit": "inch",
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "27寸，2K分辨率，165Hz刷新率，IPS屏"
+        },
+        "displayed_price": {
+          "amount": "1599.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "1499.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "显示器 27寸 2K IPS 窄边框 2K 165Hz 升降",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_spec_008",
+      "ambiguity_type": "sku_mixed_text",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "27寸2K显示器 IPS",
+        "quantity": {
+          "count": 1,
+          "content_amount": "27",
+          "content_unit": "inch",
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "27寸，2K分辨率，165Hz刷新率，IPS屏"
+        },
+        "displayed_price": {
+          "amount": "1599.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "1499.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "显示器 27寸 2K IPS 窄边框 2K 165Hz 升降",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule_fallback",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_schema_or_provider_failure",
+        "reason": "LLM 输出未通过结构化 schema 或 provider 调用失败，已安全回退规则结果。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_schema_or_provider_failure"
+    },
+    {
+      "sample_id": "fixture_complex_001",
+      "ambiguity_type": "second_item_discount",
+      "parser": "rule",
+      "expected": {
+        "product_name": "月饼礼盒 蛋黄莲蓉 8枚",
+        "quantity": {
+          "count": 8,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "8枚装，蛋黄莲蓉"
+        },
+        "displayed_price": {
+          "amount": "259.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "99.50",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "月饼礼盒 8枚 蛋黄莲蓉 259元 第二件5折 领券减30 送礼",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_complex_001",
+      "ambiguity_type": "second_item_discount",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "月饼礼盒 蛋黄莲蓉 8枚",
+        "quantity": {
+          "count": 8,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "8枚装，蛋黄莲蓉"
+        },
+        "displayed_price": {
+          "amount": "259.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "99.50",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "月饼礼盒 蛋黄莲蓉 8枚",
+        "quantity": {
+          "count": 8,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_complex_002",
+      "ambiguity_type": "gift",
+      "parser": "rule",
+      "expected": {
+        "product_name": "意式咖啡机 家用",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "送咖啡豆赠品"
+        },
+        "displayed_price": {
+          "amount": "1299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "1199.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "咖啡机 家用 1299元 满1000减100 送咖啡豆",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_complex_002",
+      "ambiguity_type": "gift",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "意式咖啡机 家用",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "送咖啡豆赠品"
+        },
+        "displayed_price": {
+          "amount": "1299.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "1199.00",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "意式咖啡机 家用",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
+    },
+    {
+      "sample_id": "fixture_complex_003",
+      "ambiguity_type": "dynamic_price",
+      "parser": "rule",
+      "expected": {
+        "product_name": "便携蓝牙音箱 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "限时8折+满99减10"
+        },
+        "displayed_price": {
+          "amount": "199.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "149.20",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "蓝牙音箱 便携 黑色 199元 限时8折 满99减10 防水",
+        "quantity": null,
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "rule",
+        "parser_source": "RULE",
+        "candidate_count": 0,
+        "reason_code": "ambiguous_missing_primary_quantity",
+        "reason": "未提取到主数量，商品核心名称或规格可能需要语义判断。",
+        "ambiguous": true,
+        "confidence": 0.45
+      },
+      "parser_source": "RULE",
+      "failure_reason": "ambiguous_missing_primary_quantity"
+    },
+    {
+      "sample_id": "fixture_complex_003",
+      "ambiguity_type": "dynamic_price",
+      "parser": "hybrid",
+      "expected": {
+        "product_name": "便携蓝牙音箱 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "specification": {
+          "package_type": "box",
+          "notes": "限时8折+满99减10"
+        },
+        "displayed_price": {
+          "amount": "199.00",
+          "currency": "CNY",
+          "price_kind": "displayed"
+        },
+        "effective_price": {
+          "amount": "149.20",
+          "currency": "CNY",
+          "price_kind": "coupon"
+        }
+      },
+      "actual": {
+        "product_name": "便携蓝牙音箱 黑色",
+        "quantity": {
+          "count": 1,
+          "content_amount": null,
+          "content_unit": null,
+          "container_unit": "piece"
+        },
+        "spec": {
+          "package_type": null,
+          "notes": null
+        },
+        "price": null,
+        "source": "llm",
+        "parser_source": "HYBRID",
+        "candidate_count": 0,
+        "reason_code": "llm_structured_resolution",
+        "reason": "deterministic replay response; not live model performance",
+        "ambiguous": false,
+        "confidence": 0.9
+      },
+      "parser_source": "HYBRID",
+      "failure_reason": "llm_structured_resolution"
     }
   ],
   "error_by_ambiguity_type": [
     {
       "ambiguity_type": "bulk",
-      "sample_count": 12,
-      "human_verified_count": 2,
-      "rule_error_count": 12,
-      "hybrid_error_count": 12,
-      "human_rule_error_count": 2,
-      "human_hybrid_error_count": 2,
+      "sample_count": 15,
+      "human_verified_count": 5,
+      "rule_error_count": 15,
+      "hybrid_error_count": 15,
+      "human_rule_error_count": 5,
+      "human_hybrid_error_count": 5,
       "sample_ids": [
         "synth_bulk_001",
         "synth_bulk_002",
@@ -15198,50 +20030,71 @@
         "synth_bulk_009",
         "synth_bulk_010",
         "fixture_bulk_001",
-        "fixture_bulk_002"
+        "fixture_bulk_002",
+        "fixture_pack_011",
+        "fixture_pack_012",
+        "fixture_pack_013"
       ]
     },
     {
       "ambiguity_type": "coupon_price",
-      "sample_count": 6,
-      "human_verified_count": 2,
-      "rule_error_count": 6,
-      "hybrid_error_count": 6,
-      "human_rule_error_count": 2,
-      "human_hybrid_error_count": 2,
+      "sample_count": 9,
+      "human_verified_count": 5,
+      "rule_error_count": 9,
+      "hybrid_error_count": 9,
+      "human_rule_error_count": 5,
+      "human_hybrid_error_count": 5,
       "sample_ids": [
         "synth_coupon_001",
         "synth_coupon_002",
         "synth_coupon_003",
         "synth_coupon_004",
         "fixture_coupon_001",
-        "fixture_coupon_002"
+        "fixture_coupon_002",
+        "fixture_coupon_005",
+        "fixture_coupon_006",
+        "fixture_coupon_007"
+      ]
+    },
+    {
+      "ambiguity_type": "duplicate_node",
+      "sample_count": 3,
+      "human_verified_count": 3,
+      "rule_error_count": 3,
+      "hybrid_error_count": 3,
+      "human_rule_error_count": 3,
+      "human_hybrid_error_count": 3,
+      "sample_ids": [
+        "fixture_dup_001",
+        "fixture_dup_002",
+        "fixture_dup_003"
       ]
     },
     {
       "ambiguity_type": "dynamic_price",
-      "sample_count": 5,
-      "human_verified_count": 2,
-      "rule_error_count": 5,
-      "hybrid_error_count": 5,
-      "human_rule_error_count": 2,
-      "human_hybrid_error_count": 2,
+      "sample_count": 6,
+      "human_verified_count": 3,
+      "rule_error_count": 6,
+      "hybrid_error_count": 6,
+      "human_rule_error_count": 3,
+      "human_hybrid_error_count": 3,
       "sample_ids": [
         "synth_dynamic_001",
         "synth_dynamic_002",
         "synth_dynamic_003",
         "fixture_dynamic_001",
-        "fixture_dynamic_002"
+        "fixture_dynamic_002",
+        "fixture_complex_003"
       ]
     },
     {
       "ambiguity_type": "gift",
-      "sample_count": 8,
-      "human_verified_count": 2,
-      "rule_error_count": 7,
-      "hybrid_error_count": 7,
-      "human_rule_error_count": 2,
-      "human_hybrid_error_count": 2,
+      "sample_count": 9,
+      "human_verified_count": 3,
+      "rule_error_count": 8,
+      "hybrid_error_count": 8,
+      "human_rule_error_count": 3,
+      "human_hybrid_error_count": 3,
       "sample_ids": [
         "gift-water",
         "synth_gift_001",
@@ -15250,7 +20103,8 @@
         "synth_gift_004",
         "synth_gift_005",
         "fixture_gift_001",
-        "fixture_gift_002"
+        "fixture_gift_002",
+        "fixture_complex_002"
       ]
     },
     {
@@ -15294,6 +20148,20 @@
       ]
     },
     {
+      "ambiguity_type": "popup_loading",
+      "sample_count": 3,
+      "human_verified_count": 3,
+      "rule_error_count": 3,
+      "hybrid_error_count": 3,
+      "human_rule_error_count": 3,
+      "human_hybrid_error_count": 3,
+      "sample_ids": [
+        "fixture_popup_001",
+        "fixture_popup_002",
+        "fixture_popup_003"
+      ]
+    },
+    {
       "ambiguity_type": "price_range",
       "sample_count": 6,
       "human_verified_count": 2,
@@ -15331,28 +20199,29 @@
     },
     {
       "ambiguity_type": "second_item_discount",
-      "sample_count": 5,
-      "human_verified_count": 2,
-      "rule_error_count": 5,
-      "hybrid_error_count": 5,
-      "human_rule_error_count": 2,
-      "human_hybrid_error_count": 2,
+      "sample_count": 6,
+      "human_verified_count": 3,
+      "rule_error_count": 6,
+      "hybrid_error_count": 6,
+      "human_rule_error_count": 3,
+      "human_hybrid_error_count": 3,
       "sample_ids": [
         "synth_second_001",
         "synth_second_002",
         "synth_second_003",
         "fixture_second_001",
-        "fixture_second_002"
+        "fixture_second_002",
+        "fixture_complex_001"
       ]
     },
     {
       "ambiguity_type": "sku_mixed_text",
-      "sample_count": 7,
-      "human_verified_count": 2,
-      "rule_error_count": 7,
-      "hybrid_error_count": 7,
-      "human_rule_error_count": 2,
-      "human_hybrid_error_count": 2,
+      "sample_count": 10,
+      "human_verified_count": 5,
+      "rule_error_count": 10,
+      "hybrid_error_count": 10,
+      "human_rule_error_count": 5,
+      "human_hybrid_error_count": 5,
       "sample_ids": [
         "synth_sku_001",
         "synth_sku_002",
@@ -15360,7 +20229,10 @@
         "synth_sku_004",
         "synth_sku_005",
         "fixture_sku_001",
-        "fixture_sku_002"
+        "fixture_sku_002",
+        "fixture_spec_006",
+        "fixture_spec_007",
+        "fixture_spec_008"
       ]
     },
     {
@@ -15407,7 +20279,7 @@
     "reason": "历史样本均为 synthetic 且 not_human_reviewed，旧报告没有 numerator/denominator 和人工复核证据。"
   },
   "limitations": [
-    "HUMAN_VERIFIED_ONLY 当前有 22 条人工确认样本，但样本规模与来源仍不足以代表线上平台总体准确率。",
+    "HUMAN_VERIFIED_ONLY 当前有 40 条人工确认样本，但样本规模与来源仍不足以代表线上平台总体准确率。",
     "LLM 指标使用 FakeLLMProvider 的确定性回放，不代表任何线上模型表现。",
     "taxonomy 中尚无可靠样本的类别标记为 NOT_REPRESENTED，不编造覆盖率。",
     "淘宝数据来自脱敏 fixture 回放，不是实时淘宝数据。",

@@ -15,6 +15,16 @@ from evaluation.runner import DEFAULT_HUMAN_ANNOTATIONS, load_human_annotations 
 from evaluation.schema import AnnotationStatus  # noqa: E402
 
 
+BASELINE_HUMAN_SAMPLE_IDS = {
+    "fixture_bulk_001", "fixture_bulk_002", "fixture_unit_001", "fixture_unit_002",
+    "fixture_gift_001", "fixture_gift_002", "fixture_qty_001", "fixture_qty_002",
+    "fixture_sku_001", "fixture_sku_002", "fixture_price_range_001", "fixture_price_range_002",
+    "fixture_coupon_001", "fixture_coupon_002", "fixture_second_001", "fixture_second_002",
+    "fixture_dynamic_001", "fixture_dynamic_002", "real_noise_001", "real_noise_002",
+    "real_noise_003", "real_noise_004",
+}
+
+
 def validate(annotations_path: Path) -> dict[str, object]:
     records = load_human_annotations(annotations_path)
     audits = [
@@ -44,7 +54,9 @@ def validate(annotations_path: Path) -> dict[str, object]:
         "source_audit_failed": len(failed),
         "human_metric_eligible_count": len(eligible),
         "human_annotation_count": len(records),
-        "new_human_samples_count": 0,
+        "new_human_samples_count": sum(
+            record.sample_id not in BASELINE_HUMAN_SAMPLE_IDS for record in human_records
+        ),
         "source_recreated_count": sum(
             row.get("provenance_origin") == "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION" for row in audits
         ),
