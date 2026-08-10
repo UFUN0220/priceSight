@@ -1,0 +1,62 @@
+{
+  "purpose": "人工填写计划，不是样本数据，不计入任何指标",
+  "append_to": "evaluation/datasets/human_annotations.jsonl",
+  "current_after_deduplication": {
+    "total_annotation_rows": 68,
+    "human_verified": 22,
+    "unreviewed_synthetic": 46,
+    "disputed": 0,
+    "duplicate_sample_ids": 0,
+    "repository_source_files_present_for_human_verified": 0,
+    "repository_source_files_missing_for_human_verified": 22
+  },
+  "target": {
+    "human_verified_min": 40,
+    "human_verified_max": 60,
+    "additional_non_synthetic_rows_needed_min": 18,
+    "source_files_must_be_present_before_final_evidence_claim": true
+  },
+  "priority_ambiguity_types": [
+    "multi_pack",
+    "multi_spec",
+    "second_item_discount",
+    "after_sale_price",
+    "coupon_price",
+    "price_range",
+    "gift",
+    "sku_mixed_text",
+    "quantity_ambiguity",
+    "unit_ambiguity",
+    "title_noise",
+    "missing_information",
+    "duplicate_node",
+    "popup_loading",
+    "dynamic_price"
+  ],
+  "currently_missing_or_underrepresented": [
+    "multi_pack",
+    "multi_spec",
+    "after_sale_price",
+    "duplicate_node",
+    "popup_loading"
+  ],
+  "required_fields": [
+    "sample_id",
+    "platform",
+    "source_type",
+    "anonymized_source",
+    "query",
+    "product_title",
+    "raw_text",
+    "expected_quantity",
+    "expected_spec",
+    "expected_displayed_price",
+    "expected_effective_price",
+    "expected_product_name",
+    "ambiguity_type",
+    "annotation_status",
+    "annotator_notes"
+  ],
+  "allowed_annotation_status": ["UNREVIEWED", "HUMAN_VERIFIED", "DISPUTED"],
+  "human_verification_rule": "只有人工实际查看来源、逐字段确认、记录依据并明确将状态改为 HUMAN_VERIFIED 后，样本才进入 HUMAN_VERIFIED_ONLY。"
+}

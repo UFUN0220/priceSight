@@ -1,0 +1,54 @@
+{
+  "schema_version": "stage9d.v1",
+  "captured_at": "2026-08-09T19:23:29.774119+00:00",
+  "evidence_boundary": {
+    "device_type": "ANDROID_EMULATOR",
+    "shopping_app": "MOCK",
+    "real_android_shopping_app": false,
+    "production_verified": false
+  },
+  "environment": {
+    "adb": "F:\\newinstall\\android_sdk\\platform-tools\\adb.exe",
+    "serial": "emulator-5554",
+    "backend": "http://127.0.0.1:8000",
+    "session_db": "F:\\projects_2027\\PriceSight\\backend\\data\\device_sessions.sqlite3"
+  },
+  "action_matrix": {
+    "CLICK": "VERIFIED"
+  },
+  "counts": {
+    "observation_count": 1,
+    "total_action_count": 1,
+    "success_count": 1,
+    "rejected_count": 0,
+    "stale_count": 0,
+    "safety_blocked_count": 0,
+    "failed_count": 0,
+    "timeout_count": 0
+  },
+  "cases": [
+    {
+      "case_id": "CLICK",
+      "status": "VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-click-53729739fc",
+          "action_type": "CLICK",
+          "observation_id": "129-1786303406032",
+          "target": {
+            "node_id": "129:root.3"
+          },
+          "enqueue_status": 200,
+          "command_id": "67a8d4c69bfb495fbf2d7a3ff38c8742",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "129-1786303407750",
+          "duration_ms": 250,
+          "layer": null,
+          "message": "node click performed"
+        }
+      ],
+      "details": {}
+    }
+  ]
+}

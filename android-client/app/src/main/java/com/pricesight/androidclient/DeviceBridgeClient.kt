@@ -39,6 +39,7 @@ class DeviceBridgeClient(
 
     fun submitObservationAsync(observation: AccessibilityObservation) {
         latestObservation.set(observation)
+        Log.d(TAG, "OBSERVATION_QUEUED device_id=$deviceId observation_id=${observation.observationId}")
         scheduleUploadDrain()
     }
 
@@ -65,6 +66,7 @@ class DeviceBridgeClient(
 
     private fun uploadObservationWithRetry(observation: AccessibilityObservation) {
         val encodedDeviceId = URLEncoder.encode(deviceId, Charsets.UTF_8.name())
+        Log.d(TAG, "UPLOAD_START device_id=$deviceId observation_id=${observation.observationId}")
         withRetry("observation upload") {
             val response = request(
                 method = "POST",
@@ -76,6 +78,7 @@ class DeviceBridgeClient(
             }
         }
         currentObservationId = observation.observationId
+        Log.i(TAG, "UPLOAD_SUCCESS device_id=$deviceId observation_id=${observation.observationId}")
         pollNextActionWithRetry()
     }
 
@@ -107,6 +110,7 @@ class DeviceBridgeClient(
 
         val command = JSONObject(response.body)
         val commandId = command.getString("command_id")
+        Log.i(TAG, "ACTION_RECEIVED device_id=$deviceId command_id=$commandId action_id=${command.optString("action_id", commandId)}")
         val result = if (isDuplicateCommand(commandId)) {
             BridgeActionResult(
                 success = false,
@@ -117,11 +121,13 @@ class DeviceBridgeClient(
         } else {
             executeCommand(command, observationId)
         }
+        Log.i(TAG, "ACTION_RESULT device_id=$deviceId command_id=$commandId status=${result.status} observation_id=$observationId")
         val report = JSONObject()
             .put("command_id", commandId)
             .put("action_id", command.optString("action_id", commandId))
             .put("result", result.toJson())
         withRetry("action result callback") {
+            Log.d(TAG, "CALLBACK_START device_id=$deviceId command_id=$commandId")
             val callbackResponse = request(
                 method = "POST",
                 path = "/devices/$encodedDeviceId/action-results",
@@ -130,6 +136,7 @@ class DeviceBridgeClient(
             if (callbackResponse.code !in 200..299) {
                 error("action result returned HTTP ${callbackResponse.code}: ${callbackResponse.body}")
             }
+            Log.i(TAG, "CALLBACK_SUCCESS device_id=$deviceId command_id=$commandId")
             callbackResponse
         }
     }
@@ -210,7 +217,7 @@ class DeviceBridgeClient(
     }
 
     private fun logFailure(error: Throwable) {
-        Log.w(TAG, "Device bridge request failed", error)
+        Log.w(TAG, "DEVICE_BRIDGE_FAILED device_id=$deviceId error_type=${error::class.java.simpleName}", error)
     }
 
     private fun <T> withRetry(operation: String, block: () -> T): T {

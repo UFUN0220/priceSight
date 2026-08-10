@@ -22,6 +22,8 @@ class AnnotationStatus(StrEnum):
     HUMAN_VERIFIED = "HUMAN_VERIFIED"
     DISPUTED = "DISPUTED"
     REJECTED = "REJECTED"
+    UNREVIEWED_SOURCE_MISSING = "UNREVIEWED_SOURCE_MISSING"
+    REVIEW_REQUIRED = "REVIEW_REQUIRED"
 
 
 class AmbiguityType(StrEnum):
@@ -133,6 +135,13 @@ class HumanAnnotationRecord(BaseModel):
     platform: str = Field(min_length=1)
     source_type: SourceType
     anonymized_source: str = Field(min_length=1)
+    source_hash: str | None = None
+    source_format: str | None = None
+    source_platform: str | None = None
+    captured_at: str | None = None
+    source_redacted: bool | None = None
+    annotation_version: str = "v1"
+    provenance_origin: str | None = None
     query: str = Field(min_length=1)
     product_title: str = ""
     raw_text: str = Field(min_length=1)

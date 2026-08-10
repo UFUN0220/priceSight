@@ -1,0 +1,435 @@
+{
+  "schema_version": "stage9d.v1",
+  "captured_at": "2026-08-09T19:27:17.935499+00:00",
+  "evidence_boundary": {
+    "device_type": "ANDROID_EMULATOR",
+    "shopping_app": "MOCK",
+    "real_android_shopping_app": false,
+    "production_verified": false
+  },
+  "environment": {
+    "adb": "F:\\newinstall\\android_sdk\\platform-tools\\adb.exe",
+    "serial": "emulator-5554",
+    "backend": "http://127.0.0.1:8000",
+    "session_db": "F:\\projects_2027\\PriceSight\\backend\\data\\device_sessions.sqlite3"
+  },
+  "action_matrix": {
+    "CLICK": "VERIFIED",
+    "SET_TEXT": "VERIFIED",
+    "SCROLL_FORWARD": "VERIFIED",
+    "BACK": "VERIFIED",
+    "TARGET_NOT_FOUND": "VERIFIED",
+    "STALE_OBSERVATION": "VERIFIED",
+    "DUPLICATE_ACTION": "CONTRACT_VERIFIED",
+    "STOP": "VERIFIED",
+    "SAFETY_BLOCKED": "VERIFIED"
+  },
+  "counts": {
+    "observation_count": 18,
+    "total_action_count": 18,
+    "success_count": 14,
+    "rejected_count": 1,
+    "stale_count": 1,
+    "safety_blocked_count": 2,
+    "failed_count": 0,
+    "timeout_count": 0
+  },
+  "cases": [
+    {
+      "case_id": "CLICK",
+      "status": "VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-click-9cdee8545c",
+          "action_type": "CLICK",
+          "observation_id": "153-1786303610937",
+          "target": {
+            "node_id": "153:root.3"
+          },
+          "enqueue_status": 200,
+          "command_id": "33c1c440dade4ce9830f2ae1130955b4",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "153-1786303612034",
+          "duration_ms": 515,
+          "layer": null,
+          "message": "node click performed"
+        }
+      ],
+      "details": {}
+    },
+    {
+      "case_id": "SET_TEXT",
+      "status": "VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-set_text-d862937fb7",
+          "action_type": "CLICK",
+          "observation_id": "155-1786303613275",
+          "target": {
+            "node_id": "155:root.3"
+          },
+          "enqueue_status": 200,
+          "command_id": "60e53818000f4abb98ec02407c16c7c7",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "155-1786303614104",
+          "duration_ms": 266,
+          "layer": null,
+          "message": "node click performed"
+        },
+        {
+          "action_id": "stage9d-set_text-8305cc2061",
+          "action_type": "SET_TEXT",
+          "observation_id": "155-1786303614104",
+          "target": {
+            "node_id": "155:root.2"
+          },
+          "enqueue_status": 200,
+          "command_id": "ec9b4e0f95a5473598b0a405acbb571a",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "155-1786303615010",
+          "duration_ms": 500,
+          "layer": null,
+          "message": "text set action performed"
+        }
+      ],
+      "details": {}
+    },
+    {
+      "case_id": "SCROLL_FORWARD",
+      "status": "VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-scroll_forward-7d1ea97e1c",
+          "action_type": "CLICK",
+          "observation_id": "157-1786303616439",
+          "target": {
+            "node_id": "157:root.5"
+          },
+          "enqueue_status": 200,
+          "command_id": "0321c77573f94dc086243d46fec2c54b",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "157-1786303617237",
+          "duration_ms": 266,
+          "layer": null,
+          "message": "node click performed"
+        },
+        {
+          "action_id": "stage9d-scroll_forward-1329ede58c",
+          "action_type": "SCROLL_FORWARD",
+          "observation_id": "157-1786303617237",
+          "target": {
+            "node_id": "157:root.3"
+          },
+          "enqueue_status": 200,
+          "command_id": "511954b24121408989a63de8b3facb36",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "157-1786303618464",
+          "duration_ms": 500,
+          "layer": null,
+          "message": "scroll action performed"
+        }
+      ],
+      "details": {
+        "before_viewport": "909e882d3509b03e",
+        "after_viewport": "19e09e9bc85b33d6"
+      }
+    },
+    {
+      "case_id": "BACK",
+      "status": "VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-back-34d077699e",
+          "action_type": "CLICK",
+          "observation_id": "159-1786303619736",
+          "target": {
+            "node_id": "159:root.5"
+          },
+          "enqueue_status": 200,
+          "command_id": "6beb73d349c347c184ce33532f0827e9",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "159-1786303620851",
+          "duration_ms": 530,
+          "layer": null,
+          "message": "node click performed"
+        },
+        {
+          "action_id": "stage9d-back-2df2eac2c4",
+          "action_type": "CLICK",
+          "observation_id": "159-1786303620851",
+          "target": {
+            "node_id": "159:root.3.0"
+          },
+          "enqueue_status": 200,
+          "command_id": "b1a4b89865174a2082d296be5886e694",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "159-1786303621857",
+          "duration_ms": 500,
+          "layer": null,
+          "message": "node click performed"
+        },
+        {
+          "action_id": "stage9d-back-e243ca0fe3",
+          "action_type": "BACK",
+          "observation_id": "159-1786303621857",
+          "target": null,
+          "enqueue_status": 200,
+          "command_id": "463cfb9afeb044bfb6545ec0087288a7",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "159-1786303622968",
+          "duration_ms": 515,
+          "layer": null,
+          "message": "global back performed"
+        }
+      ],
+      "details": {}
+    },
+    {
+      "case_id": "TARGET_NOT_FOUND",
+      "status": "VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-target_not_found-9253b00cf5",
+          "action_type": "CLICK",
+          "observation_id": "161-1786303624239",
+          "target": {
+            "node_id": "161:root.999"
+          },
+          "enqueue_status": 200,
+          "command_id": "ff1bea8b483e4035a44e626227efc216",
+          "callback_status": "TARGET_NOT_FOUND",
+          "lifecycle": "FAILED",
+          "ending_observation_id": null,
+          "duration_ms": 250,
+          "layer": null,
+          "message": "fresh node and bounds were unavailable"
+        }
+      ],
+      "details": {
+        "service_healthy": true
+      }
+    },
+    {
+      "case_id": "STALE_OBSERVATION",
+      "status": "VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-stale-66fb967961",
+          "action_type": "CLICK",
+          "observation_id": "163-1786303625733",
+          "target": {
+            "content_description": "search"
+          },
+          "enqueue_status": 409,
+          "command_id": null,
+          "callback_status": "STALE_OBSERVATION",
+          "lifecycle": null,
+          "ending_observation_id": null,
+          "duration_ms": null,
+          "layer": "backend_enqueue",
+          "message": "action observation_id must match the device's latest observation"
+        }
+      ],
+      "details": {
+        "protection_layer": "backend_enqueue",
+        "observation_a": "163-1786303625733",
+        "observation_b": "165-1786303627000"
+      }
+    },
+    {
+      "case_id": "DUPLICATE_ACTION",
+      "status": "CONTRACT_VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-duplicate-33b3423cbf",
+          "action_type": "WAIT",
+          "observation_id": "167-1786303628420",
+          "target": null,
+          "enqueue_status": 200,
+          "command_id": "951263919e0e444cb3a1e4a7b5489af0",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": null,
+          "duration_ms": null,
+          "layer": "backend_idempotency",
+          "message": "same command is returned for duplicate action_id"
+        },
+        {
+          "action_id": "stage9d-duplicate-33b3423cbf",
+          "action_type": "WAIT_DUPLICATE",
+          "observation_id": "167-1786303628420",
+          "target": null,
+          "enqueue_status": 200,
+          "command_id": "951263919e0e444cb3a1e4a7b5489af0",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": null,
+          "duration_ms": null,
+          "layer": "backend_idempotency",
+          "message": "duplicate enqueue response"
+        }
+      ],
+      "details": {
+        "execution_count": 1,
+        "callback_count": 1,
+        "stored_action_rows": 1
+      }
+    },
+    {
+      "case_id": "STOP",
+      "status": "VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-stop-0f85c0a847",
+          "action_type": "STOP",
+          "observation_id": "169-1786303629999",
+          "target": null,
+          "enqueue_status": 200,
+          "command_id": "22d96ba59d5b477b9c807e4082e89d0b",
+          "callback_status": "SAFETY_BLOCKED",
+          "lifecycle": "SAFETY_BLOCKED",
+          "ending_observation_id": null,
+          "duration_ms": 264,
+          "layer": null,
+          "message": "backend requested a safety stop"
+        }
+      ],
+      "details": {
+        "service_healthy": true,
+        "contract": "STOP is represented by the existing SAFETY_BLOCKED callback; no payment/order action is continued."
+      }
+    },
+    {
+      "case_id": "SAFETY_BLOCKED",
+      "status": "VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-safety_blocked-e15e45a8d2",
+          "action_type": "CLICK",
+          "observation_id": "171-1786303631438",
+          "target": {
+            "node_id": "171:root.3"
+          },
+          "enqueue_status": 200,
+          "command_id": "d393f66328004f1d863da4944739ee88",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "171-1786303632318",
+          "duration_ms": 500,
+          "layer": null,
+          "message": "node click performed"
+        },
+        {
+          "action_id": "stage9d-safety_blocked-e031ef739d",
+          "action_type": "SET_TEXT",
+          "observation_id": "171-1786303632318",
+          "target": {
+            "node_id": "171:root.2"
+          },
+          "enqueue_status": 200,
+          "command_id": "978ba0ea1d974ff08c52313d394ad13e",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "171-1786303632741",
+          "duration_ms": 250,
+          "layer": null,
+          "message": "text set action performed"
+        },
+        {
+          "action_id": "stage9d-safety_blocked-5268779cf5",
+          "action_type": "CLICK",
+          "observation_id": "171-1786303632741",
+          "target": {
+            "node_id": "171:root.3"
+          },
+          "enqueue_status": 200,
+          "command_id": "722702048a43433d87925a89eabd48bc",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "171-1786303633949",
+          "duration_ms": 530,
+          "layer": null,
+          "message": "node click performed"
+        },
+        {
+          "action_id": "stage9d-safety_blocked-199756fb03",
+          "action_type": "CLICK",
+          "observation_id": "171-1786303633949",
+          "target": {
+            "node_id": "171:root.3.0"
+          },
+          "enqueue_status": 200,
+          "command_id": "c99f6f75aa9d4cf78dc52b6c34207f86",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "171-1786303634959",
+          "duration_ms": 516,
+          "layer": null,
+          "message": "node click performed"
+        },
+        {
+          "action_id": "stage9d-safety_blocked-eef45700a0",
+          "action_type": "CLICK",
+          "observation_id": "171-1786303634959",
+          "target": {
+            "node_id": "171:root.6"
+          },
+          "enqueue_status": 200,
+          "command_id": "c0f8f9beb1564c9a8e0664324432f83e",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "171-1786303635490",
+          "duration_ms": 264,
+          "layer": null,
+          "message": "node click performed"
+        },
+        {
+          "action_id": "stage9d-safety_blocked-707b2465a6",
+          "action_type": "CLICK",
+          "observation_id": "171-1786303635490",
+          "target": {
+            "node_id": "171:root.4"
+          },
+          "enqueue_status": 200,
+          "command_id": "f82e551d8045472c951cc74684041c9e",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "171-1786303636013",
+          "duration_ms": 250,
+          "layer": null,
+          "message": "node click performed"
+        },
+        {
+          "action_id": "stage9d-safety_blocked-48b87d2bba",
+          "action_type": "CLICK",
+          "observation_id": "171-1786303636013",
+          "target": {
+            "node_id": "171:root.3"
+          },
+          "enqueue_status": 403,
+          "command_id": null,
+          "callback_status": "SAFETY_BLOCKED",
+          "lifecycle": null,
+          "ending_observation_id": null,
+          "duration_ms": 14,
+          "layer": "backend_enqueue",
+          "message": "Safety stop: HIGH_RISK_FLOW; terms=['submit order', '提交订单']"
+        }
+      ],
+      "details": {
+        "rejection_layer": "backend_enqueue",
+        "page_still_order_confirmation": true,
+        "service_healthy": true,
+        "payment_entered": false
+      }
+    }
+  ]
+}

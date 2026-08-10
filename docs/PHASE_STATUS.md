@@ -260,12 +260,24 @@
 
 ### 阶段9——Android Emulator Runtime 闭环复验
 
-- [x] 完成环境盘点：Java 17.0.15、SDK `F:\newinstall\android_sdk`、platform `android-34`、build-tools `34.0.0`、adb/sdkmanager/avdmanager 已确认。
-- [x] Emulator binary 已安装；API 34 x86_64 system image 两次下载均未完成，目录只有 `.installer` 元数据。
-- [x] 修复 instrumented test harness 的 AndroidX runner 配置；测试 APK 编译成功。
-- [x] Android unit tests、assembleDebug、Backend 138 tests、Python quality gate 85% coverage、git diff --check 通过。
-- [ ] Instrumented runtime 因 `No connected devices!` BLOCKED；未创建 AVD，未启动 Mock Shopping App，未执行双向 Runtime E2E。
-- [ ] 生成 [android_runtime_validation_final.md](../evaluation/reports/android_runtime_validation_final.md)；Android Runtime 仍保持 BLOCKED，不升级为 MOCK_RUNTIME_VERIFIED。
+- [x] 完成环境解阻：Java 17.0.15、SDK `F:\newinstall\android_sdk`、platform `android-34`、build-tools `34.0.0`、adb/sdkmanager/avdmanager 已确认。
+- [x] 使用官方 API 34 default x86_64 system image archive 建立可运行镜像；创建 `PriceSight_API34` AVD，`adb devices` 为 `device`，`sys.boot_completed=1`。
+- [x] Mock Shopping App 与 Android Client APK 已安装；Emulator 可访问宿主机 `10.0.2.2`，backend 曾收到真实 Emulator observation。
+- [x] Android unit tests、assembleDebug、Backend 138 tests、Python quality gate 85% branch coverage 通过。
+- [x] 阶段9C诊断确认：没有 AndroidRuntime/FATAL EXCEPTION 证据；`Crashed services` 出现在同包 instrumentation 强制停止目标包之后，主因分类为 `TEST_HARNESS`。
+- [x] 外部 ADB 启用服务、Mock App 和 Backend 复验了最小 `Observation → enqueue → polling → Accessibility CLICK → callback` 闭环；终态 `SUCCESS=1`、`FAILED=0`、`pending=0`。
+- [ ] `connectedDebugAndroidTest` 与直接 AndroidX runner 仍因测试目标包承载 AccessibilityService 而 BLOCKED；不能据此宣称完整 instrumented runtime。
+- [ ] SET_TEXT、SCROLL_FORWARD、BACK、STOP、TARGET_NOT_FOUND、SAFETY_BLOCKED 尚无本阶段 Emulator 运行证据；完整动作矩阵保持未完成。
+- [x] 已更新 [android_runtime_validation_final.md](../evaluation/reports/android_runtime_validation_final.md)；阶段9C状态为 `MINIMAL_RUNTIME_VERIFIED`，不是完整 `MOCK_RUNTIME_VERIFIED`。
+
+### 阶段9D——External Runtime Harness 与完整 Android Action Matrix
+
+- [x] 新增 `scripts/run_android_runtime_e2e.py`；Harness 仅编排 ADB 环境、Backend API、SQLite observation 读取和证据采集，不用 ADB 伪造 Runtime action。
+- [x] CLICK regression 通过；随后独立 case 验证 SET_TEXT、SCROLL_FORWARD、BACK、TARGET_NOT_FOUND、STALE_OBSERVATION、STOP 和订单确认 `SAFETY_BLOCKED`。
+- [x] Duplicate action 返回相同 command_id，SQLite 仅保留一条 action/result；单独标记为 `CONTRACT_VERIFIED`。
+- [x] 9D 最终矩阵：普通动作和安全/异常动作均有真实 Emulator + Mock App 证据；本地结果为 `observation_count=18`、`total_action_count=18`、`failed=0`、`timeout=0`。
+- [x] 修复一次 Harness viewport 断言缺陷：SCROLL 改为比较可见节点文本、bounds 和 visibility 指纹；未修改 Android Runtime。
+- [x] Android Runtime 状态升级为 `MOCK_RUNTIME_VERIFIED`；真实淘宝/JD/美团 Android App、物理设备和生产环境仍为 `NOT_VERIFIED`。
 
 ## 后续外部前置条件
 

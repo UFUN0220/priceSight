@@ -1,10 +1,10 @@
-# Evaluation v2 人工标注指南
+# Evaluation v2 最终人工标注指南
 
 ## 目的
 
 Evaluation v2 用于建立可追溯的商品解析评测集。`synthetic` 是历史规则样本，`fixture` 是仓库内脱敏页面回放，`real_anonymized` 只能在真实页面经过脱敏和人工复核后使用。三类来源都必须保留来源证据；来源类型不等于人工标注状态。
 
-当前数据集中的样本均为 `UNREVIEWED`。在没有人工逐条复核前，不得改为 `HUMAN_REVIEWED` 或 `HUMAN_VERIFIED`，也不得将 runner 输出当成真实准确率。
+当前 annotation 文件在清理重复 sample_id 后共有 68 条：22 条已声明 `HUMAN_VERIFIED`、46 条 `UNREVIEWED` synthetic。synthetic 永远不能进入 HUMAN_VERIFIED；当前目标是新增并人工复核至少 18 条非 synthetic 样本，使 HUMAN_VERIFIED 达到 40 条以上。Codex、parser、FakeLLM 和 runner 都不得替人工修改状态。
 
 ## 标注流程
 
@@ -13,7 +13,7 @@ Evaluation v2 用于建立可追溯的商品解析评测集。`synthetic` 是历
 3. 将营销词、赠品、第二件优惠、券后价等记录在 `ambiguity_type` 与 `expected_*` 的说明中。
 4. 逐条填写 `expected_quantity`、`expected_spec`、`expected_price`、`expected_product_name`。
 5. 若信息缺失，不猜测；使用 `null`，并记录 `missing_information` 或对应失败原因。
-6. 复核人完成后才可设置 `annotation_status: HUMAN_REVIEWED`；第二名复核人确认一致后才可设置 `HUMAN_VERIFIED`。
+6. 复核人完成后，若仍有分歧使用 `DISPUTED`；只有人工明确确认并完成复核后才可设置 `HUMAN_VERIFIED`。
 
 ## 字段约定
 
@@ -25,7 +25,7 @@ Evaluation v2 用于建立可追溯的商品解析评测集。`synthetic` 是历
 | `expected_quantity` | 只填写主购买数量；赠品和促销数量不得合并。 |
 | `expected_spec` | 记录组合或 SKU 规格；无法从观察确认时保持空值并写明原因。 |
 | `expected_price.price_kind` | 例如 `displayed`、`coupon`、`after_sale`；不同口径不能混比。 |
-| `annotation_status` | 机器 runner 不得写入 `HUMAN_*`。 |
+| `annotation_status` | 工作文件只使用 `UNREVIEWED`、`HUMAN_VERIFIED`、`DISPUTED`；机器 runner 不得写入人工状态。 |
 | `parser_output`、`model_output`、`final_output` | 运行产物，不是人工标签；应由报告保存，数据集初始值保持 `null`。 |
 
 ## 失败与 Bad Case
@@ -50,7 +50,7 @@ evaluation/datasets/human_annotations.jsonl
 evaluation/datasets/human_annotations.template.json
 ```
 
-仓库已放入当前 10 条样本的人工复核队列，全部保持 `UNREVIEWED`，其中 8 条是既有 synthetic，2 条是淘宝脱敏 fixture。它们不是人工标签，也不会自动进入 HUMAN_VERIFIED 指标。以后新增 Bad Case 时，在同一个 JSONL 文件新增一行；不要改写既有 `sample_id`。
+当前文件已经包含 22 条人工确认记录和 46 条 synthetic 回归记录。不要把 synthetic 行改成 HUMAN_VERIFIED；新增真实脱敏页面或经人工确认的 fixture 时，在同一个 JSONL 文件追加新 sample_id，不要重复使用既有 ID。目标总量为 40～60 条 HUMAN_VERIFIED，不足部分需要人工新增至少 18 条非 synthetic 样本。
 
 使用人工 overlay 重放：
 
@@ -70,7 +70,7 @@ runner 会按 `sample_id` 合并 overlay。空白的 `UNREVIEWED` 队列行不�
 | `sample_id` | 来源中的稳定 ID；不得按 parser 版本改名。 |
 | `platform` | `taobao`、`jd`、`meituan`、`generic` 或仓库已有平台名。 |
 | `source_type` | `synthetic`、`fixture`、`real_anonymized`；合成数据永远保持 `synthetic`。 |
-| `anonymized_source` | 脱敏文件路径、fixture JSON selector 或采集记录编号；不得放账号、Cookie、支付信息。 |
+| `anonymized_source` | 脱敏文件路径、fixture JSON selector 或采集记录编号；fixture/real_anonymized 必须在标记 HUMAN_VERIFIED 前提交可读取的仓库内来源文件；不得放账号、Cookie、支付信息。 |
 | `query` | 当时的用户查询，不自行改写成商品标题。 |
 | `product_title` | 页面可见的商品标题；没有标题时留空。 |
 | `raw_text` | 可复现的脱敏文本，保留影响判断的促销、SKU、数量和价格。 |
@@ -82,6 +82,16 @@ runner 会按 `sample_id` 合并 overlay。空白的 `UNREVIEWED` 队列行不�
 | `ambiguity_type` | 从 `evaluation/bad_case_taxonomy.json` 选择最主要的一个类型；必要的次要歧义写入 notes。 |
 | `annotation_status` | 新行使用 `UNREVIEWED`；有明确分歧使用 `DISPUTED`；只有人工完成复核和确认后才使用 `HUMAN_VERIFIED`。 |
 | `annotator_notes` | 记录判断依据、缺失字段、优惠条件和复核意见；HUMAN_VERIFIED 必须非空。 |
+
+### 哪些字段允许 null
+
+- `product_title`：允许空字符串，例如页面没有稳定标题。
+- `expected_quantity`、`expected_spec`、`expected_displayed_price`、`expected_effective_price`：允许 `null`；必须在 `annotator_notes` 说明信息为何不足。
+- `expected_product_name`：`HUMAN_VERIFIED` 当前由 schema 要求非空；无法确认时只能保持 `UNREVIEWED` 或 `DISPUTED`。
+- `query`、`raw_text`、`anonymized_source`：不能为空，必须能追溯并回放来源。
+
+`raw_text` 可以作为脱敏文本回放输入，但不能替代来源文件证据。runner 会单独审计
+`anonymized_source` 是否解析到仓库内文件；路径不存在时，人工标签仍会保留，但该样本不能被报告描述为仓库内 fixture 或真实页面证据。
 
 ## 字段判定细则
 
@@ -120,8 +130,10 @@ runner 会按 `sample_id` 合并 overlay。空白的 `UNREVIEWED` 队列行不�
 5. `annotator_notes` 写明依据，并完成第二次复核或明确确认。
 6. 标注人手工将状态改为 `HUMAN_VERIFIED` 后，再运行 runner；Codex、parser、FakeLLM 和 runner 都不得替你改变这个状态。
 
+此外，`anonymized_source` 必须指向可读取的脱敏文件或仓库内 fixture。来源文件缺失不应被 runner 自动补齐；应先补文件并重新人工确认来源。
+
 如果两名标注人无法达成一致，使用 `DISPUTED`，保留分歧说明；该样本可以进入 ALL 回归，但不会进入 HUMAN_VERIFIED_ONLY。
 
 ## 当前优先补充的 Bad Case
 
-当前 taxonomy 已预留但尚无可靠样本的类型：`second_item_discount`、`coupon_price`、`price_range`、`sku_mixed_text`、`missing_information`、`duplicate_node`、`popup_loading`、`dynamic_price`。优先从脱敏真实页面或可审计 fixture 补充，不要为了填满列表而编造商品、价格或人工结论。
+当前 HUMAN_VERIFIED 已覆盖：`bulk`、`unit_ambiguity`、`gift`、`quantity_ambiguity`、`sku_mixed_text`、`price_range`、`coupon_price`、`second_item_discount`、`dynamic_price`、`title_noise`。仍应优先补充 `multi_pack`、`multi_spec`、`after_sale_price`、`duplicate_node`、`popup_loading`，以及更多真实来源的已覆盖类型。不要为了填满列表而编造商品、价格或人工结论。

@@ -1,6 +1,7 @@
 package com.pricesight.androidclient
 
 import android.provider.Settings
+import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import org.json.JSONObject
@@ -48,6 +49,10 @@ class DeviceBridgeRuntimeInstrumentedTest {
     private fun awaitSnapshot(predicate: (JSONObject) -> Boolean): JSONObject {
         repeat(20) {
             val response = request("GET", "/devices/android-default")
+            Log.i(
+                TAG,
+                "SNAPSHOT_READY_CHECK attempt=$it code=${response.code} has_latest=${response.body.has("latest_observation_id")} latest_is_null=${response.body.isNull("latest_observation_id")} connected=${response.body.optBoolean("connected", false)}",
+            )
             if (response.code in 200..299 && predicate(response.body)) return response.body
             Thread.sleep(500)
         }
@@ -82,6 +87,7 @@ class DeviceBridgeRuntimeInstrumentedTest {
     private data class HttpResponse(val code: Int, val body: JSONObject)
 
     companion object {
+        private const val TAG = "PriceSightRuntimeTest"
         private const val BASE_URL = "http://10.0.2.2:8000"
     }
 }

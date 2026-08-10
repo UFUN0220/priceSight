@@ -1,0 +1,73 @@
+{
+  "schema_version": "stage9d.v1",
+  "captured_at": "2026-08-09T19:26:27.500577+00:00",
+  "evidence_boundary": {
+    "device_type": "ANDROID_EMULATOR",
+    "shopping_app": "MOCK",
+    "real_android_shopping_app": false,
+    "production_verified": false
+  },
+  "environment": {
+    "adb": "F:\\newinstall\\android_sdk\\platform-tools\\adb.exe",
+    "serial": "emulator-5554",
+    "backend": "http://127.0.0.1:8000",
+    "session_db": "F:\\projects_2027\\PriceSight\\backend\\data\\device_sessions.sqlite3"
+  },
+  "action_matrix": {
+    "SCROLL_FORWARD": "VERIFIED"
+  },
+  "counts": {
+    "observation_count": 2,
+    "total_action_count": 2,
+    "success_count": 2,
+    "rejected_count": 0,
+    "stale_count": 0,
+    "safety_blocked_count": 0,
+    "failed_count": 0,
+    "timeout_count": 0
+  },
+  "cases": [
+    {
+      "case_id": "SCROLL_FORWARD",
+      "status": "VERIFIED",
+      "actions": [
+        {
+          "action_id": "stage9d-scroll_forward-f9442103d8",
+          "action_type": "CLICK",
+          "observation_id": "151-1786303582922",
+          "target": {
+            "node_id": "151:root.5"
+          },
+          "enqueue_status": 200,
+          "command_id": "36aaafc933754809a585108c87057831",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "151-1786303583694",
+          "duration_ms": 250,
+          "layer": null,
+          "message": "node click performed"
+        },
+        {
+          "action_id": "stage9d-scroll_forward-d74153cfc0",
+          "action_type": "SCROLL_FORWARD",
+          "observation_id": "151-1786303583694",
+          "target": {
+            "node_id": "151:root.3"
+          },
+          "enqueue_status": 200,
+          "command_id": "fd80e6425a3545ff8a0d0b906f6eb860",
+          "callback_status": "SUCCESS",
+          "lifecycle": "SUCCESS",
+          "ending_observation_id": "151-1786303585453",
+          "duration_ms": 500,
+          "layer": null,
+          "message": "scroll action performed"
+        }
+      ],
+      "details": {
+        "before_viewport": "94768a53d5e01265",
+        "after_viewport": "d0db1804e774e337"
+      }
+    }
+  ]
+}

@@ -86,6 +86,8 @@ def test_human_annotation_queue_is_unreviewed_and_does_not_claim_human_data() ->
         not (record["source_type"] == "synthetic" and record["annotation_status"] == "HUMAN_VERIFIED")
         for record in records
     )
+    sample_ids = [record["sample_id"] for record in records]
+    assert len(sample_ids) == len(set(sample_ids))
 
 
 def test_synthetic_sample_cannot_be_marked_human_verified() -> None:
@@ -173,12 +175,78 @@ def test_human_verified_annotation_is_scored_only_after_explicit_confirmation(tm
 
     report = evaluate_dataset(annotations_path=annotation_path)
 
-    human_metrics = report["metrics_by_scope"]["HUMAN_VERIFIED_ONLY"]
+    human_metrics = report["metrics_by_scope"]["HUMAN_ANNOTATED"]
     assert report["human_verified_count"] == 1
     assert human_metrics["hybrid_accuracy"]["numerator"] == 1
     assert human_metrics["hybrid_accuracy"]["denominator"] == 1
     assert human_metrics["hybrid_accuracy"]["accuracy"] == 1.0
+    assert human_metrics["hybrid_displayed_price_accuracy"]["numerator"] == 1
+    assert human_metrics["hybrid_displayed_price_accuracy"]["denominator"] == 1
+    assert human_metrics["hybrid_effective_price_accuracy"]["accuracy"] == "NOT_AVAILABLE"
     assert "not live model performance" in human_metrics["llm_accuracy"]["basis"]
+    assert report["metrics_by_scope"]["HUMAN_VERIFIED_ELIGIBLE"]["hybrid_accuracy"]["accuracy"] == "NOT_AVAILABLE"
+
+
+def test_human_failure_analysis_excludes_unreviewed_samples(tmp_path: Path) -> None:
+    annotation_path = tmp_path / "annotations.jsonl"
+    annotation_path.write_text(
+        json.dumps(
+            {
+                "sample_id": "taobao-iphone17-item-1",
+                "platform": "taobao",
+                "source_type": "fixture",
+                "anonymized_source": "fixture",
+                "query": "iphone17",
+                "product_title": "Apple/苹果 iPhone 17",
+                "raw_text": "Apple/苹果 iPhone 17 ¥5999.00",
+                "expected_spec": {"package_type": None, "notes": "无容量信息"},
+                "expected_displayed_price": {"amount": "5999.00", "currency": "CNY", "price_kind": "displayed"},
+                "expected_product_name": "故意不同的人工名称",
+                "ambiguity_type": "title_noise",
+                "annotation_status": "HUMAN_VERIFIED",
+                "annotator_notes": "人工逐字段复核，保留用于失败分析测试",
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    report = evaluate_dataset(annotations_path=annotation_path)
+
+    assert report["human_failure_analysis"]
+    assert all(item["sample_id"] == "taobao-iphone17-item-1" for item in report["human_failure_analysis"])
+
+
+def test_human_source_audit_does_not_turn_missing_files_into_fixture_evidence(tmp_path: Path) -> None:
+    annotation_path = tmp_path / "annotations.jsonl"
+    annotation_path.write_text(
+        json.dumps(
+            {
+                "sample_id": "taobao-iphone17-item-1",
+                "platform": "taobao",
+                "source_type": "fixture",
+                "anonymized_source": "missing/fixture.json",
+                "query": "iphone17",
+                "raw_text": "Apple/苹果 iPhone 17 ¥5999.00",
+                "expected_product_name": "Apple/苹果 iPhone 17",
+                "annotation_status": "HUMAN_VERIFIED",
+                "annotator_notes": "人工确认来源，但测试文件不存在",
+            },
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    report = evaluate_dataset(annotations_path=annotation_path)
+
+    audit = report["human_source_audit"]
+    assert audit["human_verified_declared_count"] == 1
+    assert audit["repository_source_files_present"] == 0
+    assert audit["repository_source_files_missing"] == 1
+    assert audit["missing_sample_ids"] == ["taobao-iphone17-item-1"]
+    assert report["human_accuracy_claim_eligible"] is False
 
 
 def test_same_text_with_different_sample_ids_has_same_parser_output(tmp_path: Path) -> None:
