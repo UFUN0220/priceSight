@@ -18,10 +18,10 @@
 ## Python
 
 ```powershell
-uv sync
+uv sync --locked --all-extras --all-groups
 uv run pytest
 uv run ruff check backend
-uv run mypy backend/app backend/tests
+uv run mypy backend/app
 ```
 
 ## Android / Mock App

@@ -2,14 +2,14 @@
 
 ## 验收结论
 
-截至 2026-08-10，项目功能性调优冻结，最终评分 87/100，加权 86.85。评分沿用 2026-08-09 验收报告的八个维度和权重，没有为提高结果调整标准。
+截至 2026-08-11，项目功能性调优冻结，最终评分 87/100，加权 86.85。评分沿用 2026-08-09 验收报告的八个维度和权重，没有为提高结果调整标准；最终定向补强后的远端 CI 已在 run `31413048761` 验证。
 
 ## 证据矩阵
 
 | 范围 | 结果 | 证据边界 |
 |---|---|---|
-| Backend 全量 | VERIFIED | 160 passed |
-| Python quality | VERIFIED | Ruff、mypy、compile、pre-commit、coverage 85.69% |
+| Backend 全量 | VERIFIED | 172 passed |
+| Python quality | VERIFIED | Ruff、mypy、compile、pre-commit、branch coverage 85% |
 | Browser Mock Chromium | MOCK_RUNTIME_VERIFIED | Mock 页面闭环 |
 | 淘宝 fixture | FIXTURE_VERIFIED | 脱敏 fixture replay |
 | 淘宝公开只读 | LIVE_READONLY_VERIFIED | 140 links、45 displayed prices、无副作用 |
@@ -17,6 +17,8 @@
 | Android Emulator Mock App | MOCK_RUNTIME_VERIFIED | 18 observations/actions、0 failed、0 timeout |
 | Android 真实购物 App | NOT_VERIFIED | 未执行 |
 | 生产性能 | NOT_VERIFIED | 未有生产负载证据 |
+
+Final Remote Freeze：commit `7b201fec3def68de0a4be5eba1c63de8f35f7d9c` 的 `项目持续集成` run `31413048761` 由 `push` 触发，Python 测试与覆盖率、Python 质量门禁、Browser Mock Web E2E、Android client、Mock Shopping App 五个关键 job 全部成功。该 CI 结果不改变 HOLDOUT/HUMAN 评测指标。
 
 ## Evaluation
 

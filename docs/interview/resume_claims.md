@@ -12,7 +12,7 @@
 
 ## USE_WITH_CONTEXT
 
-- Backend 160 tests、85.69% branch coverage：必须注明为本地测试/覆盖率，不是生产可靠性。
+- Backend 172 tests、85% branch coverage：必须注明为本地/CI 测试与覆盖率，不是生产可靠性；最终远端 run 为 `31413048761`。
 - Android Runtime `MOCK_RUNTIME_VERIFIED`：必须注明 Emulator + Mock Shopping App，不是真实购物 App 或物理设备。
 - 淘宝 `LIVE_READONLY_VERIFIED`：必须注明一次公开页面只读 smoke，不代表登录态、长期 selector 稳定性或交易能力。
 - HUMAN Evaluation：40 条人工复核 reconstructed anonymized samples；`EXACT_CORE_V1=5/40`、HOLDOUT=0/8，必须注明离线回放和 LIMITED generalization。

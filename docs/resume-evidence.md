@@ -11,7 +11,7 @@ This document lists claims that can be defended from repository code, automated 
 - Implemented deterministic SAFE MODE/SafetyGuard stops for order confirmation, payment, password, CAPTCHA and identity-verification boundaries.
 - Added a price evidence pipeline that preserves source text, node/selector identity, normalized amount, parser and confidence, with explicit abstention for price ranges, member prices, starting prices and conflicts.
 - Added a deterministic Decimal PricingEngine for explicitly evidenced discounts/fees and a structured offline evaluation with DEV/HOLDOUT, provenance audit, CORE/STRICT contracts and Bad Case taxonomy.
-- Maintained automated Python tests and CI quality gates; the repository’s prior verified run recorded 161 passed and 86% branch coverage before this reinforcement work.
+- Maintained automated Python tests and CI quality gates; Final Remote Freeze run `31413048761` recorded 172 passed and 85% branch coverage, with all five critical jobs successful.
 - Verified Android Emulator/Mock Shopping and Browser Mock flows as controlled evidence, including safety blocking without real order submission.
 
 ## B. Can be expanded in an interview

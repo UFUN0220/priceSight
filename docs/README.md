@@ -12,6 +12,13 @@
 8. [面试材料](08-interview-materials.md)
 9. [安全边界](SAFETY.md)
 
+补强与证据入口：
+
+- [定向补强最终报告](final-improvement-report.md)
+- [Agent 决策边界](agent-decision-boundary.md)
+- [简历证据边界](resume-evidence.md)
+- [阶段状态与 FINAL_CI_VERIFIED](PHASE_STATUS.md)
+
 ## 原始证据
 
 `evaluation/reports/` 的 JSON、JSONL、Markdown 报告，`evaluation/datasets/`、`evaluation/fixtures/`、`evaluation/sources/` 和 `scripts/` 均为可回放或审计材料，不作为同一层级的正式说明文档。

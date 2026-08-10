@@ -163,6 +163,7 @@ F:\newinstall\gradle-9.7.0-bin\gradle-9.7.0\bin\gradle.bat assembleDebug --offli
 ## Quick Start
 
 ```powershell
+uv sync --locked --all-extras --all-groups
 uv run --project backend pytest -q
 uv run pre-commit run --all-files
 ```
@@ -170,7 +171,7 @@ uv run pre-commit run --all-files
 ## 已知限制
 
 - Android Mock Emulator Runtime 已达到 `MOCK_RUNTIME_VERIFIED`；真实购物 Android App 和物理设备仍为 `NOT_VERIFIED`。
-- Android `lintDebug` 当前离线缺少 `com.android.tools.lint:lint-gradle:31.5.2`；远端 GitHub Actions 尚无执行记录。
+- Final Remote Freeze 的 GitHub Actions 已验证 Android client 与 Mock Shopping App 的 test、lint、Debug build；真实购物 Android App 仍未建立证据。
 - 淘宝 live smoke 只覆盖一次公开搜索页只读访问；JD/美团没有 live smoke。
 - Evaluation 有 40 条人工复核 reconstructed anonymized samples，但 HOLDOUT exact 为 0/8，generalization 为 `LIMITED`；FakeLLM 不代表线上模型。
 - SQLite SessionStore 是本地单体持久化，不是分布式故障转移方案；真实断网重连、多进程 failover 未验证。

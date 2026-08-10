@@ -58,4 +58,11 @@ scripts/
 - 已删除重复说明：`DEVELOPMENT.md`、`FINAL_AUDIT.md`、`PROJECT_ACCEPTANCE_REPORT.md`、`PHASE_0_REPORT.md`～`PHASE_16_REPORT.md`、旧 interview/resume 文档和拼写错误的 `evaluation/ANNOTATION_GUIDIDE.md`。
 - 未建立 archive 副本：旧文档的独有事实已进入 03，机器可读和原始回放材料继续原位保留，避免重复拷贝造成版本分叉。
 - 链接校验：`MARKDOWN_LINKS_OK`。
-- 质量校验：既有 quality gate 通过，Ruff、compile、pytest 160 passed、coverage 85.69%；`git diff --check` 通过。
+- 质量校验（此前整合 pass）：既有 quality gate 通过，Ruff、compile、pytest 160 passed、coverage 85.69%；`git diff --check` 通过。当前最终结果见下方 2026-08-11 记录。
+
+## 2026-08-11 Final consolidation pass
+
+- Pass 1 inventory confirmed that the canonical documentation set already exists；未发现仍需单独保留的 `PHASE_*` Markdown 文件，也未发现 `final-final` 类重复正式报告。
+- 已将当前最终补强与远端 CI 事实同步到 README、项目概览、测试质量、最终验收、开发历史、面试 claims 和文档索引：commit `7b201fec3def68de0a4be5eba1c63de8f35f7d9c`，run `31413048761`，五个关键 job 全部成功，172 passed，branch coverage 85%。
+- 未修改业务代码、评测答案、HUMAN/HOLDOUT membership、raw evaluation evidence 或历史报告；HOLDOUT CORE/STRICT 仍为 0/8，HUMAN CORE/STRICT 仍为 5/40、2/40，effective price 仍为 0/12。
+- 本轮删除候选仅限项目本地可再生成缓存/构建产物，以及与正式 JSON 语义完全相同且无引用的两个 `.runner.log` 副本；`data/device_sessions.sqlite3` 按数据库规则保留并列为 review-required。

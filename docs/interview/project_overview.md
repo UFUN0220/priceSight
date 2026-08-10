@@ -156,7 +156,7 @@ AccessibilityService 采集 Observation 并上传后端，后端根据最新 obs
 
 ### 19. 当前最大的技术限制是什么？
 
-第一是真实 Android shopping App 和物理设备没有证据；第二是 HUMAN source 为 reconstructed annotation，且 HOLDOUT exact=0/8；第三是 JD/美团没有 live 只读验证；第四是远端 CI 没有运行记录，Android lint 还受离线依赖缓存阻断。SQLite、真实模型和生产吞吐也没有做分布式/长期验证。
+第一是真实 Android shopping App 和物理设备没有证据；第二是 HUMAN source 为 reconstructed annotation，且 HOLDOUT exact=0/8；第三是 JD/美团没有 live 只读验证；第四是真实线上模型、生产吞吐和长期稳定性仍未验证。Final Remote Freeze 的 GitHub Actions 已通过，但 CI 通过不等于真实 App 泛化或生产能力。
 
 依据：封板验收报告的证据矩阵和限制清单。
 

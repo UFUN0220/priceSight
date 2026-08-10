@@ -2,7 +2,7 @@
 
 ## 当前基线
 
-本项目最终冻结基线以 `2026-08-10` 的证据为准：Backend 160 passed，branch coverage 85.69%，coverage fail-under 80。Ruff、mypy、Python compile、pre-commit 和 `git diff --check` 均已通过。Android unit/build 与 Mock App build 采用冻结报告中的结果；External Harness 已提供 Emulator + Mock App 运行证据。
+本项目当前最终冻结以 commit `7b201fec3def68de0a4be5eba1c63de8f35f7d9c` 的远端 run `31413048761` 为准：Backend 172 passed，branch coverage 85%，coverage fail-under 80。Ruff、mypy、Python compile、pre-commit、Browser Mock、Android client 和 Mock Shopping App 均通过。历史 160 passed / 85.69% 属于上一轮验收口径，保留在 raw acceptance reports 中，不与当前结果混写。
 
 ## 可复现入口
 
@@ -11,7 +11,7 @@
 ```powershell
 uv run pytest
 uv run ruff check backend
-uv run mypy backend/app backend/tests
+uv run mypy backend/app
 uv run python -m compileall backend/app backend/tests
 uv run coverage run --branch -m pytest backend/tests
 uv run coverage report --fail-under=80

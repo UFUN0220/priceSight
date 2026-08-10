@@ -23,7 +23,7 @@ PriceSight 是一个面向跨平台商品比较的 Computer-Use Agent 工程。�
 
 ## 当前冻结状态
 
-- Backend：160 passed；branch coverage 85.69%，门槛 80%。
+- Backend：172 passed；branch coverage 85%，门槛 80%。Final Remote Freeze run `31413048761` 的五个关键 job 全部成功。
 - Browser Mock Chromium：MOCK_RUNTIME_VERIFIED。
 - 淘宝脱敏 fixture：FIXTURE_VERIFIED；公开页面只读 smoke：LIVE_READONLY_VERIFIED。
 - Android Emulator + Mock Shopping App external harness：MOCK_RUNTIME_VERIFIED；不代表真实购物 App。

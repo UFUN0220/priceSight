@@ -110,6 +110,12 @@
 - 最终冻结：`EXACT_CORE_V1` DEV 5/32、HOLDOUT 0/8、ALL 16/96、Human 5/40；`EXACT_STRICT_V2` DEV 2/32、HOLDOUT 0/8、ALL 12/96、Human 2/40。quantity 26/40、specification 17/40、displayed price 10/37、effective price 0/12。总体泛化为 `LIMITED`。
 - 项目最终评估保留原八维度和权重，得分 87/100（加权 86.85）；该分数基于证据矩阵，不通过修改评分标准获得。
 
+### 4.5 Final targeted reinforcement（2026-08-11）
+
+- 在不修改 HUMAN/HOLDOUT ground truth、split 或 metric contract 的前提下，补强 quantity/specification normalization、Price Evidence Pipeline、Decimal `PricingEngine`、comparison confidence/reason/abstention、可重放 baseline/final 结果和 Agent decision boundary 文档。
+- 本轮本地与远端结果：172 tests passed，branch coverage 85%；Final Remote Freeze commit `7b201fec3def68de0a4be5eba1c63de8f35f7d9c` 的 run `31413048761` 中 Python quality、Browser Mock、Android client 和 Mock Shopping App 全部成功。
+- 指标没有被美化：HOLDOUT CORE/STRICT 仍为 0/8，HUMAN CORE/STRICT 仍为 5/40、2/40，HUMAN effective price 仍为 0/12；真实购物 Android App 仍为 `REAL_APP_NOT_ESTABLISHED`。
+
 ## 五、跨阶段不合并的指标
 
 | 指标类型 | 可说明什么 | 不可说明什么 |
@@ -126,4 +132,4 @@
 - HOLDOUT exact 0/8，说明 parser 对未见复杂表达的泛化仍有限。
 - effective price 人工正确数 0/12，促销语义仍需更多真实、可审计标注后再评估。
 - 真实购物 App、真实订单、支付、验证码和生产级延迟未验证。
-- 旧阶段报告中的历史文档仍需通过本次清理归档/删除，raw JSON/JSONL/fixture/script 不删除。
+- 阶段报告已合并到本文；本次环境清理只删除可再生缓存、构建产物和已确认重复 runner 日志，raw JSON/JSONL/fixture/source/script 与历史报告不删除。
