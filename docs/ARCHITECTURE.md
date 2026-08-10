@@ -81,7 +81,7 @@ Android Accessibility Event
 
 SQLite 只用于当前单体应用的轻量持久化，不代表分布式队列或多实例高可用。设备在最后观察超时后被视为断开，不再 lease 新动作；重新上传观察后恢复。详细验证见 [阶段6会话报告](../evaluation/reports/session_store_validation.md)。
 
-WebSocket event ingress 仍保留为后端事件基准，但 Android 当前未实现 WebSocket client。上述闭环已通过后端契约测试和 Android 编译构建，未在真实设备上运行，因此不应解释为真实平台端到端验收通过。详细结论见 [PROJECT_ACCEPTANCE_REPORT.md](PROJECT_ACCEPTANCE_REPORT.md)。
+WebSocket event ingress 仍保留为后端事件基准，但 Android 当前未实现 WebSocket client。Mock Emulator External Harness 已验证 Mock App 闭环；真实购物 App 仍未验证。详细结论见 [最终验收](07-final-acceptance.md) 和 [开发历史](03-development-history.md)。
 
 ## 桌面浏览器闭环
 

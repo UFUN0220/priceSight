@@ -315,3 +315,16 @@ def test_same_text_with_different_sample_ids_has_same_parser_output(tmp_path: Pa
     outputs = {case["sample_id"]: case["parser_output"] for case in report["case_results"]}
 
     assert outputs["same-text-a"] == outputs["same-text-b"]
+
+
+def test_phase13_exact_metric_versions_keep_core_and_strict_comparable() -> None:
+    annotations = ROOT / "evaluation/datasets/human_annotations.jsonl"
+    report = evaluate_dataset(annotations_path=annotations)
+    human = report["metrics_by_scope"]["HUMAN_VERIFIED_ONLY"]
+
+    assert report["metric_contract_version"] == "v1_core_v2_strict"
+    assert human["hybrid_exact_core_v1_accuracy"]["numerator"] == 5
+    assert human["hybrid_exact_core_v1_accuracy"]["denominator"] == 40
+    assert human["hybrid_exact_strict_v2_accuracy"]["numerator"] == 2
+    assert human["hybrid_exact_strict_v2_accuracy"]["denominator"] == 40
+    assert all("core_success" in case and "strict_success" in case for case in report["case_results"])

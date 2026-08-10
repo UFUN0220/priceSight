@@ -6,9 +6,9 @@ PriceSight 是一个面向 Computer-Use Agent 的工程原型：观察 Android A
 
 ## 当前验收结论
 
-截至 2026-08-09，最终复验综合评分为 **84/100**。该分数反映的是同一套项目级评分维度下的证据更新，不代表生产就绪：Backend 132 tests、Python branch coverage 85%、质量门禁、Browser Mock E2E、淘宝脱敏 fixture、跨平台 fixture 和一次公开淘宝页面只读 smoke 已验证；Android Runtime、Android lint、JD/美团实时页面、人工标注 Evaluation 和远端 CI 仍未验证或被环境阻断。
+截至 2026-08-10，项目封板验收综合评分为 **87/100**。该分数沿用原八维权重，不代表生产就绪：Backend 160 tests、85.69% branch coverage、Python 质量门禁、Browser Mock Chromium、淘宝 fixture、跨平台 fixture、淘宝公开网页只读 smoke，以及 Android Emulator + Mock Shopping App External Harness 已有证据。真实购物 Android App、物理设备、JD/美团 live、线上 LLM 和生产性能仍未验证。
 
-详细证据见 [最终验收报告](evaluation/reports/project_acceptance_final.md) 和 [机器可读结果](evaluation/reports/project_acceptance_final.json)。
+详细证据见 [封板验收报告](evaluation/reports/project_acceptance_freeze.md)、[机器可读结果](evaluation/reports/project_acceptance_freeze.json) 和 [Metric Contract](evaluation/METRIC_CONTRACT.md)。
 
 ## 项目解决的问题
 
@@ -79,7 +79,7 @@ normalize → candidate extraction → deterministic parse
 
 数字、数量、单位、规格、明确价格、套装和简单促销优先由规则处理；组合关系、标题语义歧义和不完整信息才调用 LLM。LLM 输出必须通过结构化 schema，解析失败 fail closed。结果会记录 `parser_source`、`confidence` 和 `reason_code`。
 
-当前 Evaluation v2 有 10 条样本：8 条 synthetic、2 条淘宝脱敏 fixture，全部 `UNREVIEWED`，`HUMAN_VERIFIED=0`。Rule 为 8/10，Hybrid FakeLLM 回放为 10/10；这些是机器一致性回归，不是人工准确率，也不是线上模型表现。
+当前冻结 Evaluation 共 96 条，40 条 `HUMAN_VERIFIED_ELIGIBLE`，固定 DEV/HOLDOUT 为 32/8，provenance audit 为 40/40。source 均为 `SOURCE_RECREATED_FROM_EXISTING_ANNOTATION`，不是原始网页 capture。`EXACT_CORE_V1` Human 为 5/40，`EXACT_STRICT_V2` 为 2/40，HOLDOUT 两者均为 0/8；这些是人工复核离线回放指标，不是线上总体准确率。
 
 ## Browser / Android Runtime
 
@@ -87,13 +87,17 @@ normalize → candidate extraction → deterministic parse
 
 BrowserRuntime 使用 Playwright Chromium 将 DOM/ARIA 和语义节点转换为 Observation，并复用 `ActionDevice`/Runtime Port 约束。启动时固定 allowlist，动作优先使用 locator、ARIA/文本和当前页面 bounds，离开允许域名或遇到安全页面时停止。
 
-已验证：本地 Mock Web Chromium E2E 搜索、输入、打开商品、读取 `¥10.90`，进入订单确认边界后返回 `SAFETY_BLOCKED`，未提交订单。阶段8还完成了一次淘宝公开搜索页只读 smoke：真实页面访问成功，生成 Observation，抽取 140 个商品链接和 45 个展示价格，无外部副作用。它只证明该次公开页面只读链路，不证明登录态、稳定性或下单能力。
+已验证：本地 Mock Web Chromium E2E 搜索、输入、打开商品、读取 `¥10.90`，进入订单确认边界后返回 `SAFETY_BLOCKED`，未提交订单。阶段8还完成了一次淘宝公开搜索页只读 smoke：真实页面访问成功，生成 Observation，抽取 140 个商品链接和 45 个展示价格，无外部副作用；证据等级为 `LIVE_READONLY_VERIFIED`。它只证明该次公开页面只读链路，不证明登录态、稳定性或下单能力。
 
 ### Android Runtime / DeviceBridge
 
 Android `PriceSightAccessibilityService` 采集树，`AndroidActionExecutor` 执行点击、输入、滚动、返回和停止等动作，`DeviceBridgeClient` 通过 polling 上传 Observation、获取动作并回传结果。后端在入队和下发阶段都校验 `observation_id`；action/command id、租约、有限重试和生命周期代码已存在。
 
-当前 Android Client 和 Mock Shopping App 的 unit test、`assembleDebug` 已通过，但本机没有 Emulator/AVD/system image，instrumented 双向运行链路没有执行，因此 Android Runtime 仍是 `NOT_VERIFIED`。
+Android Emulator + Mock Shopping App External Harness 已验证 Observation、动作执行、结果回传、旧观察拒绝、安全阻断和完整动作矩阵，状态为 `MOCK_RUNTIME_VERIFIED`。这不等价于真实淘宝/JD/美团 Android App 或物理设备验证；Android assembleDebug 仍单独标记为 `BUILD_ONLY`。
+
+## Comparison
+
+Comparison Engine 只对身份、规格、数量和 confidence 满足比较条件的商品计算 effective unit price；不把页面上孤立的展示数字直接排序。effective price 的确定性优惠契约见 [Metric Contract](evaluation/METRIC_CONTRACT.md)。
 
 ## Platform Adapter
 
@@ -116,7 +120,7 @@ Runtime → Observation → PlatformAdapter → NormalizedProduct → Comparison
 
 详见 [安全说明](docs/SAFETY.md)。
 
-## Evaluation 与一键验证
+## Evaluation Methodology 与一键验证
 
 Python 环境使用 Python 3.12、FastAPI、Pydantic、pytest 和 uv。最小质量门禁为：
 
@@ -124,14 +128,19 @@ Python 环境使用 Python 3.12、FastAPI、Pydantic、pytest 和 uv。最小质
 uv run python scripts/run_quality_gate.py
 ```
 
-它会执行 Ruff、mypy、compileall、pre-commit、全量 pytest 和 80% branch coverage 门槛。阶段8完整验收还使用：
+它会执行 Ruff、mypy、compileall、pre-commit、全量 pytest 和 80% branch coverage 门槛。最终封板验收还使用：
 
 ```powershell
 uv run python scripts/run_browser_mock.py
 uv run python scripts/run_taobao_fixture_replay.py
 uv run python scripts/run_evaluation_v2.py
 uv run pytest backend/tests/test_multi_platform_adapters.py backend/tests/test_comparison.py backend/tests/test_taobao_adapter.py backend/tests/test_web_adapter.py -q
+uv run --project backend python scripts/build_final_dataset_manifest.py
+uv run --project backend python scripts/build_final_evaluation_report.py
+uv run --project backend python scripts/build_project_acceptance_freeze.py
 ```
+
+Evaluation 不以 accuracy 营销为目标：它保留 synthetic/fixture regression，区分 HUMAN_OFFLINE_EVALUATION，使用 provenance audit、固定 DEV/HOLDOUT、Bad Case taxonomy 和 numerator/denominator。EXACT_CORE_V1 与 EXACT_STRICT_V2 的定义固定在 [METRIC_CONTRACT.md](evaluation/METRIC_CONTRACT.md)。
 
 浏览器依赖是可选项，且不应将 Mock 结果写成真实平台结果。Android 本地命令为：
 
@@ -140,7 +149,7 @@ F:\newinstall\gradle-9.7.0-bin\gradle-9.7.0\bin\gradle.bat test --offline --no-d
 F:\newinstall\gradle-9.7.0-bin\gradle-9.7.0\bin\gradle.bat assembleDebug --offline --no-daemon --console=plain
 ```
 
-完整验收状态、numerator/denominator、阻断原因和评分见 [project_acceptance_final.md](evaluation/reports/project_acceptance_final.md)。
+完整验收状态、numerator/denominator、阻断原因和评分见 [最终验收](docs/07-final-acceptance.md)；机器结果见 [project_acceptance_freeze.json](evaluation/reports/project_acceptance_freeze.json)。
 
 ## Demo
 
@@ -149,12 +158,19 @@ F:\newinstall\gradle-9.7.0-bin\gradle-9.7.0\bin\gradle.bat assembleDebug --offli
 - 淘宝脱敏 fixture：`uv run python scripts/run_taobao_fixture_replay.py`
 - 淘宝公开页面只读 smoke：`uv run python scripts/run_taobao_readonly.py`；只允许读取，不登录、不点击、不输入、不加购、不下单、不支付。
 
+## Quick Start
+
+```powershell
+uv run --project backend pytest -q
+uv run pre-commit run --all-files
+```
+
 ## 已知限制
 
-- Android 没有 emulator/AVD 或物理设备运行证据；不能声称 Android Runtime Verified。
+- Android Mock Emulator Runtime 已达到 `MOCK_RUNTIME_VERIFIED`；真实购物 Android App 和物理设备仍为 `NOT_VERIFIED`。
 - Android `lintDebug` 当前离线缺少 `com.android.tools.lint:lint-gradle:31.5.2`；远端 GitHub Actions 尚无执行记录。
 - 淘宝 live smoke 只覆盖一次公开搜索页只读访问；JD/美团没有 live smoke。
-- Evaluation 样本尚未人工复核，不能发布“复杂商品识别准确率”等真实指标；FakeLLM 不代表线上模型。
+- Evaluation 有 40 条人工复核 reconstructed anonymized samples，但 HOLDOUT exact 为 0/8，generalization 为 `LIMITED`；FakeLLM 不代表线上模型。
 - SQLite SessionStore 是本地单体持久化，不是分布式故障转移方案；真实断网重连、多进程 failover 未验证。
 - 真实购物 App、真实支付、真实订单、生产吞吐和长期价格稳定性均未测试。
 
@@ -170,8 +186,16 @@ evaluation/         数据集、runner 和验收报告
 docs/interview/     面试说明
 ```
 
+- [文档索引](docs/README.md)
+- [项目概览](docs/01-project-overview.md)
 - [架构说明](docs/ARCHITECTURE.md)
+- [开发历史](docs/03-development-history.md)
+- [测试与工程质量](docs/04-testing-and-quality.md)
+- [AI、Parser 与 Evaluation](docs/05-ai-evaluation.md)
+- [环境与复现](docs/06-environment-and-setup.md)
+- [最终验收](docs/07-final-acceptance.md)
 - [阶段状态](docs/PHASE_STATUS.md)
 - [安全说明](docs/SAFETY.md)
-- [最终验收报告](evaluation/reports/project_acceptance_final.md)
-- [面试项目说明](docs/interview/project_overview.md)
+- [冻结数据 manifest](evaluation/reports/final_dataset_manifest.json)
+- [Metric Contract](evaluation/METRIC_CONTRACT.md)
+- [面试材料入口](docs/08-interview-materials.md)

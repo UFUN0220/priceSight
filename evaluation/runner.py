@@ -29,6 +29,8 @@ from evaluation.schema import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
+EXACT_CORE_V1 = "EXACT_CORE_V1"
+EXACT_STRICT_V2 = "EXACT_STRICT_V2"
 DEFAULT_DATASET = ROOT / "evaluation" / "datasets" / "evaluation_v2.jsonl"
 DEFAULT_TAXONOMY = ROOT / "evaluation" / "bad_case_taxonomy.json"
 DEFAULT_HUMAN_ANNOTATIONS = ROOT / "evaluation" / "datasets" / "human_annotations.jsonl"
@@ -347,14 +349,24 @@ def _effective_price_equal(sample: EvaluationSample, output: ParsedOutput) -> bo
     return expected.amount == actual.amount and expected.currency == actual.currency
 
 
-def _full_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
+def _exact_core_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
     product_equal = (sample.expected_product_name or "").casefold() == (output.product_name or "").casefold()
+    return product_equal and _quantity_equal(sample.expected_quantity, output.quantity) and _spec_equal(sample, output) and _price_equal(sample, output)
+
+
+def _exact_strict_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
     effective_equal = (
         True
         if not _effective_price_eligible(sample)
         else _effective_price_equal(sample, output)
     )
-    return product_equal and _quantity_equal(sample.expected_quantity, output.quantity) and _spec_equal(sample, output) and _price_equal(sample, output) and effective_equal
+    return _exact_core_equal(sample, output) and effective_equal
+
+
+def _full_equal(sample: EvaluationSample, output: ParsedOutput) -> bool:
+    """Backward-compatible alias for the strict metric used by old reports."""
+
+    return _exact_strict_equal(sample, output)
 
 
 def _field_equal(sample: EvaluationSample, output: ParsedOutput, field: str) -> bool:
@@ -437,7 +449,13 @@ def _metrics_for_scope(
             "llm": "selected samples where FakeLLMProvider fallback returned source=llm; not live model performance",
             "hybrid": "selected samples in scope; rule-first hybrid with FakeLLMProvider",
         }[parser_name]
-        metrics[f"{parser_name}_accuracy"] = _metric_for(samples, outputs, all_predicate, _full_equal, basis)
+        metrics[f"{parser_name}_exact_core_v1_accuracy"] = _metric_for(
+            samples, outputs, all_predicate, _exact_core_equal, f"{EXACT_CORE_V1}; {basis}"
+        )
+        metrics[f"{parser_name}_exact_strict_v2_accuracy"] = _metric_for(
+            samples, outputs, all_predicate, _exact_strict_equal, f"{EXACT_STRICT_V2}; {basis}"
+        )
+        metrics[f"{parser_name}_accuracy"] = _metric_for(samples, outputs, all_predicate, _exact_strict_equal, basis)
         for field, predicate in field_predicates.items():
             comparator = field_comparator(field)
             metrics[f"{parser_name}_{field}_accuracy"] = _metric_for(samples, outputs, predicate, comparator, basis)
@@ -528,13 +546,22 @@ def evaluate_dataset(
     case_results = []
     for sample in samples:
         final_output = final_outputs[sample.sample_id]
-        rule_success = _full_equal(sample, rule_outputs[sample.sample_id])
-        model_success = (
-            _full_equal(sample, model_outputs[sample.sample_id])
+        rule_core_success = _exact_core_equal(sample, rule_outputs[sample.sample_id])
+        rule_strict_success = _exact_strict_equal(sample, rule_outputs[sample.sample_id])
+        rule_success = rule_strict_success
+        model_core_success = (
+            _exact_core_equal(sample, model_outputs[sample.sample_id])
             if sample.sample_id in model_outputs
             else None
         )
-        success = _full_equal(sample, final_output)
+        model_success = (
+            _exact_strict_equal(sample, model_outputs[sample.sample_id])
+            if sample.sample_id in model_outputs
+            else None
+        )
+        core_success = _exact_core_equal(sample, final_output)
+        strict_success = _exact_strict_equal(sample, final_output)
+        success = strict_success
         case_results.append(
             {
                 "sample_id": sample.sample_id,
@@ -544,6 +571,11 @@ def evaluate_dataset(
                 "parser_output": rule_outputs[sample.sample_id].model_dump(mode="json"),
                 "model_output": model_outputs[sample.sample_id].model_dump(mode="json") if sample.sample_id in model_outputs else None,
                 "final_output": final_output.model_dump(mode="json"),
+                "rule_core_success": rule_core_success,
+                "rule_strict_success": rule_strict_success,
+                "model_core_success": model_core_success,
+                "core_success": core_success,
+                "strict_success": strict_success,
                 "rule_success": rule_success,
                 "model_success": model_success,
                 "final_success": success,
@@ -560,12 +592,12 @@ def evaluate_dataset(
     rule_failure_ids = [
         sample.sample_id
         for sample in samples
-        if not _full_equal(sample, rule_outputs[sample.sample_id])
+        if not _exact_strict_equal(sample, rule_outputs[sample.sample_id])
     ]
     hybrid_failure_ids = [
         sample.sample_id
         for sample in samples
-        if not _full_equal(sample, final_outputs[sample.sample_id])
+        if not _exact_strict_equal(sample, final_outputs[sample.sample_id])
     ]
     failure_analysis: list[dict[str, Any]] = []
     for sample in samples:
@@ -641,7 +673,8 @@ def evaluate_dataset(
         and human_source_audit["live_platform_evidence_count"] == 0
     )
     return {
-        "report_version": "evaluation_v2_human_annotation_aware",
+        "report_version": "evaluation_v3_metric_contract",
+        "metric_contract_version": "v1_core_v2_strict",
         "dataset": _report_path(dataset_path),
         "dataset_count": len(samples),
         "source_type_counts": dict(sorted(source_counts.items())),

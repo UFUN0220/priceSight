@@ -1,10 +1,10 @@
 # PriceSight 面试项目说明
 
-本文只使用仓库中已经实现并在 [最终验收报告](../../evaluation/reports/project_acceptance_final.md) 中记录的证据。`fixture`、`Mock`、`BUILD_ONLY` 和真实公开页面只读 smoke 不混称。
+本文只使用仓库中已经实现并在 [最终验收](../07-final-acceptance.md) 中记录的证据。`fixture`、`Mock`、`BUILD_ONLY` 和真实公开页面只读 smoke 不混称；指标口径以 [METRIC_CONTRACT.md](../../evaluation/METRIC_CONTRACT.md) 为准。
 
 ## 30 秒介绍
 
-PriceSight 是一个安全模式的跨平台商品比较 Computer-Use Agent 原型。它通过 Android Accessibility Tree 或浏览器 DOM/ARIA 生成结构化 Observation，先用 YAML Workflow 执行确定性步骤，再用结构化 Agent 处理商品选择和规格歧义；动作经过 `observation_id` 校验、目标 grounding 和 SafetyGuard 后才执行。平台差异收敛在 Adapter，商品归一化后按规格、数量和有效单位价比较。当前已验证后端、Mock Chromium、淘宝 fixture 和一次淘宝公开页面只读 smoke；Android Runtime、人工标注评测和生产交付仍未完成。
+PriceSight 是一个安全模式的跨平台商品比较 Computer-Use Agent 原型。它通过 Android Accessibility Tree 或浏览器 DOM/ARIA 生成结构化 Observation，先用 YAML Workflow 执行确定性步骤，再用结构化 Agent 处理商品选择和规格歧义；动作经过 `observation_id` 校验、目标 grounding 和 SafetyGuard 后才执行。平台差异收敛在 Adapter，商品归一化后按规格、数量和有效单位价比较。当前已验证后端、Mock Chromium、淘宝 fixture、一次淘宝公开页面只读 smoke，以及 Android Emulator + Mock Shopping App External Harness；真实 Android shopping App、人工评测的线上外推和生产交付仍未完成。
 
 ## 2 分钟介绍
 
@@ -120,7 +120,7 @@ LLM provider 返回结构化 JSON，经过 Pydantic schema validation；解析�
 
 ### 13. Android bridge 的闭环是什么？
 
-AccessibilityService 采集 Observation 并上传后端，后端根据最新 observation_id 排队动作；DeviceBridge polling 获取带 lease 的动作，AndroidActionExecutor 执行，再回传结果。代码中有 action_id/command_id 去重、backoff/jitter、超时和生命周期。由于没有 emulator/AVD，本仓库没有把 instrumented loop 写成 Runtime Verified。
+AccessibilityService 采集 Observation 并上传后端，后端根据最新 observation_id 排队动作；DeviceBridge polling 获取带 lease 的动作，AndroidActionExecutor 执行，再回传结果。代码中有 action_id/command_id 去重、backoff/jitter、超时和生命周期。External Harness 已在 Emulator + Mock App 上验证完整动作矩阵，因此状态为 MOCK_RUNTIME_VERIFIED；真实购物 App 和物理设备仍 NOT_VERIFIED。
 
 依据：`PriceSightAccessibilityService.kt`、`DeviceBridgeClient.kt`、`AndroidActionExecutor.kt`、`backend/app/main.py`、`transport/store.py`。
 
@@ -138,31 +138,31 @@ AccessibilityService 采集 Observation 并上传后端，后端根据最新 obs
 
 ### 16. Evaluation 为什么不直接说 85% 或 100% 准确率？
 
-当前 10 条样本中 8 条 synthetic、2 条 fixture，全部 `UNREVIEWED`，没有 `HUMAN_VERIFIED`。因此 Rule 8/10、Hybrid FakeLLM 10/10 只能说明当前期望字段与机器输出的一致性，不能支撑人工真实准确率或复杂商品识别简历指标。
+当前冻结数据集共 96 条，其中 40 条 HUMAN_VERIFIED_ELIGIBLE，DEV/HOLDOUT=32/8，provenance=40/40，但 source 都是 SOURCE_RECREATED_FROM_EXISTING_ANNOTATION。EXACT_CORE_V1 Human=5/40，EXACT_STRICT_V2=2/40，HOLDOUT 两者均为 0/8。因此它证明的是可信离线 Evaluation 方法和 Bad Case 暴露能力，不能支撑线上总体准确率。
 
 依据：`evaluation/datasets/evaluation_v2.jsonl`、`scripts/run_evaluation_v2.py`、最终验收 JSON。
 
 ### 17. 典型 Bad Case 是什么？
 
-已覆盖并可单独回放：多件装、多规格、赠品、数量歧义、单位歧义和标题噪声；`taobao-iphone17-item-1/2` 是标题营销噪声导致 rule parser 需要语义 fallback 的例子。第二件优惠、券后价、价格区间、动态价格、popup/loading 等仍缺少代表性样本。
+已覆盖并可单独回放：多件装、优惠券、第二件优惠、价格区间、赠品、SKU 混合文本、数量/单位歧义、标题噪声、重复节点、popup/loading 和动态价格。典型问题包括 GB 被误解析为 g、价格区间端点误选、effective price 条件不足，以及 Android Harness 的同包 AccessibilityService 生命周期干扰。
 
 依据：`evaluation/reports/evaluation_v2.md`、`hybrid_parser_after_optimization.md`。
 
 ### 18. Mock E2E 证明了什么，不能证明什么？
 
-它证明 Workflow、Runtime Port、Action Harness、fresh observation、价格读取和安全边界在控制性环境中可复现；它不能证明真实淘宝/JD/美团 selector、真实账号状态、网络稳定性或 Android Accessibility 运行成功。报告对 Mock、fixture 和 live smoke 分开记账。
+它证明 Workflow、Runtime Port、Action Harness、fresh observation、价格读取和安全边界在控制性环境中可复现；Android External Harness 进一步证明 Mock App 上的双向动作矩阵。它不能证明真实淘宝/JD/美团 selector、真实账号状态、网络稳定性或真实 Android shopping App 成功。报告对 Mock、fixture、human offline 和 live smoke 分开记账。
 
-依据：`scripts/run_browser_mock.py`、`evaluation/reports/project_acceptance_final.md`。
+依据：`scripts/run_browser_mock.py`、`scripts/run_android_runtime_e2e.py`、`docs/07-final-acceptance.md`。
 
 ### 19. 当前最大的技术限制是什么？
 
-第一是 Android runtime 没有 emulator/AVD/物理设备证据；第二是 Evaluation 没有人工标注数据；第三是 JD/美团没有 live 只读验证；第四是远端 CI 没有运行记录，Android lint 还受离线依赖缓存阻断。SQLite、真实模型和生产吞吐也没有做分布式/长期验证。
+第一是真实 Android shopping App 和物理设备没有证据；第二是 HUMAN source 为 reconstructed annotation，且 HOLDOUT exact=0/8；第三是 JD/美团没有 live 只读验证；第四是远端 CI 没有运行记录，Android lint 还受离线依赖缓存阻断。SQLite、真实模型和生产吞吐也没有做分布式/长期验证。
 
-依据：最终验收报告的 P0/P1/P2 清单。
+依据：封板验收报告的证据矩阵和限制清单。
 
 ### 20. 如果继续迭代，下一步是什么？
 
-先补可复现的 Android Emulator 环境并运行已有 instrumented test；然后采集经过脱敏和人工复核的真实 Bad Case，扩大 Evaluation；再分别做 JD/美团公开只读 smoke。所有新结果仍需按 `VERIFIED`、`FIXTURE_VERIFIED`、`MOCK_VERIFIED`、`BUILD_ONLY`、`NOT_VERIFIED`、`BLOCKED` 分类，不能用 Mock 替代真实验证。
+功能性调优已经封板。若未来重新立项，应先补真实平台/设备证据，再单独建立新的 Evaluation 版本；不能为改善当前数字重新抽样、修改 expected 或继续查看 HOLDOUT 写规则。
 
 ## 可核验命令
 
@@ -173,4 +173,70 @@ uv run python scripts/run_taobao_fixture_replay.py
 uv run python scripts/run_evaluation_v2.py
 ```
 
-最终验收结果和当前限制以 `evaluation/reports/project_acceptance_final.md/json` 为准。
+最终验收结果和当前限制以 `docs/07-final-acceptance.md` 与 `evaluation/reports/project_acceptance_freeze.json` 为准。
+
+## 阶段13新增深挖问题
+
+### 为什么不用截图而用 DOM/Accessibility Observation？
+
+当前目标是可执行和可验证的 Computer-Use Agent。DOM/Accessibility Observation 能保留文本、可点击性、编辑性、滚动性、resource id、bounds 和层级，便于 grounding、压缩和动作后验证；截图/OCR 没有作为当前主链路实现。
+
+### Observation ID 为什么重要？
+
+它把动作绑定到动作规划时看到的页面版本。后端入队、下发和设备侧都校验 observation_id，页面变化后返回 STALE_OBSERVATION，而不是继续使用旧坐标。
+
+### stale action 怎么处理？
+
+拒绝下发或执行，返回显式 stale 结果，要求重新 Observation 和重新规划；不会关闭保护来追求动作成功率。
+
+### Android 为什么使用 polling？
+
+Polling 是本项目可测量、简单可靠的本地基线，配合 lease、retry、backoff、jitter 和 idempotency 处理设备断连及重复请求；event transport 保留为可扩展路径。
+
+### AccessibilityService 为什么 instrumented E2E 有问题？
+
+测试目标包承载 AccessibilityService 时，AndroidX instrumentation 的生命周期会停止或干扰同包服务。项目因此使用 External Runtime Harness 编排 ADB、Backend API 和真实 Emulator 状态，避免把 Harness 伪造结果写成 instrumented runtime 结果。
+
+### 为什么最终选择 external harness？
+
+它能保留真实 Emulator、AccessibilityService、Backend polling 和 callback 的边界，同时把测试编排与被测 Runtime 解耦。阶段 9D 已验证完整动作矩阵，状态是 MOCK_RUNTIME_VERIFIED。
+
+### Browser selector 怎么 fallback？
+
+优先使用稳定 selector、ARIA/文本语义和当前页面 locator，必要时使用 fresh bounds；页面变化后重新 Observation，不复用旧坐标。淘宝 live smoke 只证明一次公开只读页面。
+
+### 为什么价格区间 fail closed？
+
+199-399 不是一个确定商品价格，自动选择最低或最高端点会制造错误比较结论。因此 parser 返回不可用，交给后续人工/语义处理，不进入确定性价格结果。
+
+### displayed price 和 effective price 有什么区别？
+
+displayed price 是页面直接展示值；effective price 只有在券后价、无门槛券或数量明确的第二件优惠等证据充分时计算。满减条件未知、数量未知或区间价格都返回 null。
+
+### 为什么 Hybrid Parser 不是全部交给 LLM？
+
+数量、单位、明确价格和 schema 边界适合 deterministic rule，便于测试、解释和 fail closed；LLM 只处理语义歧义、组合关系和不完整描述。
+
+### JSON Schema 为什么仍可能失败？
+
+结构化输出只能保证“符合已声明 schema”。如果合法业务单位尚未声明会失败；本阶段已补 GB/TB/mm/cm/m/inch/sheet，20W 仍被明确分类为 EXPECTED_FAIL_CLOSED，而不是放宽 schema。
+
+### 为什么 Holdout 是 0/8？
+
+固定 Holdout 上商品名、规格和价格证据仍存在跨样本泛化不足。它是可信边界信号，不应通过查看 Holdout 继续写 sample-specific rule。
+
+### 为什么项目仍值得作为 Demo？
+
+重点不是宣称高准确率，而是展示统一 Observation、Browser/Android 双 Runtime、stale action 防护、安全停止、Adapter 抽象、Rule + LLM fail-closed 和可审计 Evaluation 工程链。
+
+### 40 条 Evaluation 有什么局限？
+
+样本虽人工复核且 provenance 40/40，但 source 是 reconstructed anonymized annotation，不是原始网页 capture；平台分布、自然流量和长期动态价格不足，HOLDOUT exact 为 0/8。
+
+### reconstructed source 与 real capture 有什么区别？
+
+reconstructed source 是根据已有脱敏 annotation 重建的可回放文本，保留人工标签但不等于当时页面的完整 DOM/Accessibility capture；因此只能称 HUMAN_OFFLINE_EVALUATION。
+
+### 哪些指标绝不能写简历？
+
+复杂商品识别准确率 85%、50%→85%、真实淘宝/JD/美团准确率、线上 LLM accuracy、production latency、production throughput 和 physical-device verified 都没有仓库证据支持。
