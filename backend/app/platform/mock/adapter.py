@@ -64,13 +64,23 @@ class MockShoppingAdapter(BasePlatformAdapter):
             if not (node.node_id.startswith("result.") or node.content_description in {"product_result", "product_result_duplicate"}):
                 continue
             parsed = self.product_parser.parse(node.text)
+            prices = self.price_parser.parse_prices(
+                node.text,
+                parsed.specification.primary_quantity,
+                source_node_id=node.node_id,
+                selector=f"node:{node.node_id}",
+            )
             products.append(
                 PlatformProduct(
                     node_id=node.node_id,
                     raw_title=node.text,
                     identity=parsed.product_identity,
                     specification=parsed.specification,
-                    price=self.price_parser.parse(node.text),
+                    price=prices.displayed,
+                    displayed_price=prices.displayed,
+                    price_candidates=prices.candidates,
+                    price_evidence=[candidate.evidence for candidate in prices.candidates],
+                    price_status=prices.status,
                     promotions=parsed.promotions,
                 )
             )
@@ -81,6 +91,8 @@ class MockShoppingAdapter(BasePlatformAdapter):
             platform_id=self.platform_id,
             page_type=page,
             products=products,
+            price_status=products[0].price_status,
+            price_evidence=[evidence for product in products for evidence in product.price_evidence],
             selector_candidates=self._selector_map(observation),
         )
 
@@ -95,13 +107,24 @@ class MockShoppingAdapter(BasePlatformAdapter):
         if title_node is None or title_node.text is None:
             return self._failure(page, "product detail title selector not found")
         parsed = self.product_parser.parse(title_node.text)
+        text = self._text(observation)
+        prices = self.price_parser.parse_prices(
+            text,
+            parsed.specification.primary_quantity,
+            source_node_id=title_node.node_id,
+            selector="detail.text",
+        )
         product = PlatformProduct(
             node_id=title_node.node_id,
             raw_title=title_node.text,
             identity=parsed.product_identity,
             specification=parsed.specification,
-            price=self.price_parser.parse(self._text(observation)),
-            promotions=self.promotion_parser.parse(self._text(observation)),
+            price=prices.displayed,
+            displayed_price=prices.displayed,
+            price_candidates=prices.candidates,
+            price_evidence=[candidate.evidence for candidate in prices.candidates],
+            price_status=prices.status,
+            promotions=self.promotion_parser.parse(text),
         )
         return AdapterExtraction(
             recognized=True,
@@ -109,6 +132,8 @@ class MockShoppingAdapter(BasePlatformAdapter):
             page_type=page,
             product=product,
             price=product.price,
+            price_status=prices.status,
+            price_evidence=[candidate.evidence for candidate in prices.candidates],
             promotions=product.promotions,
             selector_candidates=self._selector_map(observation),
         )
@@ -118,11 +143,14 @@ class MockShoppingAdapter(BasePlatformAdapter):
         if page is PlatformPageType.UNKNOWN:
             return self._failure(page, "platform or page was not recognized")
         text = self._text(observation)
+        prices = self.price_parser.parse_prices(text)
         return AdapterExtraction(
             recognized=True,
             platform_id=self.platform_id,
             page_type=page,
-            price=self.price_parser.parse(text),
+            price=prices.displayed,
+            price_status=prices.status,
+            price_evidence=[candidate.evidence for candidate in prices.candidates],
             promotions=self.promotion_parser.parse(text),
             selector_candidates=self._selector_map(observation),
         )

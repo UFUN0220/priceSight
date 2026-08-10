@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+from decimal import Decimal
 from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.action.models import ActionTarget
 from app.parser.models import ProductIdentity, ProductSpecification, Promotion, Quantity
-from app.parser.price import Price
+from app.parser.price import Price, PriceCandidate, PriceEvidence, PriceResolutionStatus
 
 
 class PlatformPageType(StrEnum):
@@ -32,6 +33,9 @@ class PlatformProduct(BaseModel):
     price: Price | None = None
     displayed_price: Price | None = None
     original_price: Price | None = None
+    price_candidates: list[PriceCandidate] = Field(default_factory=list)
+    price_evidence: list[PriceEvidence] = Field(default_factory=list)
+    price_status: PriceResolutionStatus = PriceResolutionStatus.NEED_MORE_EVIDENCE
     product_url: str | None = None
     product_id: str | None = None
     seller: str | None = None
@@ -57,8 +61,16 @@ class NormalizedProduct(BaseModel):
 
     platform: str
     title: str
+    product_name_raw: str | None = None
+    product_name_normalized: str | None = None
     base_price: Price | None = None
+    displayed_price: Price | None = None
+    original_price: Price | None = None
     effective_price: Price | None = None
+    effective_unit_price: Decimal | None = Field(default=None, gt=0)
+    currency: str = "CNY"
+    price_status: PriceResolutionStatus = PriceResolutionStatus.NEED_MORE_EVIDENCE
+    price_evidence: list[PriceEvidence] = Field(default_factory=list)
     quantity: Quantity | None = None
     specification: ProductSpecification
     seller: str | None = None
@@ -78,6 +90,8 @@ class AdapterExtraction(BaseModel):
     products: list[PlatformProduct] = Field(default_factory=list)
     product: PlatformProduct | None = None
     price: Price | None = None
+    price_status: PriceResolutionStatus = PriceResolutionStatus.NEED_MORE_EVIDENCE
+    price_evidence: list[PriceEvidence] = Field(default_factory=list)
     promotions: list[Promotion] = Field(default_factory=list)
     selector_candidates: dict[str, list[ActionTarget]] = Field(default_factory=dict)
     selector_strategy: dict[str, str] = Field(default_factory=dict)

@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from decimal import Decimal
 from typing import Protocol, runtime_checkable
 
 from app.action.models import ActionTarget
+from app.comparison.pricing import PricingEngine, PricingRule, PricingRuleType, PricingStatus
 from app.core.safety import SafetyDecision, SafetyGuard
 from app.observation.models import Observation
 from app.parser.price import Price
@@ -46,12 +46,22 @@ class BasePlatformAdapter:
     def normalize_product(self, product: PlatformProduct) -> NormalizedProduct:
         base_price = product.original_price or product.price
         effective_price = self._effective_price(product)
+        quantity = product.specification.primary_quantity
+        total_quantity = quantity.total_quantity if quantity else None
         return NormalizedProduct(
             platform=self.platform_id,
             title=product.raw_title,
+            product_name_raw=product.identity.name,
+            product_name_normalized=product.identity.normalized_name,
             base_price=base_price,
+            displayed_price=product.displayed_price or product.price,
+            original_price=product.original_price,
             effective_price=effective_price,
-            quantity=product.specification.primary_quantity,
+            effective_unit_price=(effective_price.amount / total_quantity if effective_price and total_quantity else None),
+            currency=(base_price.currency if base_price else "CNY"),
+            price_status=product.price_status,
+            price_evidence=product.price_evidence,
+            quantity=quantity,
             specification=product.specification,
             seller=product.seller,
             store=product.seller,
@@ -79,13 +89,34 @@ class BasePlatformAdapter:
     def _effective_price(product: PlatformProduct) -> Price | None:
         if product.price is None:
             return None
-        discount = sum(
-            (promotion.discount_amount or 0)
-            for promotion in product.promotions
-            if promotion.discount_amount is not None
-        )
-        amount = max(Decimal("0.01"), product.price.amount - discount)
-        return product.price.model_copy(update={"amount": amount})
+        rules: list[PricingRule] = []
+        for promotion in product.promotions:
+            if promotion.discount_amount is None and promotion.discount_ratio is None:
+                continue
+            confirmed = promotion.threshold_amount is None or (
+                promotion.threshold_amount is not None and product.price.amount >= promotion.threshold_amount
+            )
+            if promotion.kind.value == "second_item_discount":
+                confirmed = confirmed and product.specification.primary_quantity is not None and product.specification.primary_quantity.count == 2
+                rule_type = PricingRuleType.MULTI_ITEM
+            elif promotion.kind.value == "coupon":
+                rule_type = PricingRuleType.COUPON
+            else:
+                rule_type = PricingRuleType.DIRECT_DISCOUNT
+            rules.append(
+                PricingRule(
+                    rule_type=rule_type,
+                    amount=promotion.discount_amount,
+                    ratio=promotion.discount_ratio,
+                    threshold_amount=promotion.threshold_amount,
+                    condition_confirmed=confirmed,
+                    evidence=promotion.raw_text,
+                )
+            )
+        result = PricingEngine().calculate(product.price.amount, rules, order_subtotal=product.price.amount)
+        if result.status is PricingStatus.UNRESOLVED or result.effective_price is None:
+            return None
+        return product.price.model_copy(update={"amount": result.effective_price})
 
 
 @runtime_checkable

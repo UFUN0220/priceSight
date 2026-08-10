@@ -10,7 +10,7 @@ from app.llm.fake import FakeLLMProvider
 from app.parser.hybrid import HybridProductParser
 from app.parser.models import ParseSource, ParserSource, PromotionType, Unit
 from app.parser.product import ProductParser
-from app.parser.price import PriceParser
+from app.parser.price import PriceKind, PriceParser, PriceResolutionStatus
 
 
 def test_price_parser_supports_yuan_and_labeled_current_price() -> None:
@@ -41,6 +41,30 @@ def test_measurement_and_package_count_are_separate() -> None:
     assert result.parser_source is ParserSource.RULE
     assert result.candidate_count == 1
     assert result.reason_code == "deterministic_confident"
+    assert quantity.unit_quantity == Decimal("550")
+    assert quantity.total_quantity == Decimal("6600")
+
+
+@pytest.mark.parametrize(
+    ("text", "count", "amount", "unit"),
+    [
+        ("饮料 500ml×2", 2, Decimal("500"), Unit.ML),
+        ("饮料 500 mL * 2", 2, Decimal("500"), Unit.ML),
+        ("饮料 2瓶装", 2, None, Unit.BOTTLE),
+        ("饮料 12×330ml", 12, Decimal("330"), Unit.ML),
+        ("零食 750g*2袋", 2, Decimal("750"), Unit.G),
+        ("方便面 5连包", 5, None, Unit.PACK),
+    ],
+)
+def test_representative_quantity_forms_are_deterministic(
+    text: str, count: int, amount: Decimal | None, unit: Unit
+) -> None:
+    quantity = ProductParser().parse(text).specification.primary_quantity
+
+    assert quantity is not None
+    assert quantity.count == count
+    assert quantity.content_amount == amount
+    assert quantity.container_unit is unit or quantity.content_unit is unit
 
 
 def test_liter_and_kilogram_units_normalize_to_base_units() -> None:
@@ -124,6 +148,31 @@ def test_effective_price_parser_is_deterministic_and_fail_closed() -> None:
     assert price_parser.parse_prices("商品 199-399元").displayed is None
     assert price_parser.parse_prices("商品 券后89元").displayed is None
     assert price_parser.parse_prices("商品 券后89元").effective is not None
+
+
+def test_price_candidates_rank_current_price_over_original_and_keep_evidence() -> None:
+    result = PriceParser().parse_prices("商品 原价199元 现价129元 会员价99元")
+
+    assert result.status is PriceResolutionStatus.UNRESOLVED
+    assert result.displayed is not None and result.displayed.amount == Decimal("129")
+    assert {candidate.kind for candidate in result.candidates} == {
+        PriceKind.ORIGINAL,
+        PriceKind.DISPLAYED,
+        PriceKind.MEMBER,
+    }
+    displayed = next(candidate for candidate in result.candidates if candidate.kind is PriceKind.DISPLAYED)
+    assert displayed.evidence.source_text == "现价129元"
+    assert displayed.evidence.normalized_amount == Decimal("129")
+
+
+def test_starting_price_and_member_price_abstain() -> None:
+    starting = PriceParser().parse_prices("手机 3999元起")
+    member = PriceParser().parse_prices("手机 3999元 会员价3699元")
+
+    assert starting.status is PriceResolutionStatus.NEED_MORE_EVIDENCE
+    assert starting.effective is None
+    assert member.status is PriceResolutionStatus.UNRESOLVED
+    assert member.effective is None
 
 
 def test_second_item_promotion_and_effective_unit_price_require_two_items() -> None:

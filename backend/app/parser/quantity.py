@@ -29,14 +29,21 @@ class QuantityParser:
     )
     _measure_with_prefix = re.compile(
         r"(?P<count_before>\d+|一|二|两|三|四|五|六|七|八|九|十)\s*"
-        r"(?P<container_before>瓶|罐|袋|杯|盒|箱|包|件|双|卷)\s+"
+        r"(?P<container_before>瓶|罐|袋|杯|盒|箱|包|件|双|卷|bottle|can|bag|cup|box|pack|case|piece)\s*"
         r"(?P<amount>\d+(?:\.\d+)?)\s*"
         r"(?P<unit>GB|TB|mm|cm|inch|英寸|寸|毫升|ml|升|l|千克|kg|公斤|克|g|m)(?![A-Za-z])",
         re.IGNORECASE,
     )
+    _count_before_measure = re.compile(
+        r"(?P<count_before>\d+|一|二|两|三|四|五|六|七|八|九|十)\s*x\s*"
+        r"(?P<amount>\d+(?:\.\d+)?)\s*"
+        r"(?P<unit>GB|TB|mm|cm|inch|英寸|寸|毫升|ml|升|l|千克|kg|公斤|克|g|m)\s*"
+        r"(?P<container>瓶|罐|袋|杯|盒|箱|包|件|双|卷|bottle|can|bag|cup|box|pack|case|piece)?(?![A-Za-z])",
+        re.IGNORECASE,
+    )
     _count_only = re.compile(
         r"(?P<count>\d+|一|二|两|三|四|五|六|七|八|九|十)\s*"
-        r"(?P<unit>瓶|罐|袋|杯|盒|箱|包|件|个|支|双|卷|张)\s*(?:装)?"
+        r"(?:连)?(?P<unit>瓶|罐|袋|杯|盒|箱|包|件|个|支|双|卷|张)\s*(?:装|连包|连装)?"
     )
 
     _units = {
@@ -72,6 +79,14 @@ class QuantityParser:
         "双": Unit.PAIR,
         "卷": Unit.ROLL,
         "张": Unit.SHEET,
+        "bottle": Unit.BOTTLE,
+        "can": Unit.CAN,
+        "bag": Unit.BAG,
+        "cup": Unit.CUP,
+        "box": Unit.BOX,
+        "pack": Unit.PACK,
+        "case": Unit.CASE,
+        "piece": Unit.PIECE,
     }
     _count_words = {"一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9, "十": 10}
 
@@ -85,9 +100,12 @@ class QuantityParser:
         normalized = self.normalize(text)
         measure = self._measure.search(normalized)
         prefixed_measure = self._measure_with_prefix.search(normalized)
+        count_before_measure = self._count_before_measure.search(normalized)
         count_only = self._count_only.search(normalized)
         if prefixed_measure is not None and (measure is None or prefixed_measure.start() <= measure.start()):
             measure = prefixed_measure
+        if count_before_measure is not None and (measure is None or count_before_measure.start() <= measure.start()):
+            measure = count_before_measure
         if measure is not None and (count_only is None or measure.start() <= count_only.start()):
             return self._from_measure(measure)
         if count_only is not None:
@@ -98,7 +116,11 @@ class QuantityParser:
         normalized = self.normalize(text)
         matches: list[QuantityMatch] = []
         occupied_until = -1
-        all_measure_matches = [*self._measure.finditer(normalized), *self._measure_with_prefix.finditer(normalized)]
+        all_measure_matches = [
+            *self._measure.finditer(normalized),
+            *self._measure_with_prefix.finditer(normalized),
+            *self._count_before_measure.finditer(normalized),
+        ]
         for match in sorted(all_measure_matches, key=lambda item: item.start()):
             if match.start() < occupied_until:
                 continue
@@ -129,6 +151,10 @@ class QuantityParser:
                 container_unit=container,
                 normalized_content_amount=normalized_amount,
                 normalized_content_unit=normalized_unit,
+                unit_quantity=normalized_amount,
+                unit_quantity_unit=normalized_unit,
+                total_quantity=normalized_amount * count,
+                total_quantity_unit=normalized_unit,
                 confidence=0.98 if (groups.get("count_before") or groups.get("count") or groups.get("count_after")) else 0.94,
             ),
             start=match.start(),

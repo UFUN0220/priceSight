@@ -68,6 +68,10 @@ class Quantity(BaseModel):
     container_unit: Unit | None = None
     normalized_content_amount: Decimal | None = Field(default=None, gt=0)
     normalized_content_unit: Unit | None = None
+    unit_quantity: Decimal | None = Field(default=None, gt=0)
+    unit_quantity_unit: Unit | None = None
+    total_quantity: Decimal | None = Field(default=None, gt=0)
+    total_quantity_unit: Unit | None = None
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
 
 
@@ -102,6 +106,10 @@ class ProductSpecification(BaseModel):
     primary_quantity: Quantity | None = None
     components: list[Quantity] = Field(default_factory=list)
     package_type: str | None = None
+    specification_text: str | None = None
+    extraction_source: str = "rule"
+    status: str = "RESOLVED"
+    evidence: list[str] = Field(default_factory=list)
     ambiguous: bool = False
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
 
@@ -121,6 +129,8 @@ class ParseResult(BaseModel):
     candidate_count: int = Field(default=0, ge=0)
     reason_code: str = "deterministic_confident"
     reason: str | None = None
+    evidence: list[str] = Field(default_factory=list)
+    decision_status: str = "RESOLVED"
     llm_fallback_attempted: bool = False
     llm_schema_valid: bool | None = None
     llm_invocation_reason: str | None = None

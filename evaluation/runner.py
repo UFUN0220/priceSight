@@ -265,6 +265,8 @@ def output_from_result(result: ParseResult, text: str) -> ParsedOutput:
             if effective
             else None
         ),
+        price_status=prices.status.value,
+        price_evidence=[candidate.evidence.model_dump(mode="json") for candidate in prices.candidates],
         source=result.source.value,
         parser_source=result.parser_source.value,
         candidate_count=result.candidate_count,

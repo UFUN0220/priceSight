@@ -28,17 +28,27 @@ class ProductParser:
     def parse(self, text: str) -> ParseResult:
         normalized = self.normalize(text)
         candidates = self.extract_candidates(normalized)
-        primary_match = next(
-            (candidate for candidate in candidates if self.quantity_parser.is_product_quantity(candidate.quantity)),
-            None,
-        )
+        product_candidates = [
+            candidate for candidate in candidates if self.quantity_parser.is_product_quantity(candidate.quantity)
+        ]
+        primary_match = product_candidates[0] if product_candidates else None
         promotions = self.promotion_parser.parse(normalized)
         components = [item.quantity for item in candidates]
         primary_quantity = primary_match.quantity if primary_match else None
         package_type = self._package_type(normalized, promotions)
-        identity_name = self._identity_name(normalized, primary_match.start if primary_match else None)
+        identity_name = self._identity_name(
+            normalized,
+            primary_match.start if primary_match else None,
+            primary_match.end if primary_match else None,
+        )
         semantic_review = self._requires_semantic_review(normalized)
-        ambiguous = primary_quantity is None or package_type == "combo" or semantic_review
+        gift_is_explicit = any(item.kind.value == "gift" for item in promotions)
+        ambiguous = (
+            primary_quantity is None
+            or package_type == "combo"
+            or semantic_review
+            or (len(product_candidates) > 1 and not gift_is_explicit)
+        )
         confidence = primary_quantity.confidence if primary_quantity else 0.45
         if package_type == "combo":
             confidence = min(confidence, 0.58)
@@ -60,6 +70,10 @@ class ProductParser:
                 primary_quantity=primary_quantity,
                 components=components,
                 package_type=package_type,
+                specification_text=normalized,
+                extraction_source="rule",
+                status="NEED_MORE_EVIDENCE" if ambiguous else "RESOLVED",
+                evidence=[candidate.quantity.raw_text for candidate in candidates],
                 ambiguous=ambiguous,
                 confidence=confidence,
             ),
@@ -70,6 +84,8 @@ class ProductParser:
             candidate_count=len(candidates),
             reason_code=reason_code,
             reason=reason,
+            evidence=[candidate.quantity.raw_text for candidate in candidates],
+            decision_status="NEED_MORE_EVIDENCE" if ambiguous else "RESOLVED",
         )
 
     def normalize(self, text: str) -> str:
@@ -91,6 +107,8 @@ class ProductParser:
     ) -> tuple[str, str]:
         if package_type == "combo":
             return "ambiguous_combo_semantics", "组合商品需要判断组件关系，交给结构化 LLM 复核。"
+        if ambiguous and len(candidates) > 1 and not any(item.kind.value == "gift" for item in promotions):
+            return "ambiguous_multiple_product_quantities", "同一标题包含多个商品数量候选，无法仅靠规则确认主规格。"
         if ambiguous and candidates and not promotions:
             return "ambiguous_title_or_sku_semantics", "标题含噪声或多候选规格，需要结构化 LLM 复核。"
         if ambiguous and candidates:
@@ -104,8 +122,10 @@ class ProductParser:
         return "deterministic_confident", "数量、单位和商品名候选满足规则解析置信度门槛。"
 
     @staticmethod
-    def _identity_name(text: str, quantity_start: int | None) -> str:
+    def _identity_name(text: str, quantity_start: int | None, quantity_end: int | None = None) -> str:
         candidate = text[:quantity_start] if quantity_start is not None else text
+        if quantity_start == 0 and quantity_end is not None:
+            candidate = text[quantity_end:]
         if quantity_start is None:
             candidate = re.sub(r"\s*(?:买\d+赠\d+|赠.*)$", "", candidate).strip()
         candidate = re.sub(r"\s*[+＋]\s*$", "", candidate).strip(" -_:")
@@ -117,7 +137,7 @@ class ProductParser:
     def _package_type(text: str, promotions: list[Promotion]) -> str | None:
         if any(item.kind.value == "combo" for item in promotions):
             return "combo"
-        if re.search(r"礼盒(?:装)?|盒装|箱装|\d+\s*箱", text):
+        if re.search(r"礼盒(?:装)?|盒装|箱装|整箱(?:装)?|\d+\s*箱|连包|连装", text):
             return "box"
         if re.search(r"袋装", text):
             return "bag"

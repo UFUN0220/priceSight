@@ -82,6 +82,8 @@ class ParsedOutput(BaseModel):
     price: ExpectedPrice | None = None
     displayed_price: ExpectedPrice | None = None
     effective_price: ExpectedPrice | None = None
+    price_status: str | None = None
+    price_evidence: list[dict[str, Any]] = Field(default_factory=list)
     source: str | None = None
     parser_source: str | None = None
     candidate_count: int | None = None

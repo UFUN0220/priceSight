@@ -1,10 +1,10 @@
 # PriceSight 当前阶段状态
 
-更新时间：2026-08-10
+更新时间：2026-08-11
 
 ## 当前状态
 
-`PROJECT_FREEZE`：功能性调优已结束，后续如继续工作，应建立新的、未泄漏的人工 holdout，再单独立项。本文只作为状态入口，不重复保存完整历史。
+`TARGETED_REINFORCEMENT`：围绕真实性、价格证据、确定性 effective price 和 abstention 完成一轮最小补强；原有 DEV/HOLDOUT 与 metric contract 未改。本文只作为状态入口，不重复保存完整历史。
 
 ## 已完成能力
 
@@ -14,14 +14,17 @@
 - Android Emulator + Mock Shopping App External Harness：`MOCK_RUNTIME_VERIFIED`。
 - Taobao/JD/Meituan Adapter 与 NormalizedProduct/Comparison Engine。
 - Evaluation provenance、annotation schema、Bad Case taxonomy、固定 DEV/HOLDOUT 和 frozen metric contract。
+- Quantity unit/pack/total normalization、price candidate evidence/ranking、Decimal `PricingEngine`、`UNRESOLVED`/`NEED_MORE_EVIDENCE` 状态和 Rule/Workflow/LLM 边界文档。
 
 ## 当前证据
 
 - Backend：160 passed。
-- Branch coverage：85.69%，门槛 80%。
+- 历史封板 CI：161 passed；本轮本地质量门禁：172 passed，branch coverage 85%，门槛 80%。本轮改动尚未声明远端 CI 已验证。
 - Browser Mock：`MOCK_RUNTIME_VERIFIED`；Taobao fixture：`FIXTURE_VERIFIED`；Taobao live readonly：`LIVE_READONLY_VERIFIED`。
 - Android Mock App：18 observations/actions、0 failed、0 timeout，`MOCK_RUNTIME_VERIFIED`。
 - Evaluation：96 条样本，40 条 HUMAN_VERIFIED_ELIGIBLE，DEV 32 / HOLDOUT 8；HOLDOUT exact 0/8，泛化 `LIMITED`。
+- 本轮 baseline → final：HUMAN CORE `5/40 → 5/40`、STRICT `2/40 → 2/40`、quantity `26/40 → 26/40`、specification `17/40 → 17/40`、displayed price `10/37 → 10/37`、effective price `0/12 → 0/12`；HOLDOUT CORE/STRICT 仍为 `0/8`。代码能力由新增定向回归和 evidence/abstention 测试证明，未修改答案或污染 HOLDOUT。
+- 机器结果：[baseline.json](../evaluation/results/baseline.json)、[baseline.md](../evaluation/results/baseline.md)、[final.json](../evaluation/results/final.json)、[final.md](../evaluation/results/final.md)。
 - Final acceptance：87/100，加权 86.85。
 - CI_VERIFIED（2026-08-10）：run `31394430586` / commit `25c616d3b426376a46d0e8b45798fabd4c874075` 的 Python 测试 161 passed、分支覆盖率 86%，Python 质量、浏览器 Mock 和两个 Android 测试构建 job 全部成功；HUMAN_VERIFIED exact core 5/40、strict 2/40 回归断言通过。
 

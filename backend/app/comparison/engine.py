@@ -8,8 +8,11 @@ from decimal import Decimal
 from app.cache.offer import OfferCache
 from app.comparison.matcher import ProductMatcher
 from app.comparison.models import CacheEvent, ComparisonResult, FinalPrice, NormalizedOffer
+from app.comparison.pricing import PricingEngine, PricingRule, PricingRuleType, PricingStatus
 from app.observation.models import Observation
 from app.platform.base import PlatformAdapter
+from app.parser.models import PromotionType
+from app.parser.price import PriceResolutionStatus
 
 
 class ComparisonEngine:
@@ -98,6 +101,8 @@ class ComparisonEngine:
                 offers=offers,
                 comparable=False,
                 reason="fewer than two comparable platform offers; no forced recommendation",
+                comparison_confidence=0.0,
+                comparison_reason="NEED_MORE_EVIDENCE: fewer than two offers have resolved comparable pricing",
                 cache_hits=cache_hits,
                 cache_misses=cache_misses,
                 cache_events=cache_events,
@@ -115,6 +120,8 @@ class ComparisonEngine:
             comparable=True,
             recommended_platform=recommended.platform_id,
             reason="comparable offers matched by normalized identity and specification",
+            comparison_confidence=min(offer.confidence for offer in comparable_offers),
+            comparison_reason="RESOLVED: identity, specification, quantity and price evidence are comparable",
             cache_hits=cache_hits,
             cache_misses=cache_misses,
             cache_events=cache_events,
@@ -128,18 +135,56 @@ class ComparisonEngine:
         effective_amount: Decimal | None = None,
     ) -> FinalPrice:
         if listed_amount is None:
-            return FinalPrice(listed_amount=None, amount=None, calculation_note="price unavailable")
-        discount = sum(
-            (promotion.discount_amount or Decimal("0"))
-            for promotion in promotions
-            if promotion.discount_amount is not None
-        )
-        final = max(Decimal("0.01"), effective_amount or (listed_amount - discount))
+            return FinalPrice(
+                listed_amount=None,
+                amount=None,
+                calculation_note="price unavailable",
+                pricing_status="UNRESOLVED",
+            )
+        if effective_amount is not None:
+            return FinalPrice(
+                listed_amount=listed_amount,
+                amount=effective_amount,
+                calculation_note="explicitly evidenced effective price",
+                pricing_status=PricingStatus.RESOLVED,
+            )
+        rules: list[PricingRule] = []
+        for promotion in promotions:
+            if promotion.discount_amount is None and promotion.discount_ratio is None:
+                continue
+            if promotion.kind is PromotionType.SECOND_ITEM_DISCOUNT:
+                rule_type = PricingRuleType.MULTI_ITEM
+            elif promotion.kind is PromotionType.COUPON:
+                rule_type = PricingRuleType.COUPON
+            else:
+                rule_type = PricingRuleType.DIRECT_DISCOUNT
+            condition_confirmed = promotion.threshold_amount is None or (
+                promotion.threshold_amount is not None and listed_amount >= promotion.threshold_amount
+            )
+            rules.append(
+                PricingRule(
+                    rule_type=rule_type,
+                    amount=promotion.discount_amount,
+                    ratio=promotion.discount_ratio,
+                    threshold_amount=promotion.threshold_amount,
+                    condition_confirmed=condition_confirmed,
+                    evidence=promotion.raw_text,
+                )
+            )
+        result = PricingEngine().calculate(listed_amount, rules, order_subtotal=listed_amount)
+        if result.status is PricingStatus.UNRESOLVED:
+            return FinalPrice(
+                listed_amount=listed_amount,
+                amount=None,
+                calculation_note=result.reason,
+                pricing_status="UNRESOLVED",
+            )
         return FinalPrice(
             listed_amount=listed_amount,
-            discount_amount=discount,
-            amount=final,
-            calculation_note="listed price minus explicitly parsed coupon/promotion discounts",
+            discount_amount=result.discount_amount,
+            amount=result.effective_price,
+            calculation_note=result.reason,
+            pricing_status=PriceResolutionStatus.RESOLVED,
         )
 
     @staticmethod

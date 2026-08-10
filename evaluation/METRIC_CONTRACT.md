@@ -46,9 +46,12 @@ Phase 11 的 `5/40` 只能与 Phase 12 的 `EXACT_CORE_V1` 比较；Phase 12 的
 
 ## 证据等级
 
+字段输出同时保留证据状态：`RESOLVED`、`UNRESOLVED`、`NEED_MORE_EVIDENCE`。`displayed_price` 只表示页面明确显示的价格；`effective_price` 只表示由已确认优惠规则通过 Decimal 确定性计算得到的价格。会员身份、满减门槛、价格区间、起售价或互相冲突的价格候选不能被转化为精确 effective price。
+
+价格候选保存 source text、source node/selector（可用时）、normalization、parser 和 confidence。比较层不得通过选择最低数字来替代 evidence ranking；无法确认时应 abstain。
+
 - `LIVE_READONLY_VERIFIED`：真实淘宝公开网页的只读 Browser smoke。
 - `MOCK_RUNTIME_VERIFIED`：Android Emulator + Mock Shopping App 外部 Harness。
 - `FIXTURE_VERIFIED`：脱敏 Taobao/JD/Meituan/Mock fixture 回放。
 - `HUMAN_OFFLINE_EVALUATION`：40 条人工复核的 reconstructed anonymized source 离线回放。
 - `NOT_VERIFIED`：缺少足够真实环境证据。
-

@@ -1,0 +1,1016 @@
+{
+  "final_version": "pricesight_targeted_improvement_v1",
+  "generated_at": "2026-08-10T17:06:53.974034+00:00",
+  "baseline_path": "evaluation/results/baseline.json",
+  "baseline_commit": "034b94a3b630a9d342903ac45c46982bd714f6fd",
+  "metric_contract_version": "v1_core_v2_strict",
+  "split_seed": 20260810,
+  "scopes": {
+    "DEV": {
+      "dataset_count": 32,
+      "metrics": {
+        "hybrid_exact_core_v1_accuracy": {
+          "numerator": 5,
+          "denominator": 32,
+          "accuracy": 0.15625
+        },
+        "hybrid_exact_strict_v2_accuracy": {
+          "numerator": 2,
+          "denominator": 32,
+          "accuracy": 0.0625
+        },
+        "hybrid_quantity_accuracy": {
+          "numerator": 23,
+          "denominator": 32,
+          "accuracy": 0.71875
+        },
+        "hybrid_specification_accuracy": {
+          "numerator": 14,
+          "denominator": 32,
+          "accuracy": 0.4375
+        },
+        "hybrid_displayed_price_accuracy": {
+          "numerator": 8,
+          "denominator": 31,
+          "accuracy": 0.25806451612903225
+        },
+        "hybrid_effective_price_accuracy": {
+          "numerator": 0,
+          "denominator": 10,
+          "accuracy": 0.0
+        },
+        "hybrid_ambiguous_detection_accuracy": {
+          "numerator": 0,
+          "denominator": 32,
+          "accuracy": 0.0
+        }
+      },
+      "bad_cases": {
+        "bulk": {
+          "sample_count": 4,
+          "hybrid_error_count": 4
+        },
+        "coupon_price": {
+          "sample_count": 4,
+          "hybrid_error_count": 4
+        },
+        "duplicate_node": {
+          "sample_count": 3,
+          "hybrid_error_count": 3
+        },
+        "dynamic_price": {
+          "sample_count": 3,
+          "hybrid_error_count": 1
+        },
+        "gift": {
+          "sample_count": 2,
+          "hybrid_error_count": 2
+        },
+        "popup_loading": {
+          "sample_count": 1,
+          "hybrid_error_count": 1
+        },
+        "price_range": {
+          "sample_count": 2,
+          "hybrid_error_count": 2
+        },
+        "quantity_ambiguity": {
+          "sample_count": 1,
+          "hybrid_error_count": 1
+        },
+        "second_item_discount": {
+          "sample_count": 3,
+          "hybrid_error_count": 3
+        },
+        "sku_mixed_text": {
+          "sample_count": 4,
+          "hybrid_error_count": 4
+        },
+        "title_noise": {
+          "sample_count": 3,
+          "hybrid_error_count": 3
+        },
+        "unit_ambiguity": {
+          "sample_count": 2,
+          "hybrid_error_count": 2
+        }
+      },
+      "abstention_counts": {
+        "ambiguous": 0,
+        "missing_displayed_price": 24,
+        "missing_effective_price": 30
+      }
+    },
+    "HOLDOUT": {
+      "dataset_count": 8,
+      "metrics": {
+        "hybrid_exact_core_v1_accuracy": {
+          "numerator": 0,
+          "denominator": 8,
+          "accuracy": 0.0
+        },
+        "hybrid_exact_strict_v2_accuracy": {
+          "numerator": 0,
+          "denominator": 8,
+          "accuracy": 0.0
+        },
+        "hybrid_quantity_accuracy": {
+          "numerator": 3,
+          "denominator": 8,
+          "accuracy": 0.375
+        },
+        "hybrid_specification_accuracy": {
+          "numerator": 3,
+          "denominator": 8,
+          "accuracy": 0.375
+        },
+        "hybrid_displayed_price_accuracy": {
+          "numerator": 2,
+          "denominator": 6,
+          "accuracy": 0.3333333333333333
+        },
+        "hybrid_effective_price_accuracy": {
+          "numerator": 0,
+          "denominator": 2,
+          "accuracy": 0.0
+        },
+        "hybrid_ambiguous_detection_accuracy": {
+          "numerator": 1,
+          "denominator": 8,
+          "accuracy": 0.125
+        }
+      },
+      "bad_cases": {
+        "bulk": {
+          "sample_count": 1,
+          "hybrid_error_count": 1
+        },
+        "coupon_price": {
+          "sample_count": 1,
+          "hybrid_error_count": 1
+        },
+        "gift": {
+          "sample_count": 1,
+          "hybrid_error_count": 1
+        },
+        "popup_loading": {
+          "sample_count": 2,
+          "hybrid_error_count": 2
+        },
+        "quantity_ambiguity": {
+          "sample_count": 1,
+          "hybrid_error_count": 1
+        },
+        "sku_mixed_text": {
+          "sample_count": 1,
+          "hybrid_error_count": 1
+        },
+        "title_noise": {
+          "sample_count": 1,
+          "hybrid_error_count": 1
+        }
+      },
+      "abstention_counts": {
+        "ambiguous": 1,
+        "missing_displayed_price": 6,
+        "missing_effective_price": 8
+      }
+    },
+    "ALL": {
+      "dataset_count": 96,
+      "metrics": {
+        "hybrid_exact_core_v1_accuracy": {
+          "numerator": 16,
+          "denominator": 96,
+          "accuracy": 0.16666666666666666
+        },
+        "hybrid_exact_strict_v2_accuracy": {
+          "numerator": 12,
+          "denominator": 96,
+          "accuracy": 0.125
+        },
+        "hybrid_quantity_accuracy": {
+          "numerator": 69,
+          "denominator": 92,
+          "accuracy": 0.75
+        },
+        "hybrid_specification_accuracy": {
+          "numerator": 49,
+          "denominator": 96,
+          "accuracy": 0.5104166666666666
+        },
+        "hybrid_displayed_price_accuracy": {
+          "numerator": 18,
+          "denominator": 85,
+          "accuracy": 0.21176470588235294
+        },
+        "hybrid_effective_price_accuracy": {
+          "numerator": 1,
+          "denominator": 24,
+          "accuracy": 0.041666666666666664
+        },
+        "hybrid_ambiguous_detection_accuracy": {
+          "numerator": 4,
+          "denominator": 96,
+          "accuracy": 0.041666666666666664
+        }
+      },
+      "bad_cases": {
+        "bulk": {
+          "sample_count": 15,
+          "hybrid_error_count": 15
+        },
+        "coupon_price": {
+          "sample_count": 9,
+          "hybrid_error_count": 9
+        },
+        "duplicate_node": {
+          "sample_count": 3,
+          "hybrid_error_count": 3
+        },
+        "dynamic_price": {
+          "sample_count": 6,
+          "hybrid_error_count": 4
+        },
+        "gift": {
+          "sample_count": 9,
+          "hybrid_error_count": 8
+        },
+        "missing_information": {
+          "sample_count": 2,
+          "hybrid_error_count": 2
+        },
+        "multi_pack": {
+          "sample_count": 4,
+          "hybrid_error_count": 0
+        },
+        "multi_spec": {
+          "sample_count": 1,
+          "hybrid_error_count": 0
+        },
+        "popup_loading": {
+          "sample_count": 3,
+          "hybrid_error_count": 3
+        },
+        "price_range": {
+          "sample_count": 6,
+          "hybrid_error_count": 6
+        },
+        "quantity_ambiguity": {
+          "sample_count": 8,
+          "hybrid_error_count": 7
+        },
+        "second_item_discount": {
+          "sample_count": 6,
+          "hybrid_error_count": 6
+        },
+        "sku_mixed_text": {
+          "sample_count": 10,
+          "hybrid_error_count": 10
+        },
+        "title_noise": {
+          "sample_count": 6,
+          "hybrid_error_count": 4
+        },
+        "unit_ambiguity": {
+          "sample_count": 8,
+          "hybrid_error_count": 7
+        }
+      },
+      "abstention_counts": {
+        "ambiguous": 4,
+        "missing_displayed_price": 78,
+        "missing_effective_price": 89
+      }
+    }
+  },
+  "human_verified_only": {
+    "hybrid_exact_core_v1_accuracy": {
+      "numerator": 5,
+      "denominator": 40,
+      "accuracy": 0.125
+    },
+    "hybrid_exact_strict_v2_accuracy": {
+      "numerator": 2,
+      "denominator": 40,
+      "accuracy": 0.05
+    },
+    "hybrid_quantity_accuracy": {
+      "numerator": 26,
+      "denominator": 40,
+      "accuracy": 0.65
+    },
+    "hybrid_specification_accuracy": {
+      "numerator": 17,
+      "denominator": 40,
+      "accuracy": 0.425
+    },
+    "hybrid_displayed_price_accuracy": {
+      "numerator": 10,
+      "denominator": 37,
+      "accuracy": 0.2702702702702703
+    },
+    "hybrid_effective_price_accuracy": {
+      "numerator": 0,
+      "denominator": 12,
+      "accuracy": 0.0
+    }
+  },
+  "bad_case_delta": {
+    "bulk": {
+      "baseline": 15,
+      "final": 15,
+      "delta": 0
+    },
+    "coupon_price": {
+      "baseline": 9,
+      "final": 9,
+      "delta": 0
+    },
+    "duplicate_node": {
+      "baseline": 3,
+      "final": 3,
+      "delta": 0
+    },
+    "dynamic_price": {
+      "baseline": 4,
+      "final": 4,
+      "delta": 0
+    },
+    "gift": {
+      "baseline": 8,
+      "final": 8,
+      "delta": 0
+    },
+    "missing_information": {
+      "baseline": 2,
+      "final": 2,
+      "delta": 0
+    },
+    "multi_pack": {
+      "baseline": 0,
+      "final": 0,
+      "delta": 0
+    },
+    "multi_spec": {
+      "baseline": 0,
+      "final": 0,
+      "delta": 0
+    },
+    "popup_loading": {
+      "baseline": 3,
+      "final": 3,
+      "delta": 0
+    },
+    "price_range": {
+      "baseline": 6,
+      "final": 6,
+      "delta": 0
+    },
+    "quantity_ambiguity": {
+      "baseline": 7,
+      "final": 7,
+      "delta": 0
+    },
+    "second_item_discount": {
+      "baseline": 6,
+      "final": 6,
+      "delta": 0
+    },
+    "sku_mixed_text": {
+      "baseline": 10,
+      "final": 10,
+      "delta": 0
+    },
+    "title_noise": {
+      "baseline": 4,
+      "final": 4,
+      "delta": 0
+    },
+    "unit_ambiguity": {
+      "baseline": 7,
+      "final": 7,
+      "delta": 0
+    }
+  },
+  "human_source_audit": {
+    "human_verified_declared_count": 40,
+    "source_audit_passed": 40,
+    "source_audit_failed": 0,
+    "repository_source_files_present": 40,
+    "repository_source_files_missing": 0,
+    "missing_sample_ids": [],
+    "missing_sources": [],
+    "eligible_sample_ids": [
+      "fixture_bulk_001",
+      "fixture_bulk_002",
+      "fixture_unit_001",
+      "fixture_unit_002",
+      "fixture_gift_001",
+      "fixture_gift_002",
+      "fixture_qty_001",
+      "fixture_qty_002",
+      "fixture_sku_001",
+      "fixture_sku_002",
+      "fixture_price_range_001",
+      "fixture_price_range_002",
+      "fixture_coupon_001",
+      "fixture_coupon_002",
+      "fixture_second_001",
+      "fixture_second_002",
+      "fixture_dynamic_001",
+      "fixture_dynamic_002",
+      "real_noise_001",
+      "real_noise_002",
+      "real_noise_003",
+      "real_noise_004",
+      "fixture_dup_001",
+      "fixture_dup_002",
+      "fixture_dup_003",
+      "fixture_popup_001",
+      "fixture_popup_002",
+      "fixture_popup_003",
+      "fixture_coupon_005",
+      "fixture_coupon_006",
+      "fixture_coupon_007",
+      "fixture_pack_011",
+      "fixture_pack_012",
+      "fixture_pack_013",
+      "fixture_spec_006",
+      "fixture_spec_007",
+      "fixture_spec_008",
+      "fixture_complex_001",
+      "fixture_complex_002",
+      "fixture_complex_003"
+    ],
+    "source_rows": [
+      {
+        "sample_id": "fixture_bulk_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_bulk_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_unit_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_unit_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_gift_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_gift_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_qty_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_qty_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_sku_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_sku_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_price_range_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_price_range_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_coupon_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_coupon_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_second_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_second_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_dynamic_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_dynamic_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "real_noise_001",
+        "source_type": "real_anonymized",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "real_noise_002",
+        "source_type": "real_anonymized",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_recreated.jsonl",
+        "declared_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "actual_hash": "3d52336871efb1e4a3ae8c42a1ffc739f841ca30d029ad168cc110d41ddca406",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "real_noise_003",
+        "source_type": "real_anonymized",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "real_noise_004",
+        "source_type": "real_anonymized",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_recreated.jsonl",
+        "declared_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "actual_hash": "8c0d810fd305dc4c0f42df74fc94ecf085766e66dfebc9ded12ffc4f12173b56",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_dup_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_dup_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_dup_003",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_popup_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_popup_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_popup_003",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/meituan/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/meituan/human_verified_added_recreated.jsonl",
+        "declared_hash": "d4cf17bc85e52796c167c98954740200564c511eb43fa589dc04e47e65bc7934",
+        "actual_hash": "d4cf17bc85e52796c167c98954740200564c511eb43fa589dc04e47e65bc7934",
+        "source_format": "jsonl",
+        "source_platform": "meituan",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_coupon_005",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_coupon_006",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_coupon_007",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_pack_011",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_pack_012",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_pack_013",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/meituan/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/meituan/human_verified_added_recreated.jsonl",
+        "declared_hash": "d4cf17bc85e52796c167c98954740200564c511eb43fa589dc04e47e65bc7934",
+        "actual_hash": "d4cf17bc85e52796c167c98954740200564c511eb43fa589dc04e47e65bc7934",
+        "source_format": "jsonl",
+        "source_platform": "meituan",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_spec_006",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_spec_007",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_spec_008",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_complex_001",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_complex_002",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/jd/human_verified_added_recreated.jsonl",
+        "declared_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "actual_hash": "6c99d961b53ca8480be8e3673f3e8f36335dd1cd820ad4b07d071608f6e5b375",
+        "source_format": "jsonl",
+        "source_platform": "jd",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      },
+      {
+        "sample_id": "fixture_complex_003",
+        "source_type": "fixture",
+        "annotation_status": "HUMAN_VERIFIED",
+        "anonymized_source": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "repository_path": "evaluation/sources/taobao/human_verified_added_recreated.jsonl",
+        "declared_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "actual_hash": "959795920eb9a63ed18a93d1c0b94b9882bbeb973bf9b566614cf46b32de0c54",
+        "source_format": "jsonl",
+        "source_platform": "taobao",
+        "provenance_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+        "errors": [],
+        "human_metric_eligible": true
+      }
+    ],
+    "live_platform_evidence_count": 0,
+    "synthetic_human_verified_count": 0
+  },
+  "evidence_boundary": {
+    "source_origin": "SOURCE_RECREATED_FROM_EXISTING_ANNOTATION",
+    "live_platform_evidence": 0,
+    "llm": "FakeLLM structured replay; not online model accuracy"
+  }
+}

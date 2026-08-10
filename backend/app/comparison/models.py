@@ -8,6 +8,7 @@ from decimal import Decimal
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.parser.models import ProductIdentity, ProductSpecification, Promotion, Quantity
+from app.parser.price import PriceEvidence, PriceResolutionStatus
 
 
 class NormalizedRequirement(BaseModel):
@@ -26,6 +27,8 @@ class FinalPrice(BaseModel):
     amount: Decimal | None = Field(default=None, gt=0)
     currency: str = "CNY"
     calculation_note: str | None = None
+    pricing_status: PriceResolutionStatus = PriceResolutionStatus.RESOLVED
+    evidence: list[PriceEvidence] = Field(default_factory=list)
 
 
 class NormalizedOffer(BaseModel):
@@ -65,6 +68,8 @@ class ComparisonResult(BaseModel):
     comparable: bool
     recommended_platform: str | None = None
     reason: str
+    comparison_confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    comparison_reason: str | None = None
     cache_hits: int = 0
     cache_misses: int = 0
     cache_events: list[CacheEvent] = Field(default_factory=list)

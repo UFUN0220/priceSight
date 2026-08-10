@@ -75,13 +75,23 @@ class WebPlatformAdapter(BasePlatformAdapter):
             if not node.text:
                 continue
             parsed = self.product_parser.parse(node.text)
+            prices = self.price_parser.parse_prices(
+                node.text,
+                parsed.specification.primary_quantity,
+                source_node_id=node.node_id,
+                selector=f"node:{node.node_id}",
+            )
             products.append(
                 PlatformProduct(
                     node_id=node.node_id,
                     raw_title=node.text,
                     identity=parsed.product_identity,
                     specification=parsed.specification,
-                    price=self.price_parser.parse(node.text),
+                    price=prices.displayed,
+                    displayed_price=prices.displayed,
+                    price_candidates=prices.candidates,
+                    price_evidence=[candidate.evidence for candidate in prices.candidates],
+                    price_status=prices.status,
                     promotions=parsed.promotions,
                 )
             )
@@ -92,6 +102,8 @@ class WebPlatformAdapter(BasePlatformAdapter):
             platform_id=self.platform_id,
             page_type=page,
             products=products,
+            price_status=(products[0].price_status if products else None),
+            price_evidence=[evidence for product in products for evidence in product.price_evidence],
             selector_candidates=self._selector_map(observation),
         )
 
@@ -104,12 +116,23 @@ class WebPlatformAdapter(BasePlatformAdapter):
             return self._failure(page, "web product title selector not found")
         text = self._text(observation)
         parsed = self.product_parser.parse(title_node.text)
+        price_node = self._node_by_resource(observation, self.selector_config.price_resource_id)
+        prices = self.price_parser.parse_prices(
+            text,
+            parsed.specification.primary_quantity,
+            source_node_id=price_node.node_id if price_node else None,
+            selector=f"resource:{self.selector_config.price_resource_id}",
+        )
         product = PlatformProduct(
             node_id=title_node.node_id,
             raw_title=title_node.text,
             identity=parsed.product_identity,
             specification=parsed.specification,
-            price=self.price_parser.parse(text),
+            price=prices.displayed,
+            displayed_price=prices.displayed,
+            price_candidates=prices.candidates,
+            price_evidence=[candidate.evidence for candidate in prices.candidates],
+            price_status=prices.status,
             promotions=self.promotion_parser.parse(text),
         )
         return AdapterExtraction(
@@ -118,6 +141,8 @@ class WebPlatformAdapter(BasePlatformAdapter):
             page_type=page,
             product=product,
             price=product.price,
+            price_status=prices.status,
+            price_evidence=[candidate.evidence for candidate in prices.candidates],
             promotions=product.promotions,
             selector_candidates=self._selector_map(observation),
         )
@@ -127,11 +152,14 @@ class WebPlatformAdapter(BasePlatformAdapter):
         if page is PlatformPageType.UNKNOWN:
             return self._failure(page, "web platform or page was not recognized")
         text = self._text(observation)
+        prices = self.price_parser.parse_prices(text)
         return AdapterExtraction(
             recognized=True,
             platform_id=self.platform_id,
             page_type=page,
-            price=self.price_parser.parse(text),
+            price=prices.displayed,
+            price_status=prices.status,
+            price_evidence=[candidate.evidence for candidate in prices.candidates],
             promotions=self.promotion_parser.parse(text),
             selector_candidates=self._selector_map(observation),
         )

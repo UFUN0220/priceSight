@@ -6,7 +6,9 @@ PriceSight 是一个面向 Computer-Use Agent 的工程原型：观察 Android A
 
 ## 当前验收结论
 
-截至 2026-08-10，项目封板验收综合评分为 **87/100**。该分数沿用原八维权重，不代表生产就绪：Backend 160 tests、85.69% branch coverage、Python 质量门禁、Browser Mock Chromium、淘宝 fixture、跨平台 fixture、淘宝公开网页只读 smoke，以及 Android Emulator + Mock Shopping App External Harness 已有证据。真实购物 Android App、物理设备、JD/美团 live、线上 LLM 和生产性能仍未验证。
+截至 2026-08-10，项目封板验收综合评分为 **87/100**。该分数沿用原八维权重，不代表生产就绪：封板 CI 已验证 Python 测试、覆盖率、Browser Mock Chromium、淘宝 fixture、跨平台 fixture、淘宝公开网页只读 smoke，以及 Android Emulator + Mock Shopping App External Harness。真实购物 Android App、物理设备、JD/美团 live、线上 LLM 和生产性能仍未验证。
+
+2026-08-11 的定向补强已在本地质量门禁中验证：172 tests passed、branch coverage 85%，并新增 quantity/specification normalization、价格 evidence、Decimal PricingEngine 和 fail-closed abstention。新的结果仍未宣称线上准确率；baseline/final 机器结果见 [evaluation/results](evaluation/results/)。
 
 详细证据见 [封板验收报告](evaluation/reports/project_acceptance_freeze.md)、[机器可读结果](evaluation/reports/project_acceptance_freeze.json) 和 [Metric Contract](evaluation/METRIC_CONTRACT.md)。
 
