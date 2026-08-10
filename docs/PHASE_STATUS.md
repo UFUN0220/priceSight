@@ -18,8 +18,8 @@
 
 ## 当前证据
 
-- Backend：160 passed。
-- 历史封板 CI：161 passed；本轮本地质量门禁：172 passed，branch coverage 85%，门槛 80%。本轮改动尚未声明远端 CI 已验证。
+- Backend：172 passed；本轮本地 branch coverage 85%，门槛 80%。
+- Final Remote Freeze：run `31412588211` / commit `c5ad99306e0ffcafe7b1f9ee5cf789aeb9a2a051`（trigger：`push`）已完成；Python 测试与覆盖率、Python 质量门禁、Browser Mock Web E2E、Android client、Mock Shopping App 五个关键 job 全部成功。
 - Browser Mock：`MOCK_RUNTIME_VERIFIED`；Taobao fixture：`FIXTURE_VERIFIED`；Taobao live readonly：`LIVE_READONLY_VERIFIED`。
 - Android Mock App：18 observations/actions、0 failed、0 timeout，`MOCK_RUNTIME_VERIFIED`。
 - Evaluation：96 条样本，40 条 HUMAN_VERIFIED_ELIGIBLE，DEV 32 / HOLDOUT 8；HOLDOUT exact 0/8，泛化 `LIMITED`。
@@ -27,6 +27,7 @@
 - 机器结果：[baseline.json](../evaluation/results/baseline.json)、[baseline.md](../evaluation/results/baseline.md)、[final.json](../evaluation/results/final.json)、[final.md](../evaluation/results/final.md)。
 - Final acceptance：87/100，加权 86.85。
 - CI_VERIFIED（2026-08-10）：run `31394430586` / commit `25c616d3b426376a46d0e8b45798fabd4c874075` 的 Python 测试 161 passed、分支覆盖率 86%，Python 质量、浏览器 Mock 和两个 Android 测试构建 job 全部成功；HUMAN_VERIFIED exact core 5/40、strict 2/40 回归断言通过。
+- FINAL_CI_VERIFIED（2026-08-10）：run `31412588211` / commit `c5ad99306e0ffcafe7b1f9ee5cf789aeb9a2a051` 的五个关键 job 全部成功；Python 测试 172 passed、分支覆盖率 85%，Ruff/mypy/compileall/pre-commit、Browser Mock、Android client 与 Mock Shopping App 均通过。
 
 ## 未完成或不应外推
 

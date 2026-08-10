@@ -66,3 +66,16 @@
 8. 为什么 HOLDOUT 仍为 0/8，为什么不能修改答案让它变绿？
 9. Android Mock App 的闭环证据和真实购物 App 证据差在哪里？
 10. stale Observation、SafetyGuard 和价格 abstention 如何共同防止错误自信执行？
+
+## 9. Final Remote Freeze
+
+- Repository：`UFUN0220/priceSight`
+- Branch：`master`
+- Commit：`c5ad99306e0ffcafe7b1f9ee5cf789aeb9a2a051`
+- Workflow：`项目持续集成`
+- Run：`31412588211`（trigger：`push`）
+- Python 测试与覆盖率：`172 passed`，branch coverage `85%`，门槛 `80%`，通过。
+- Python 质量门禁、Browser Mock Web E2E、Android client、Mock Shopping App：全部通过。
+- HOLDOUT/HUMAN 指标与 baseline→final 一致；HUMAN core `5/40`、strict `2/40` 未因 provenance/path 问题归零。
+
+本报告只声明工程链路和该 commit 的远端 CI 已验证；不声明真实 App 泛化、生产级价格识别或真实优惠价格准确计算。
